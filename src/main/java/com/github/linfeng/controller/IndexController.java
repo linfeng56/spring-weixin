@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/home")
 public class IndexController {
-
     /**
      * 默认首页
      *
