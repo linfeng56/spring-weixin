@@ -1,0 +1,8 @@
+/* pages/map/index.wxss */
+map{
+  margin: 20rpx;
+}
+
+button{
+  margin: 20rpx;
+}

@@ -1,0 +1,18 @@
+<!--pages/dialog/index.wxml-->
+<text>pages/dialog/index.wxml</text>
+
+<view>
+  <button bindtap="showMsg01">显示消息提示框</button>
+</view>
+<view>
+  <button bindtap="showMsg02">显示模态对话框</button>
+</view>
+<view>
+  <button bindtap="showMsg03">显示加载中...</button>
+</view>
+<view>
+  <button bindtap="showMsg04">显示操作菜单</button>
+</view>
+<view>
+  <button bindtap="hideLoading">加载完成</button>
+</view>

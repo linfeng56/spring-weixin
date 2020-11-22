@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.mapper.UsersMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.github.linfeng.entity.Users">
+        <id column="uid" property="uid" />
+        <result column="user_name" property="userName" />
+        <result column="nick_name" property="nickName" />
+        <result column="pwd" property="pwd" />
+        <result column="scores" property="scores" />
+        <result column="openid" property="openid" />
+        <result column="access_token" property="accessToken" />
+        <result column="access_token_expire" property="accessTokenExpire" />
+        <result column="refresh_token" property="refreshToken" />
+        <result column="wechat" property="wechat" />
+        <result column="phone" property="phone" />
+        <result column="birthday" property="birthday" />
+        <result column="sex" property="sex" />
+        <result column="stature" property="stature" />
+        <result column="weight" property="weight" />
+        <result column="domicile" property="domicile" />
+        <result column="native_place" property="nativePlace" />
+        <result column="marital_status" property="maritalStatus" />
+        <result column="education" property="education" />
+        <result column="profession" property="profession" />
+        <result column="narrate" property="narrate" />
+        <result column="family" property="family" />
+        <result column="interest" property="interest" />
+        <result column="want_style" property="wantStyle" />
+        <result column="why_single" property="whySingle" />
+        <result column="yearning_life" property="yearningLife" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        uid, user_name, nick_name, pwd, scores, openid, access_token, access_token_expire, refresh_token, wechat, phone, birthday, sex, stature, weight, domicile, native_place, marital_status, education, profession, narrate, family, interest, want_style, why_single, yearning_life
+    </sql>
+
+    <select id="getById" resultType="com.github.linfeng.entity.Users" parameterType="integer">
+        select * from spwx_users where uid=#{uid,jdbcType=INTEGER}
+    </select>
+    <select id="list" resultType="com.github.linfeng.entity.Users">
+        select * from spwx_users
+    </select>
+</mapper>

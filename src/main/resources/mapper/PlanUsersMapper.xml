@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.plan.mapper.PlanUsersMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.github.linfeng.plan.entity.PlanUsers">
+        <id column="user_id" property="userId" />
+        <result column="login_name" property="loginName" />
+        <result column="login_password" property="loginPassword" />
+        <result column="user_name" property="userName" />
+        <result column="create_date" property="createDate" />
+        <result column="login_date" property="loginDate" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id, login_name, login_password, user_name, create_date, login_date
+    </sql>
+  <update id="updateLoginDate">
+      update spwx_plan_users set login_date=#{loginDate} where user_id=#{userId};
+  </update>
+    <select id="list" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanUsers">
+      select * from spwx_plan_users;
+    </select>
+    <select id="getById" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanUsers">
+        select * from spwx_plan_users where user_id=#{id};
+    </select>
+  <select id="getUserByLoginName" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanUsers">
+      select * from spwx_plan_users where login_name=#{loginName};
+  </select>
+
+</mapper>

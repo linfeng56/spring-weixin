@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.plan.mapper.PlanItemsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.github.linfeng.plan.entity.PlanItems">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="week_id" property="weekId" />
+        <result column="job_type" property="jobType" />
+        <result column="job_num" property="jobNum" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="begin_date" property="beginDate" />
+        <result column="end_date" property="endDate" />
+        <result column="job_finish_date" property="jobFinishDate" />
+        <result column="remarks" property="remarks" />
+        <result column="create_date" property="createDate" />
+        <result column="edit_date" property="editDate" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, week_id, job_type, job_num, title, content, begin_date, end_date, job_finish_date, remarks,
+        create_date, edit_date
+    </sql>
+  <insert id="add" parameterType="com.github.linfeng.plan.entity.PlanItems">
+      insert into spwx_plan_items (user_id,week_id,job_type,job_num,title,content,begin_date,end_date,job_finish_date,
+                                   remarks,create_date,edit_date)
+      values (#{item.userId},#{item.weekId},#{item.jobType},#{item.jobNum},#{item.title},#{item.content},
+              #{item.beginDate},#{item.endDate},#{item.jobFinishDate},#{item.remarks},
+              #{item.createDate},#{item.editDate});
+  </insert>
+    <update id="edit" parameterType="map">
+        UPDATE spwx_plan_items
+        SET user_id=#{item.userId},
+            week_id=#{item.weekId},
+            job_type=#{item.jobType},
+            job_num=#{item.jobNum},
+            title=#{item.title},
+            content=#{item.content},
+            begin_date=#{item.beginDate},
+            end_date=#{item.endDate},
+            job_finish_date=#{item.jobFinishDate},
+            remarks=#{item.remarks},
+            edit_date=#{item.editDate}
+        WHERE id=#{id}
+    </update>
+    <select id="list" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanItems">
+      select * from spwx_plan_items;
+  </select>
+  <select id="getById" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanItems">
+      select * from spwx_plan_items where id=#{id};
+  </select>
+  <select id="listByWeek" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanItems">
+      select * from spwx_plan_items
+      <where>
+          <if test="weekId != null">
+              week_id=#{weekId}
+          </if>
+          <if test="userId != null">
+              AND user_id=#{userId}
+          </if>
+          <if test="searchText != null">
+          AND title LIKE concat('%',#{searchText},'%')
+          </if>
+      </where>
+      order by week_id desc,user_id desc,begin_date asc;
+  </select>
+
+</mapper>

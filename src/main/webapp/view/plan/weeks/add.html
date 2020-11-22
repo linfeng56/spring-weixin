@@ -1,0 +1,137 @@
+<#include "/plan/layout/layout_default.html">
+
+<#macro container>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>周计划添加</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">首页</a></li>
+              <li class="breadcrumb-item active">周计划添加</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">添加周计划</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form" class="from-ajax" method="post" action="doAdd">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label for="weekTitle">名称</label>
+                            <input type="text" class="form-control" name="weekTitle" id="weekTitle"
+                                   data-inputmask='"mask": "9999年99月第99周"' data-mask
+                                   placeholder="yyyy年mm月第ww周" required>
+                          </div>
+                        </div>
+                        <div class="col-3">
+                          <div class="form-group">
+                              <label>起止日期:</label>
+                              <div class="input-group date" id="weekBegin" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input" name="weekBegin"
+                                         data-target="#weekBegin" required/>
+                                  <div class="input-group-append" data-target="#weekBegin" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                  </div>
+                              </div>
+                              <!-- /.input group -->
+                          </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label>起止日期:</label>
+                                <div class="input-group date" id="weekEnd" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" name="weekEnd" data-target="#weekEnd" required/>
+                                    <div class="input-group-append" data-target="#weekEnd" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>备注</label>
+                                <textarea class="form-control" rows="3" name="remarks" placeholder="备注"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label>添加时间:</label>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">提交</button>
+                    <a href="list" class="btn btn-primary">列表</a>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!--/.col (left) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+</#macro>
+
+<#macro footer_js>
+<script>
+    $('#weekBegin').datetimepicker({
+        format: 'YYYY-MM-DD'
+    });
+    $('#weekEnd').datetimepicker({
+        format: 'YYYY-MM-DD'
+    });
+    $('[data-mask]').inputmask();
+    $('.from-ajax').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:$(this).attr('action'),
+            type:'post',
+            data:$(this).serialize(),
+            success:function(data){
+                $('#myModalMessageTitle').text("操作提示");
+                if (data.status=="200"){
+                    $('.modal-body-content').text("保存成功");
+                }else{
+                    $('.modal-body-content').text("保存失败。错误编码："+data.code);
+                }
+                console.log(data);
+                $('#myModalMessage').modal('show');
+            }
+        });
+    });
+</script>
+</#macro>

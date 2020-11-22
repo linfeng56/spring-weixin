@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.plan.mapper.PlanWeeksMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.github.linfeng.plan.entity.PlanWeeks">
+        <id column="week_id" property="weekId"/>
+        <result column="user_id" property="userId"/>
+        <result column="title" property="title"/>
+        <result column="remarks" property="remarks"/>
+        <result column="begin_date" property="beginDate"/>
+        <result column="end_date" property="endDate"/>
+        <result column="create_date" property="createDate"/>
+        <result column="summary" property="summary"/>
+        <result column="summary_date" property="summaryDate"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        week_id, user_id, title, remarks, begin_date, end_date, create_date, summary, summary_date
+    </sql>
+    <insert id="add" parameterType="com.github.linfeng.plan.entity.PlanWeeks">
+        insert into spwx_plan_weeks (title, begin_date, end_date, create_date, remarks)
+        values (#{week.title}, #{week.beginDate}, #{week.endDate}, #{week.createDate}, #{week.remarks});
+    </insert>
+    <update id="update" parameterType="map">
+        UPDATE spwx_plan_weeks
+        SET title=#{week.title},
+            begin_date=#{week.beginDate},
+            end_date=#{week.endDate},
+            remarks=#{week.remarks}
+        WHERE week_id = #{id}
+    </update>
+    <update id="updateSummary" parameterType="map">
+        UPDATE spwx_plan_weeks
+        SET summary=#{summary},
+            summary_date=#{summaryDate}
+        WHERE week_id = #{id}
+    </update>
+    <select id="list" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
+        select *
+        from spwx_plan_weeks
+        order by begin_date desc, week_id desc;
+    </select>
+    <select id="getById" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
+        select *
+        from spwx_plan_weeks
+        where week_id = #{id};
+    </select>
+    <select id="listByTitle" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
+        select *
+        from spwx_plan_weeks
+        where title LIKE concat('%', #{searchText}, '%')
+        order by begin_date desc, week_id desc;
+    </select>
+
+</mapper>

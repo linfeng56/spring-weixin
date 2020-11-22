@@ -1,2 +1,27 @@
-# spring-weixin
-Spring implements Weixin's basic functions
+
+# 工作计划管理
+  一个工作计划系统的基本功能。可以对每周进行工作项进行计划，对每周的进行工作总结。
+可以对周计划进行导出。
+
+## 开发线路
+
+- [x] 进行周计划的编辑
+- [ ] 进行周计划的总结
+- [ ] 进行周计划的word/pdf导出
+- [ ] 进行周计划的汇总
+- [ ] 计划日历
+- [ ] 人员结构和权限
+- [ ] 周计划提醒（邮件、短信、钉钉）
+- [ ] 计划项细分
+
+## 功能点
+
+- [ ] 通过拦截器读取左菜单
+- [ ] 
+
+## 技术要求及框架
+1. SpringCloud GateWay
+2. SpringBoot
+3. AdminLTE+bootstrap
+4. MySQL
+5. Redis

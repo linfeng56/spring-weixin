@@ -1,0 +1,29 @@
+<!--pages/pullDown/index.wxml-->
+<text>pages/pullDown/index.wxml</text>
+
+<view>
+  <button bindtap="startPull">开始下拉</button>
+</view>
+<view>
+  <button bindtap="stopPull">停止下拉</button>
+</view>
+<view>
+  <button bindtap="testTopBar">置顶</button>
+</view>
+<view>
+  <button bindtap="testScrollTo01">跳到68px</button>
+</view>
+<view>
+  <button bindtap="testScrollTo02">跳到内容二</button>
+</view>
+<view wx:for="{{list}}" wx:key="index" data-index="{{index}}">
+  <view class="p_{{index}}" style="height:200rpx; background-color:{{item.color}};">
+    <label>{{item.text}}</label>
+  </view>
+</view>
+<view>
+  <button bindtap="startPull">开始下拉</button>
+</view>
+<view style="padding-bottom: 75px;">
+  <button>按钮</button>
+</view>

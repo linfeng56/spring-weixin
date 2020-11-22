@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AdminLTE 3 | Log in</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="${request.getContextPath()}/statics/plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="${request.getContextPath()}/statics/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="${request.getContextPath()}/statics/dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <b>测试项目</b>管理后台
+  </div>
+    <#if msg?? >
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">${msg.title}</p>
+
+
+      <div class="social-auth-links text-center mb-3">
+          <p>${msg.content}</p>
+          <p>${msg.date?datetime}</p>
+      </div>
+      <!-- /.social-auth-links -->
+
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+    </#if>
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="${request.getContextPath()}/statics/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="${request.getContextPath()}/statics/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="${request.getContextPath()}/statics/dist/js/adminlte.min.js"></script>
+<#if msg?? >
+<#if msg.toUrl?? >
+<script>
+    function toUrl(){
+        $(window).attr('location','${msg.toUrl}');
+    }
+
+    jQuery(document).ready(function(){
+        setTimeout('toUrl()', 5000);
+    });
+</script>
+</#if>
+</#if>
+</body>
+</html>

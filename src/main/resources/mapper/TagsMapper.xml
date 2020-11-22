@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.mapper.TagsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.github.linfeng.entity.Tags">
+        <id column="tag_id" property="tagId" />
+        <result column="tag_name" property="tagName" />
+        <result column="rel_num" property="relNum" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        tag_id, tag_name, rel_num, create_time
+    </sql>
+  <select id="list" resultType="com.github.linfeng.entity.Tags">
+      select * from spwx_tags;
+  </select>
+    <select id="getById" resultType="com.github.linfeng.entity.Tags">
+        select * from spwx_tags where tag_id=#{id};
+    </select>
+
+</mapper>
