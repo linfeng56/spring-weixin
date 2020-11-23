@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/cache/spring-tx.xsd">
+
+    <!--配置数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+        destroy-method="close">
+        <property name="driverClassName" value="org.sqlite.JDBC"/>
+        <property name="url" value="classpath:/db/data.db"/>
+        <property name="password" value="linfeng"/>
+        <!--初始化连接大小-->
+        <property name="initialSize" value="10"/>
+        <!--连接池最大数量-->
+        <property name="maxTotal" value="100"/>
+        <!--连接池最大空闲-->
+        <property name="maxIdle" value="10"/>
+        <!--连接池最小空闲-->
+        <property name="minIdle" value="1"/>
+        <!--获取连接最大等待时间-->
+        <property name="maxWaitMillis" value="6000"/>
+    </bean>
+
+    <!--整合mybatis和Spring-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:mapping/*.xml"/>
+    </bean>
+
+    <!--配置Spring扫描的DAO接口所在包-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.github.linfeng.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!--事务管理-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--事务注释-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>
