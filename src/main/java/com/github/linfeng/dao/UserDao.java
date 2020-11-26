@@ -1,6 +1,7 @@
 package com.github.linfeng.dao;
 
 import com.github.linfeng.model.User;
+import org.springframework.stereotype.Component;
 
 /**
  * 用户基本信息操作
@@ -8,6 +9,7 @@ import com.github.linfeng.model.User;
  * @author 黄麟峰
  * @date 2020-11-23 21:18
  */
+@Component
 public interface UserDao {
 
     /**
