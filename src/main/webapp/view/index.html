@@ -5,5 +5,16 @@
 </head>
 <body>
 <p>${name} Spring MVC 基于 XML配置成功！</p>
+<ul>
+    <#if users ??>
+    <#list users as user>
+    <li>id:${user.id!'-'}</li>
+    <li>name:${user.userName!'-'}</li>
+    <li>nick:${user.nickName!'-'}</li>
+    <li>phone:${user.phone!'-'}</li>
+    <li>------------------------------</li>
+    </#list>
+    </#if>
+</ul>
 </body>
 </html>

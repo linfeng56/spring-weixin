@@ -1,13 +1,14 @@
 package com.github.linfeng.controller;
 
-import com.github.linfeng.dao.UserDao;
 import com.github.linfeng.model.User;
 import com.github.linfeng.service.UserService;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 默认控制器
@@ -44,6 +45,9 @@ public class IndexController {
         } else {
             model.addAttribute("name", "用户不存在!");
         }
+
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("users", users);
         return "index";
     }
 }

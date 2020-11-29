@@ -1,7 +1,9 @@
 package com.github.linfeng.dao;
 
 import com.github.linfeng.model.User;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 用户基本信息操作
@@ -9,8 +11,15 @@ import org.springframework.stereotype.Component;
  * @author 黄麟峰
  * @date 2020-11-23 21:18
  */
-@Component
+@Repository
 public interface UserDao {
+
+    /**
+     * 获取所有用户
+     *
+     * @return 用户列表
+     */
+    List<User> selectAllUser();
 
     /**
      * 通过用户编号查询用户

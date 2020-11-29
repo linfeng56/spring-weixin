@@ -12,6 +12,7 @@ public class User {
     private String userName;
     private String nickName;
     private String pwd;
+    private String phone;
 
     public Integer getId() {
         return id;
@@ -43,5 +44,13 @@ public class User {
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

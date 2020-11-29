@@ -5,17 +5,21 @@
     <resultMap id="UserBaseMap" type="com.github.linfeng.model.User">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
-        <result column="user_phone" property="nickName" jdbcType="VARCHAR"/>
-        <result column="user_email" property="pwd" jdbcType="VARCHAR"/>
+        <result column="user_nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="user_password" property="pwd" jdbcType="VARCHAR"/>
+        <result column="user_phone" property="phone" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <select id="selectUserById" parameterType="java.lang.Long" resultMap="UserBaseMap">
-        SELECT * FROM tb_user
+    <select id="selectAllUser" resultMap="UserBaseMap">
+        SELECT * FROM tb_users
+    </select>
+    <select id="selectUserById" parameterType="java.lang.Integer" resultMap="UserBaseMap">
+        SELECT * FROM tb_users
         WHERE id = #{userId}
     </select>
 
     <select id="selectUserByUserName" parameterType="java.lang.String" resultMap="UserBaseMap">
-        SELECT * FROM tb_user
+        SELECT * FROM tb_users
         WHERE userName = #{userName}
     </select>
 </mapper>
