@@ -1,5 +1,6 @@
 package com.github.linfeng.controller;
 
+import com.github.linfeng.config.WeiXinConfig;
 import com.github.linfeng.model.User;
 import com.github.linfeng.service.UserService;
 import com.github.linfeng.utils.HttpClientUtils;
@@ -25,6 +26,12 @@ import java.util.Map;
 public class AuthController {
 
     /**
+     * 微信配置
+     */
+    @Autowired
+    private WeiXinConfig weiXinConfig;
+
+    /**
      * 用户基本信息服务
      */
     @Autowired
@@ -44,7 +51,7 @@ public class AuthController {
         // 格式:https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect
 
         RequestCodeView requestView = new RequestCodeView();
-        requestView.setAppid("appid");
+        requestView.setAppid(weiXinConfig.getAppid());
         requestView.setRedirectUri("https://xxxx.com/receive-code/");
 
         // snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid）
@@ -80,9 +87,9 @@ public class AuthController {
         StringBuilder url = new StringBuilder(255);
         String accessTokenUrl = "https://api.weixin.qq.com/sns/oauth2/access_token";
         // (必须)公众号的唯一标识
-        String appid = "";
+        String appid = weiXinConfig.getAppid();
         // (必须)公众号的appsecret
-        String secret = "";
+        String secret = weiXinConfig.getAppSecret();
         // (必须)填写第一步获取的code参数
         String code = responseView.getCode();
         // (必须)填写为authorization_code
@@ -147,7 +154,7 @@ public class AuthController {
         StringBuilder url = new StringBuilder(256);
         String refreshUrl = "https://api.weixin.qq.com/sns/oauth2/refresh_token";
         //  (必须) 公众号的唯一标识
-        String appid = "";
+        String appid = weiXinConfig.getAppid();
         //  (必须) 填写为refresh_token
         String grantType = ""; //user.refreshToken;
         //  (必须) 填写通过access_token获取到的refresh_token参数
