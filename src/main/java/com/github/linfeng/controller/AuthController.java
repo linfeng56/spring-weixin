@@ -4,6 +4,8 @@ import com.github.linfeng.model.User;
 import com.github.linfeng.service.UserService;
 import com.github.linfeng.utils.HttpClientUtils;
 import com.github.linfeng.utils.JsonUtils;
+import com.github.linfeng.view.RequestCodeView;
+import com.github.linfeng.view.ResponseCodeView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,32 +41,19 @@ public class AuthController {
         // 文档:
         //https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html
 
-
         // 格式:https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect
-        StringBuilder url = new StringBuilder(1024);
 
-        String authUrl = "https://open.weixin.qq.com/connect/oauth2/authorize";
-        //(必须)公众号的唯一标识
-        String appid = "";
-        //(必须)授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理,应当使用https链接来确保授权code的安全性
-        String redirectUri = "";
-        //(必须)返回类型，请填写code
-        String responseType = "";
-        //(必须)应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且， 即使在未关注的情况下，只要用户授权，也能获取其信息 ）
-        String scope = "";
-        //(可选)重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节
-        String state = "";
-        //(必须)无论直接打开还是做页面302重定向时候，必须带此参数
-        String wechatRedirect = "#wechat_redirect";
+        RequestCodeView requestView = new RequestCodeView();
+        requestView.setAppid("appid");
+        requestView.setRedirectUri("https://xxxx.com/receive-code/");
 
-        url.append(authUrl).append("?")
-            .append("appid=").append(appid).append("&")
-            .append("redirect_uri=").append(redirectUri).append("&")
-            .append("response_type=").append(responseType).append("&")
-            .append("scope=").append(scope).append("&")
-            .append("state=").append(state).append("&")
-            .append(wechatRedirect);
-        model.addAttribute("go-url", url.toString());
+        // snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid）
+        // snsapi_userinfo （弹出授权页面，即使在未关注的情况下，只要用户授权，也能获取其信息 ）
+        requestView.setScope("snsapi_base");
+
+        String url = requestView.buildGet();
+
+        model.addAttribute("go-url", url);
 
         return "auth/get-code";
     }
@@ -81,8 +70,9 @@ public class AuthController {
         // 如果用户同意授权，页面将跳转至 redirect_uri/?code=CODE&state=STATE。
         // code说明 ： code作为换取access_token的票据，每次用户授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期。
 
-        String receiveCode = request.getParameter("code");
-        String receiveState = request.getParameter("state");
+        ResponseCodeView responseView = new ResponseCodeView();
+        responseView.setCode(request.getParameter("code"));
+        responseView.setState(request.getParameter("state"));
 
         // 获取code后，请求以下链接获取access_token：
         // https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
@@ -94,7 +84,7 @@ public class AuthController {
         // (必须)公众号的appsecret
         String secret = "";
         // (必须)填写第一步获取的code参数
-        String code = receiveCode;
+        String code = responseView.getCode();
         // (必须)填写为authorization_code
         String grantType = "authorization_code";
 
@@ -118,7 +108,6 @@ public class AuthController {
          * }
          */
         String result = HttpClientUtils.getRequest(url.toString());
-
 
         // 将返回结果转成JSON/Map格式
         Map<String, String> resultJson = JsonUtils.toMap(result);
@@ -293,7 +282,6 @@ public class AuthController {
         // 请求方法
         // http：GET（请使用https协议）
         // https://api.weixin.qq.com/sns/auth?access_token=ACCESS_TOKEN&openid=OPENID
-
 
         User user = userService.getUser(1);
 
