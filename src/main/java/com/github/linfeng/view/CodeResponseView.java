@@ -6,7 +6,7 @@ package com.github.linfeng.view;
  * @author 黄麟峰
  * @date 2020-12-01 14:02
  */
-public class ResponseCodeView extends BaseResponseView {
+public class CodeResponseView extends BaseResponseView {
 
     /**
      * code作为换取access_token的票据，每次用户授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期。

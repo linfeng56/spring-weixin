@@ -8,7 +8,7 @@ import java.util.Map;
  * @author 黄麟峰
  * @date 2020-12-01 13:49
  */
-public class RequestCodeView extends BaseRequestView {
+public class CodeRequestView extends BaseRequestView {
 
 
     /**

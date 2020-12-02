@@ -5,8 +5,8 @@ import com.github.linfeng.model.User;
 import com.github.linfeng.service.UserService;
 import com.github.linfeng.utils.HttpClientUtils;
 import com.github.linfeng.utils.JsonUtils;
-import com.github.linfeng.view.RequestCodeView;
-import com.github.linfeng.view.ResponseCodeView;
+import com.github.linfeng.view.CodeRequestView;
+import com.github.linfeng.view.CodeResponseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,7 +50,7 @@ public class AuthController {
 
         // 格式:https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect
 
-        RequestCodeView requestView = new RequestCodeView();
+        CodeRequestView requestView = new CodeRequestView();
         requestView.setAppid(weiXinConfig.getAppid());
         requestView.setRedirectUri("https://xxxx.com/receive-code/");
 
@@ -77,7 +77,7 @@ public class AuthController {
         // 如果用户同意授权，页面将跳转至 redirect_uri/?code=CODE&state=STATE。
         // code说明 ： code作为换取access_token的票据，每次用户授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期。
 
-        ResponseCodeView responseView = new ResponseCodeView();
+        CodeResponseView responseView = new CodeResponseView();
         responseView.setCode(request.getParameter("code"));
         responseView.setState(request.getParameter("state"));
 
