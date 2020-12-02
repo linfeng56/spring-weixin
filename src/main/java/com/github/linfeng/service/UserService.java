@@ -32,4 +32,19 @@ public class UserService {
     public User getUser(Integer id) {
         return userDao.selectUserById(id);
     }
+
+    /**
+     * 更新用户的Token
+     *
+     * @param openid       微信的openid
+     * @param accessToken  微信的access token
+     * @param expiresIn    过期时间
+     * @param refreshToken 更新时的token
+     * @param scope        scope
+     * @return true更新成功, false更新失败
+     */
+    public boolean UpdateUserToken(String openid, String accessToken, String expiresIn, String refreshToken,
+        String scope) {
+        return false;
+    }
 }

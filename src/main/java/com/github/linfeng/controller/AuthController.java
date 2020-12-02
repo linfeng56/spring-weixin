@@ -5,8 +5,12 @@ import com.github.linfeng.model.User;
 import com.github.linfeng.service.UserService;
 import com.github.linfeng.utils.HttpClientUtils;
 import com.github.linfeng.utils.JsonUtils;
+import com.github.linfeng.view.AccessTokenRequestView;
+import com.github.linfeng.view.AccessTokenResponseView;
 import com.github.linfeng.view.CodeRequestView;
 import com.github.linfeng.view.CodeResponseView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +29,7 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
     /**
      * 微信配置
      */
@@ -77,62 +82,33 @@ public class AuthController {
         // 如果用户同意授权，页面将跳转至 redirect_uri/?code=CODE&state=STATE。
         // code说明 ： code作为换取access_token的票据，每次用户授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期。
 
-        CodeResponseView responseView = new CodeResponseView();
+        CodeResponseView responseView = new CodeResponseView("");
         responseView.setCode(request.getParameter("code"));
         responseView.setState(request.getParameter("state"));
 
         // 获取code后，请求以下链接获取access_token：
         // https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
 
-        StringBuilder url = new StringBuilder(255);
-        String accessTokenUrl = "https://api.weixin.qq.com/sns/oauth2/access_token";
-        // (必须)公众号的唯一标识
-        String appid = weiXinConfig.getAppid();
-        // (必须)公众号的appsecret
-        String secret = weiXinConfig.getAppSecret();
-        // (必须)填写第一步获取的code参数
-        String code = responseView.getCode();
-        // (必须)填写为authorization_code
-        String grantType = "authorization_code";
+        AccessTokenRequestView requestView = new AccessTokenRequestView();
+        requestView.setAppid(weiXinConfig.getAppid());
+        requestView.setSecret(weiXinConfig.getAppSecret());
+        requestView.setCode(responseView.getCode());
 
-        url.append(accessTokenUrl).append("?")
-            .append("appid=").append(appid).append("&")
-            .append("secret=").append(secret).append("&")
-            .append("code=").append(code).append("&")
-            .append("grant_type=").append(grantType);
+        String url = requestView.buildGet();
 
-        model.addAttribute("url", url.toString());
+        model.addAttribute("url", url);
 
-        /*
-         * 正确时返回的JSON数据包如下：
-         *
-         * {
-         *   "access_token":"ACCESS_TOKEN",
-         *   "expires_in":7200,
-         *   "refresh_token":"REFRESH_TOKEN",
-         *   "openid":"OPENID",
-         *   "scope":"SCOPE"
-         * }
-         */
-        String result = HttpClientUtils.getRequest(url.toString());
+        String result = HttpClientUtils.getRequest(url);
 
-        // 将返回结果转成JSON/Map格式
-        Map<String, String> resultJson = JsonUtils.toMap(result);
-        ;
-
-        // 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
-        String receiveAccessToken = resultJson.get("receive_access_token");
-        // access_token接口调用凭证超时时间，单位（秒）
-        String receiveExpiresIn = resultJson.get("receive_expires_in");
-        // 用户刷新access_token
-        String receiveRefreshToken = resultJson.get("receive_refresh_token");
-        // 用户唯一标识，请注意，在未关注公众号时，用户访问公众号的网页，也会产生一个用户和公众号唯一的OpenID
-        String receiveOpenid = resultJson.get("receive_openid");
-        // 用户授权的作用域，使用逗号（,）分隔
-        String receiveScope = resultJson.get("receive_scope");
-
-        // 更新用户的token信息
-        // userService.UpdateUserToken(receiveOpenid,receiveAccessToken,receiveExpiresIn,receiveRefreshToken,receiveScope);
+        AccessTokenResponseView accessTokenResponseView = new AccessTokenResponseView(result);
+        if (!"".equals(accessTokenResponseView.getErrCode())) {
+            LOGGER.warn("请求失败!");
+        } else {
+            // 更新用户的token信息
+            userService.UpdateUserToken(accessTokenResponseView.getOpenid(), accessTokenResponseView.getAccessToken(),
+                accessTokenResponseView.getExpiresIn(), accessTokenResponseView.getRefreshToken(),
+                accessTokenResponseView.getScope());
+        }
         return "auth/receive-code";
     }
 

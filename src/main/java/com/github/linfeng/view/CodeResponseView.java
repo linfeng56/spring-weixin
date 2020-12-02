@@ -18,6 +18,10 @@ public class CodeResponseView extends BaseResponseView {
      */
     private String state = "";
 
+    public CodeResponseView(String json) {
+        super(json);
+    }
+
     public String getCode() {
         return code;
     }

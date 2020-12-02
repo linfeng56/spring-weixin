@@ -1,5 +1,8 @@
 package com.github.linfeng.view;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * 接收结果
  *
@@ -7,6 +10,16 @@ package com.github.linfeng.view;
  * @date 2020-12-01 14:00
  */
 public abstract class BaseResponseView {
+
+    public BaseResponseView(String json) {
+        this.json = JSON.parseObject(json);
+        if (this.json.containsKey("errcode")) {
+            errCode = this.json.getString("errcode");
+            errMsg = this.json.getString("errmsg");
+        }
+    }
+
+    protected JSONObject json;
 
     /**
      * 错误编码
