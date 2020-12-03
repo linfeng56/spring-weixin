@@ -1,9 +1,9 @@
 package com.github.linfeng.dao;
 
-import com.github.linfeng.model.User;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
+import com.github.linfeng.model.User;
+
+import org.springframework.stereotype.Repository;
 
 /**
  * 用户基本信息操作

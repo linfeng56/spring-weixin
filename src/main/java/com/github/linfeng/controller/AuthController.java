@@ -1,14 +1,20 @@
 package com.github.linfeng.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import com.github.linfeng.config.WeiXinConfig;
 import com.github.linfeng.model.User;
 import com.github.linfeng.service.UserService;
 import com.github.linfeng.utils.HttpClientUtils;
-import com.github.linfeng.utils.JsonUtils;
 import com.github.linfeng.view.AccessTokenRequestView;
 import com.github.linfeng.view.AccessTokenResponseView;
+import com.github.linfeng.view.CheckAccessTokenRequestView;
+import com.github.linfeng.view.CheckAccessTokenResponseView;
 import com.github.linfeng.view.CodeRequestView;
 import com.github.linfeng.view.CodeResponseView;
+import com.github.linfeng.view.RefreshTokenRequestView;
+import com.github.linfeng.view.UserInfoRequestView;
+import com.github.linfeng.view.UserInfoResponseView;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +22,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-
 /**
- * 认证控制器
+ * 认证控制器.
  *
  * @author 黄麟峰
  * @date 2020-11-29 22:08
@@ -29,21 +32,22 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+
     /**
-     * 微信配置
+     * 微信配置.
      */
     @Autowired
     private WeiXinConfig weiXinConfig;
 
     /**
-     * 用户基本信息服务
+     * 用户基本信息服务.
      */
     @Autowired
     private UserService userService;
 
     /**
-     * 第一步请求：用户同意授权，获取code
+     * 第一步请求：用户同意授权，获取code.
      *
      * @param model 模型属性
      * @return 页面路径
@@ -71,7 +75,7 @@ public class AuthController {
     }
 
     /**
-     * 第二步：通过code换取网页授权access_token
+     * 第二步：通过code换取网页授权access_token.
      *
      * @param request HttpRequest
      * @param model   model
@@ -113,7 +117,7 @@ public class AuthController {
     }
 
     /**
-     * 第三步：刷新access_token（如果需要）
+     * 第三步：刷新access_token（如果需要）.
      * <br/>
      * 由于access_token拥有较短的有效期，当access_token超时后，可以使用refresh_token进行刷新，refresh_token有效期为30天，当refresh_token失效之后，需要用户重新授权。
      *
@@ -127,58 +131,30 @@ public class AuthController {
 
         User user = userService.getUser(1);
 
-        StringBuilder url = new StringBuilder(256);
-        String refreshUrl = "https://api.weixin.qq.com/sns/oauth2/refresh_token";
-        //  (必须) 公众号的唯一标识
-        String appid = weiXinConfig.getAppid();
-        //  (必须) 填写为refresh_token
-        String grantType = ""; //user.refreshToken;
-        //  (必须) 填写通过access_token获取到的refresh_token参数
-        String refreshtoken = "";
+        RefreshTokenRequestView requestView = new RefreshTokenRequestView();
+        requestView.setAppid(weiXinConfig.getAppid());
+        requestView.setRefreshToken(user.getRefreshToken());
 
-        url.append(refreshUrl).append("?")
-            .append("appid=").append(appid).append("&")
-            .append("grant_type=").append(grantType).append("&")
-            .append("refresh_token=").append(refreshtoken);
+        String url = requestView.buildGet();
+        model.addAttribute("url", url);
 
-        model.addAttribute("url", url.toString());
+        String result = HttpClientUtils.getRequest(url);
 
-        /*
-         * 正确时返回的JSON数据包如下：
-         *
-         * {
-         *   "access_token":"ACCESS_TOKEN",
-         *   "expires_in":7200,
-         *   "refresh_token":"REFRESH_TOKEN",
-         *   "openid":"OPENID",
-         *   "scope":"SCOPE"
-         * }
-         */
-        String result = HttpClientUtils.getRequest(url.toString());
-
-        // 将返回结果转成JSON/Map格式
-        Map<String, String> resultJson = JsonUtils.toMap(result);
-        ;
-
-        // 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
-        String receiveAccessToken = resultJson.get("receive_access_token");
-        // access_token接口调用凭证超时时间，单位（秒）
-        String receiveExpiresIn = resultJson.get("receive_expires_in");
-        // 用户刷新access_token
-        String receiveRefreshToken = resultJson.get("receive_refresh_token");
-        // 用户唯一标识，请注意，在未关注公众号时，用户访问公众号的网页，也会产生一个用户和公众号唯一的OpenID
-        String receiveOpenid = resultJson.get("receive_openid");
-        // 用户授权的作用域，使用逗号（,）分隔
-        String receiveScope = resultJson.get("receive_scope");
-
-        // 更新用户的token信息
-        // userService.UpdateUserToken(receiveOpenid,receiveAccessToken,receiveExpiresIn,receiveRefreshToken,receiveScope);
+        AccessTokenResponseView accessTokenResponseView = new AccessTokenResponseView(result);
+        if (!"".equals(accessTokenResponseView.getErrCode())) {
+            LOGGER.warn("请求失败!");
+        } else {
+            // 更新用户的token信息
+            userService.UpdateUserToken(accessTokenResponseView.getOpenid(), accessTokenResponseView.getAccessToken(),
+                accessTokenResponseView.getExpiresIn(), accessTokenResponseView.getRefreshToken(),
+                accessTokenResponseView.getScope());
+        }
 
         return "auth/refresh-token";
     }
 
     /**
-     * 第四步：拉取用户信息(需scope为 snsapi_userinfo)
+     * 第四步：拉取用户信息(需scope为 snsapi_userinfo).
      *
      * @param model model
      * @return 页面
@@ -193,68 +169,22 @@ public class AuthController {
 
         User user = userService.getUser(1);
 
-        StringBuilder url = new StringBuilder(256);
-        String userInfoUrl = "https://api.weixin.qq.com/sns/userinfo";
+        UserInfoRequestView requestView = new UserInfoRequestView();
+        requestView.setOpenid(user.getOpenId());
+        requestView.setAccessToken(user.getAccessToken());
 
-        // 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
-        String accessToken = ""; // user.getAccessToken;
-        // 用户的唯一标识
-        String openid = ""; // user.getOpenid;
-        // 返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语
-        String lang = "zh_CN";
+        String url = requestView.buildGet();
 
-        url.append(userInfoUrl).append("?")
-            .append("access_token=").append(accessToken).append("&")
-            .append("openid=").append(openid).append("&")
-            .append("lang=").append(lang);
+        String result = HttpClientUtils.getRequest(url);
 
-        /*
-         * 正确时返回的JSON数据包如下：
-         *
-         * {
-         *   "openid":" OPENID",
-         *   "nickname": NICKNAME,
-         *   "sex":"1",
-         *   "province":"PROVINCE",
-         *   "city":"CITY",
-         *   "country":"COUNTRY",
-         *   "headimgurl":"https://thirdwx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/46",
-         *   "privilege":[ "PRIVILEGE1" "PRIVILEGE2"     ],
-         *   "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
-         * }
-         *
-         */
-        String result = HttpClientUtils.getRequest(url.toString());
+        UserInfoResponseView responseView = new UserInfoResponseView(result);
 
-        // 将返回结果转成JSON/Map格式
-        Map<String, String> resultJson = JsonUtils.toMap(result);
-        ;
-
-        // 用户的唯一标识
-        String receiveOpenid = resultJson.get("openid");
-        // 用户昵称
-        String receiveNickName = resultJson.get("nickname");
-        // 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
-        String receiveSex = resultJson.get("sex");
-        // 用户个人资料填写的省份
-        String receiveProvince = resultJson.get("province");
-        // 普通用户个人资料填写的城市
-        String receiveCity = resultJson.get("city");
-        // 国家，如中国为CN
-        String receiveCountry = resultJson.get("country");
-        // 用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空。若用户更换头像，原有头像URL将失效。
-        String receiveHeadimgurl = resultJson.get("headimgurl");
-        // 用户特权信息，json 数组，如微信沃卡用户为（chinaunicom）
-        String receivePrivilege = resultJson.get("privilege");
-        // 只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。
-        String receiveUnionid = resultJson.get("unionid");
-
-        model.addAttribute("user-info", resultJson);
+        model.addAttribute("user-info", responseView);
         return "auth/user-info";
     }
 
     /**
-     * 检验授权凭证（access_token）是否有效
+     * 检验授权凭证（access_token）是否有效.
      *
      * @param model model
      * @return 页面
@@ -268,32 +198,17 @@ public class AuthController {
 
         User user = userService.getUser(1);
 
-        StringBuilder url = new StringBuilder(256);
-        String checkAccessTokenUrl = "https://api.weixin.qq.com/sns/auth";
+        CheckAccessTokenRequestView requestView = new CheckAccessTokenRequestView();
+        requestView.setOpenid(user.getOpenId());
+        requestView.setAccessToken(user.getAccessToken());
 
-        // 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
-        String accessToken = ""; // user.getAccessToken;
-        // 用户的唯一标识
-        String openid = ""; // user.getOpenid;
+        String url = requestView.buildGet();
 
-        url.append(checkAccessTokenUrl).append("?")
-            .append("access_token=").append(accessToken).append("&")
-            .append("openid=").append(openid);
+        String result = HttpClientUtils.getRequest(url);
 
-        /*
-         * 返回说明 正确的JSON返回结果：
-         *
-         * { "errcode":0,"errmsg":"ok"}
-         */
+        CheckAccessTokenResponseView responseView = new CheckAccessTokenResponseView(result);
 
-        String result = HttpClientUtils.getRequest(url.toString());
-
-        // 将返回结果转成JSON/Map格式
-        Map<String, String> resultJson = JsonUtils.toMap(result);
-        String errorCode = resultJson.get("errcode");
-        String errorMsg = resultJson.get("errmsg");
-
-        model.addAttribute("state", errorCode.equals("0") ? "true" : "false");
+        model.addAttribute("state", responseView.getErrCode().equals("0") ? "true" : "false");
 
         return "auth/check-access-token";
     }

@@ -1,5 +1,7 @@
 package com.github.linfeng.model;
 
+import java.util.Date;
+
 /**
  * 用户基本信息
  *
@@ -13,6 +15,10 @@ public class User {
     private String nickName;
     private String pwd;
     private String phone;
+    private String openId;
+    private String accessToken;
+    private String refreshToken;
+    private Date accessTokenExpire;
 
     public Integer getId() {
         return id;
@@ -52,5 +58,37 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public Date getAccessTokenExpire() {
+        return accessTokenExpire;
+    }
+
+    public void setAccessTokenExpire(Date accessTokenExpire) {
+        this.accessTokenExpire = accessTokenExpire;
     }
 }

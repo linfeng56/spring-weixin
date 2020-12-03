@@ -1,11 +1,11 @@
 package com.github.linfeng.service;
 
+import java.util.List;
 import com.github.linfeng.dao.UserDao;
 import com.github.linfeng.model.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * 用户服务类
