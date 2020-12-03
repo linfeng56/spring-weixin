@@ -109,7 +109,7 @@ public class AuthController {
             LOGGER.warn("请求失败!");
         } else {
             // 更新用户的token信息
-            userService.UpdateUserToken(accessTokenResponseView.getOpenid(), accessTokenResponseView.getAccessToken(),
+            userService.updateUserToken(accessTokenResponseView.getOpenid(), accessTokenResponseView.getAccessToken(),
                 accessTokenResponseView.getExpiresIn(), accessTokenResponseView.getRefreshToken(),
                 accessTokenResponseView.getScope());
         }
@@ -145,7 +145,7 @@ public class AuthController {
             LOGGER.warn("请求失败!");
         } else {
             // 更新用户的token信息
-            userService.UpdateUserToken(accessTokenResponseView.getOpenid(), accessTokenResponseView.getAccessToken(),
+            userService.updateUserToken(accessTokenResponseView.getOpenid(), accessTokenResponseView.getAccessToken(),
                 accessTokenResponseView.getExpiresIn(), accessTokenResponseView.getRefreshToken(),
                 accessTokenResponseView.getScope());
         }

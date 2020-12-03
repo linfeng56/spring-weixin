@@ -10,6 +10,9 @@ import java.util.Map;
  */
 public class HttpClientUtils {
 
+    private HttpClientUtils() {
+    }
+
     /**
      * get请求
      *

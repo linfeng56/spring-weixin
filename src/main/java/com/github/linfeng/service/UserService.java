@@ -43,7 +43,7 @@ public class UserService {
      * @param scope        scope
      * @return true更新成功, false更新失败
      */
-    public boolean UpdateUserToken(String openid, String accessToken, String expiresIn, String refreshToken,
+    public boolean updateUserToken(String openid, String accessToken, String expiresIn, String refreshToken,
         String scope) {
         return false;
     }
