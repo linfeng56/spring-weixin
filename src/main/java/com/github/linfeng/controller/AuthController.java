@@ -1,26 +1,18 @@
 package com.github.linfeng.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import com.github.linfeng.config.WeiXinConfig;
 import com.github.linfeng.model.User;
 import com.github.linfeng.service.UserService;
 import com.github.linfeng.utils.HttpClientUtils;
-import com.github.linfeng.view.AccessTokenRequestView;
-import com.github.linfeng.view.AccessTokenResponseView;
-import com.github.linfeng.view.CheckAccessTokenRequestView;
-import com.github.linfeng.view.CheckAccessTokenResponseView;
-import com.github.linfeng.view.CodeRequestView;
-import com.github.linfeng.view.CodeResponseView;
-import com.github.linfeng.view.RefreshTokenRequestView;
-import com.github.linfeng.view.UserInfoRequestView;
-import com.github.linfeng.view.UserInfoResponseView;
-
+import com.github.linfeng.view.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 认证控制器.
@@ -46,6 +38,15 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+
+    private String currentBaseUrl(HttpServletRequest request) {
+        String ret = "";
+
+        ret = request.getScheme() + request.getServerName() + request.getServerPort() + request.getContextPath();
+
+        return ret;
+    }
+
     /**
      * 第一步请求：用户同意授权，获取code.
      *
@@ -53,7 +54,7 @@ public class AuthController {
      * @return 页面路径
      */
     @RequestMapping("/get-code")
-    public String getCode(Model model) {
+    public String getCode(HttpServletRequest request, Model model) {
         // 文档:
         //https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html
 
@@ -61,7 +62,7 @@ public class AuthController {
 
         CodeRequestView requestView = new CodeRequestView();
         requestView.setAppid(weiXinConfig.getAppid());
-        requestView.setRedirectUri("https://xxxx.com/receive-code/");
+        requestView.setRedirectUri(currentBaseUrl(request) + "/receive-code/");
 
         // snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid）
         // snsapi_userinfo （弹出授权页面，即使在未关注的情况下，只要用户授权，也能获取其信息 ）
@@ -69,9 +70,10 @@ public class AuthController {
 
         String url = requestView.buildGet();
 
-        model.addAttribute("go-url", url);
+        // model.addAttribute("go-url", url);
 
-        return "auth/get-code";
+        //return "auth/get-code";
+        return "redirect:" + url;
     }
 
     /**
@@ -113,7 +115,8 @@ public class AuthController {
                 accessTokenResponseView.getExpiresIn(), accessTokenResponseView.getRefreshToken(),
                 accessTokenResponseView.getScope());
         }
-        return "auth/receive-code";
+        // return "auth/receive-code";
+        return "redirect:/get-user-info";
     }
 
     /**
