@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
  * 认证控制器.
  *
  * @author 黄麟峰
- * @date 2020-11-29 22:08
  */
 @Controller
 @RequestMapping("/auth")

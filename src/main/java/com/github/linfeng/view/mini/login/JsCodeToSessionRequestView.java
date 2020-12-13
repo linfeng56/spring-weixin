@@ -1,29 +1,28 @@
-package com.github.linfeng.view.auth;
+package com.github.linfeng.view.mini.login;
 
 import com.github.linfeng.view.base.BaseRequestView;
 
 import java.util.Map;
 
 /**
- * access token请求
+ * 获取传话密钥
  *
  * @author 黄麟峰
  */
-public class AccessTokenRequestView extends BaseRequestView {
+public class JsCodeToSessionRequestView extends BaseRequestView {
 
     /**
-     * (必须)公众号的appsecret
+     * (必须)小程序 appSecret
      */
     private String secret = "";
     /**
-     * (必须)填写第一步获取的code参数
+     * (必须)登录时获取的 code
      */
-    private String code = "";
+    private String jsCode = "";
     /**
-     * (必须)填写为authorization_code
+     * (必须)授权类型，此处只需填写 authorization_code
      */
     private String grantType = "authorization_code";
-
 
     public String getSecret() {
         return secret;
@@ -33,29 +32,27 @@ public class AccessTokenRequestView extends BaseRequestView {
         this.secret = secret;
     }
 
-    public String getCode() {
-        return code;
+    public String getJsCode() {
+        return jsCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setJsCode(String jsCode) {
+        this.jsCode = jsCode;
     }
 
     public String getGrantType() {
         return grantType;
     }
 
-    private String url = "https://api.weixin.qq.com/sns/oauth2/access_token";
-
     @Override
     public String getUrl() {
-        return url;
+        return "https://api.weixin.qq.com/sns/jscode2session";
     }
 
     @Override
     public String buildGet() {
-        return String.format("%s?appid=%s&secret=%s&code=%s&grant_type=%s",
-            getUrl(), getAppid(), getSecret(), getCode(), getGrantType());
+        return String.format("%s?appid=%s&secret=%s&js_code=%s&grant_type=%s",
+            getUrl(), getAppid(), getSecret(), getJsCode(), getGrantType());
     }
 
     @Override

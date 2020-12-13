@@ -6,7 +6,6 @@ import com.github.linfeng.view.base.BaseResponseView;
  * Access Token 请求结果
  *
  * @author 黄麟峰
- * @date 2020-12-02 18:03
  */
 public class AccessTokenResponseView extends BaseResponseView {
 

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
  * 用户基本信息操作
  *
  * @author 黄麟峰
- * @date 2020-11-23 21:18
  */
 @Repository
 public interface UserDao {

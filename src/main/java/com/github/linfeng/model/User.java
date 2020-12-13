@@ -6,7 +6,6 @@ import java.util.Date;
  * 用户基本信息
  *
  * @author 黄麟峰
- * @date 2020-11-23 21:15
  */
 public class User {
 

@@ -21,7 +21,6 @@ import java.util.Map;
  * Http请求工具类
  *
  * @author 黄麟峰
- * @date 2020/11/29 22:50
  */
 public class HttpClientUtils {
 

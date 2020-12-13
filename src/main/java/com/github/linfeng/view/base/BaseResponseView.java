@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
  * 接收结果
  *
  * @author 黄麟峰
- * @date 2020-12-01 14:00
  */
 public abstract class BaseResponseView {
 

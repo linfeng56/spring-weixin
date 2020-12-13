@@ -8,7 +8,6 @@ import java.util.Map;
  * 刷新token请求
  *
  * @author 黄麟峰
- * @date 2020-12-03
  */
 public class RefreshTokenRequestView extends BaseRequestView {
 

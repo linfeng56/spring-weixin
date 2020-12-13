@@ -4,7 +4,6 @@ import com.github.linfeng.view.base.BaseResponseView;
 
 /**
  * @author 黄麟峰
- * @date 2020-12-03
  */
 public class UserInfoResponseView extends BaseResponseView {
 

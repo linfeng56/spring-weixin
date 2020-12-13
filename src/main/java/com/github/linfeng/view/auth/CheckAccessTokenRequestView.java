@@ -8,7 +8,6 @@ import java.util.Map;
  * 检验授权凭证（access_token）是否有效.
  *
  * @author 黄麟峰
- * @date 2020-12-03
  */
 public class CheckAccessTokenRequestView extends BaseRequestView {
 

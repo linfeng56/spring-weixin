@@ -8,7 +8,6 @@ import java.util.Map;
  * 微信用户基本信息请求.
  *
  * @author 黄麟峰
- * @date 2020-12-03
  */
 public class UserInfoRequestView extends BaseRequestView {
 

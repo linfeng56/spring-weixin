@@ -4,7 +4,6 @@ package com.github.linfeng.view.base;
  * 基础类
  *
  * @author 黄麟峰
- * @date 2020-12-01 13:46
  */
 public abstract class BaseView {
 

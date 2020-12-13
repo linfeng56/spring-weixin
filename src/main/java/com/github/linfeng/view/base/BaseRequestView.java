@@ -6,7 +6,6 @@ import java.util.Map;
  * 请求基础类
  *
  * @author 黄麟峰
- * @date 2020-12-01 13:53
  */
 public abstract class BaseRequestView extends BaseView {
 

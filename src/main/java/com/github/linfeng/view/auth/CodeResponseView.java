@@ -6,7 +6,6 @@ import com.github.linfeng.view.base.BaseResponseView;
  * 用户同意授权，获取code
  *
  * @author 黄麟峰
- * @date 2020-12-01 14:02
  */
 public class CodeResponseView extends BaseResponseView {
 

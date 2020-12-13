@@ -8,7 +8,6 @@ import java.util.Map;
  * 用户同意授权，获取code
  *
  * @author 黄麟峰
- * @date 2020-12-01 13:49
  */
 public class CodeRequestView extends BaseRequestView {
 
