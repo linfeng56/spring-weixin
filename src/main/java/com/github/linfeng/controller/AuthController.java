@@ -4,13 +4,22 @@ import com.github.linfeng.config.WeiXinConfig;
 import com.github.linfeng.model.User;
 import com.github.linfeng.service.UserService;
 import com.github.linfeng.utils.HttpClientUtils;
-import com.github.linfeng.view.*;
+import com.github.linfeng.view.auth.AccessTokenRequestView;
+import com.github.linfeng.view.auth.AccessTokenResponseView;
+import com.github.linfeng.view.auth.CheckAccessTokenRequestView;
+import com.github.linfeng.view.auth.CheckAccessTokenResponseView;
+import com.github.linfeng.view.auth.CodeRequestView;
+import com.github.linfeng.view.auth.CodeResponseView;
+import com.github.linfeng.view.auth.RefreshTokenRequestView;
+import com.github.linfeng.view.auth.UserInfoRequestView;
+import com.github.linfeng.view.auth.UserInfoResponseView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -84,6 +93,7 @@ public class AuthController {
      * @return 页面
      */
     @RequestMapping("/receive-code")
+    @ResponseBody
     public String receiveCode(HttpServletRequest request, Model model) {
         // 如果用户同意授权，页面将跳转至 redirect_uri/?code=CODE&state=STATE。
         // code说明 ： code作为换取access_token的票据，每次用户授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期。
@@ -116,7 +126,8 @@ public class AuthController {
                 accessTokenResponseView.getScope());
         }
         // return "auth/receive-code";
-        return "redirect:/get-user-info";
+        // return "redirect:/get-user-info";
+        return result;
     }
 
     /**

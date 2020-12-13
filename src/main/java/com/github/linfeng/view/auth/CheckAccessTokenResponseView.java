@@ -1,4 +1,6 @@
-package com.github.linfeng.view;
+package com.github.linfeng.view.auth;
+
+import com.github.linfeng.view.base.BaseResponseView;
 
 /**
  * 检验授权凭证（access_token）是否有效.

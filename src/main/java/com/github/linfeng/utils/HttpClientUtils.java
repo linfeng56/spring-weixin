@@ -73,6 +73,8 @@ public class HttpClientUtils {
                 System.out.println(response.getStatusLine());
                 ret = EntityUtils.toString(entity, StandardCharsets.UTF_8);
                 EntityUtils.consume(entity);
+
+                System.out.println("执行返回：" + ret);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
             } catch (IOException e) {

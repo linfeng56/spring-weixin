@@ -1,4 +1,4 @@
-package com.github.linfeng.view;
+package com.github.linfeng.view.base;
 
 /**
  * 基础类

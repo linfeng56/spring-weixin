@@ -1,4 +1,4 @@
-package com.github.linfeng.view;
+package com.github.linfeng.view.base;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -12,10 +12,12 @@ import com.alibaba.fastjson.JSONObject;
 public abstract class BaseResponseView {
 
     public BaseResponseView(String json) {
-        this.json = JSON.parseObject(json);
-        if (this.json.containsKey("errcode")) {
-            errCode = this.json.getString("errcode");
-            errMsg = this.json.getString("errmsg");
+        if (null != json && !"".equals(json)) {
+            this.json = JSON.parseObject(json);
+            if (this.json.containsKey("errcode")) {
+                errCode = this.json.getString("errcode");
+                errMsg = this.json.getString("errmsg");
+            }
         }
     }
 

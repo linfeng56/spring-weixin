@@ -1,4 +1,6 @@
-package com.github.linfeng.view;
+package com.github.linfeng.view.auth;
+
+import com.github.linfeng.view.base.BaseResponseView;
 
 /**
  * 用户同意授权，获取code
@@ -35,6 +37,6 @@ public class CodeResponseView extends BaseResponseView {
     }
 
     public void setState(String state) {
-        this.state = state;
+        this.state = null == state ? "" : state;
     }
 }

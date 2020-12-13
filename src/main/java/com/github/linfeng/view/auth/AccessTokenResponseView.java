@@ -1,4 +1,6 @@
-package com.github.linfeng.view;
+package com.github.linfeng.view.auth;
+
+import com.github.linfeng.view.base.BaseResponseView;
 
 /**
  * Access Token 请求结果
