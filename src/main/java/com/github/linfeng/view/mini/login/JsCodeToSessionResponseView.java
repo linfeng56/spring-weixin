@@ -47,7 +47,7 @@ public class JsCodeToSessionResponseView extends BaseResponseView {
 
     public JsCodeToSessionResponseView(String json) {
         super(json);
-        if ("0".equals(getErrCode())) {
+        if ("0".equals(getErrCode()) || "".equals(getErrCode())) {
             this.openId = this.json.getString("openid");
             this.sessionKey = this.json.getString("session_key");
             this.unionId = this.json.getString("unionid");

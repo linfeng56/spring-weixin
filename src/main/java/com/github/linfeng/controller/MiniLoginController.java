@@ -62,7 +62,7 @@ public class MiniLoginController {
      * @param model 模型属性
      * @return 页面路径
      */
-    @RequestMapping("/wx-login")
+    @RequestMapping(value = "/wx-login", produces = "text/plain;charset=utf-8")
     @ResponseBody
     public String getCode(HttpServletRequest request, Model model) {
         // 文档:
