@@ -6,11 +6,16 @@
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
+    <view wx:for="{{userList}}" wx:key="id" wx:for-index="idx">
+      <block>
+        <text class="userinfo-nickname">{{idx}}:{{item.nickName}}-{{item.sex}}</text>
+      </block>
+    </view>
   </view>
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
   </view>
   <view class="usermotto">
-    <navigator url="../list/list">列表</navigator>
+    <navigator url="../index/index">首页</navigator>
   </view>
 </view>
