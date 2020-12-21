@@ -8,7 +8,7 @@
     </block>
     <view wx:for="{{userList}}" wx:key="id" wx:for-index="idx">
       <block>
-        <text class="userinfo-nickname">{{idx}}:{{item.nickName}}-{{item.sex}}</text>
+        <text class="userinfo-nickname">{{idx}}:{{item.nickName}}-{{item.phone}}</text>
       </block>
     </view>
   </view>

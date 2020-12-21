@@ -46,9 +46,10 @@ Page({
     wx.request({
       url: 'http://localhost:8080/api/mini/user/list',
     success: res => {
-      if('success'==res.status){
+      console.info(res.data);
+      if('success'==res.data.status){
         this.setData({
-          userList:res.userList
+          userList:res.data.userList
         });
       }
     }
