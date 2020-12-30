@@ -10,7 +10,7 @@
        default-lazy-init="true">
 
     <!-- MyBatis配置 -->
-    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <bean id="sessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="typeAliasesPackage" value="com.github.linfeng.model"/>
         <property name="mapperLocations" value="classpath*:/mapping/*Mapper.xml"/>
@@ -19,7 +19,7 @@
     <!-- 扫描@Repository标识的 接口-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
-        <property name="basePackage" value="com.github.linfeng.dao"/>
+        <property name="basePackage" value="com.baomidou.mybatisplus.samples.quickstart.mapper"/>
         <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
     </bean>
 
