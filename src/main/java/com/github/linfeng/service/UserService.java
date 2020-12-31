@@ -1,8 +1,7 @@
 package com.github.linfeng.service;
 
 import java.util.List;
-import com.github.linfeng.dao.UserDao;
-import com.github.linfeng.model.User;
+import com.github.linfeng.entity.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,20 +15,14 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    private UserDao userDao;
+    private IUsersService service;
 
-    public List<User> getAllUsers() {
-        return userDao.selectAllUser();
+    public List<Users> list() {
+        return service.list();
     }
 
-    /**
-     * 获取用户基本信息
-     *
-     * @param id 用户编号
-     * @return 用户基本信息
-     */
-    public User getUser(Integer id) {
-        return userDao.selectUserById(id);
+    public Users getById(Integer id) {
+        return service.getById(id);
     }
 
     /**

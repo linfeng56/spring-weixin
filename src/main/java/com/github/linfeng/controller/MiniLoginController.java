@@ -1,11 +1,15 @@
 package com.github.linfeng.controller;
 
+import java.util.Map;
+import java.util.TreeMap;
+import javax.servlet.http.HttpServletRequest;
 import com.alibaba.fastjson.JSONObject;
 import com.github.linfeng.config.WeiXinConfig;
 import com.github.linfeng.service.UserService;
 import com.github.linfeng.utils.HttpClientUtils;
 import com.github.linfeng.view.mini.login.JsCodeToSessionRequestView;
 import com.github.linfeng.view.mini.login.JsCodeToSessionResponseView;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * 小程序登录控制器.
@@ -85,7 +85,7 @@ public class MiniLoginController {
             ret.put("status", "success");
             ret.put("login", "true");
             // TODO:修改成具体的登录标识
-            ret.put("loginKey", userService.getUser(1).getId().toString());
+            ret.put("loginKey", userService.getById(1).getUid().toString());
             ret.put("openId", responseView.getOpenId());
             ret.put("sessionKey", responseView.getSessionKey());
             ret.put("unionId", responseView.getUnionId());
