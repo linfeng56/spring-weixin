@@ -22,7 +22,6 @@ import ${superControllerClassPackage};
  * ${table.comment!} 前端控制器.
  *
  * @author ${author}
- * @since ${date}
  */
 <#if restControllerStyle>
 @RestController
