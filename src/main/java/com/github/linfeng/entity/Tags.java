@@ -9,7 +9,6 @@ import java.io.Serializable;
  * 标签.
  *
  * @author 黄麟峰
- * @since 2020-12-30
  */
 @TableName("spwx_tags")
 public class Tags implements Serializable {

@@ -10,7 +10,6 @@ import java.io.Serializable;
  * 用户信息.
  *
  * @author 黄麟峰
- * @since 2020-12-30
  */
 @TableName("spwx_users")
 public class Users implements Serializable {

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
  * 标签 服务实现类.
  *
  * @author 黄麟峰
- * @since 2020-12-30
  */
 @Service
 public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements ITagsService {

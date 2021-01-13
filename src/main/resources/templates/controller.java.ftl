@@ -5,9 +5,16 @@ package ${package.Controller};
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 <#else>
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.alibaba.fastjson.JSONObject;
+import com.github.linfeng.entity.${entity};
+import com.github.linfeng.service.${table.serviceName};
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +45,9 @@ public class ${table.controllerName} extends ${superControllerClass} {
 public class ${table.controllerName} {
 </#if>
 
+    @Autowired
+    private ${table.serviceName} service;
+
     @RequestMapping("/index")
     @ResponseBody
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -48,7 +58,18 @@ public class ${table.controllerName} {
     @RequestMapping("/list")
     @ResponseBody
     public String list(Model model, HttpServletRequest request, HttpServletResponse response) {
-        return "list";
+        Map<String, Object> ret = new HashMap<>(6);
+        List<${entity}> list = service.list();
+        if (null != list) {
+            ret.put("retCode", "success");
+            ret.put("errMsg", "success");
+            ret.put("data", list);
+
+        } else {
+            ret.put("retCode", "fail");
+            ret.put("errMsg", "list is null");
+        }
+        return JSONObject.toJSONString(ret);
     }
 
 
@@ -56,7 +77,22 @@ public class ${table.controllerName} {
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
         HttpServletResponse response) {
-        return "detail" + id;
+        Map<String, Object> ret = new HashMap<>(6);
+        if (null == id || id <= 0) {
+            ret.put("retCode", "fail");
+            ret.put("errMsg", "error id");
+            return JSONObject.toJSONString(ret);
+        }
+        ${entity} info = service.getById(id);
+        if (null != info) {
+            ret.put("retCode", "success");
+            ret.put("errMsg", "success");
+            ret.put("data", info);
+        } else {
+            ret.put("retCode", "fail");
+            ret.put("errMsg", "not exists id:[" + id + "]");
+        }
+        return JSONObject.toJSONString(ret);
     }
 }
 </#if>

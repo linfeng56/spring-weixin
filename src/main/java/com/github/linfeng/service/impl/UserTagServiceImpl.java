@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
  * 用户标签 服务实现类.
  *
  * @author 黄麟峰
- * @since 2020-12-30
  */
 @Service
 public class UserTagServiceImpl extends ServiceImpl<UserTagMapper, UserTag> implements IUserTagService {

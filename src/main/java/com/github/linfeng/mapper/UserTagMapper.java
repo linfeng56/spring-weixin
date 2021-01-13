@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
  * 用户标签 Mapper 接口.
  *
  * @author 黄麟峰
- * @since 2020-12-30
  */
 @Repository
 public interface UserTagMapper extends BaseMapper<UserTag> {
