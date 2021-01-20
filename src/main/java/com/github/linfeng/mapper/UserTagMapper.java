@@ -1,7 +1,7 @@
 package com.github.linfeng.mapper;
 
-import com.github.linfeng.entity.UserTag;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.linfeng.entity.UserTag;
 
 import org.springframework.stereotype.Repository;
 

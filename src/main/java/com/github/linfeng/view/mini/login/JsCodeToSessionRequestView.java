@@ -1,8 +1,7 @@
 package com.github.linfeng.view.mini.login;
 
-import com.github.linfeng.view.base.BaseRequestView;
-
 import java.util.Map;
+import com.github.linfeng.view.base.BaseRequestView;
 
 /**
  * 获取传话密钥

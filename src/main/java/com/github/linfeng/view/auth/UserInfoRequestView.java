@@ -1,8 +1,7 @@
 package com.github.linfeng.view.auth;
 
-import com.github.linfeng.view.base.BaseRequestView;
-
 import java.util.Map;
+import com.github.linfeng.view.base.BaseRequestView;
 
 /**
  * 微信用户基本信息请求.

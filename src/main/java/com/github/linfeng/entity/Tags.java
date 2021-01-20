@@ -1,9 +1,9 @@
 package com.github.linfeng.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 标签.
@@ -43,6 +43,7 @@ public class Tags implements Serializable {
     public void setTagId(Integer tagId) {
         this.tagId = tagId;
     }
+
     public String getTagName() {
         return tagName;
     }
@@ -50,6 +51,7 @@ public class Tags implements Serializable {
     public void setTagName(String tagName) {
         this.tagName = tagName;
     }
+
     public Integer getRelNum() {
         return relNum;
     }
@@ -57,6 +59,7 @@ public class Tags implements Serializable {
     public void setRelNum(Integer relNum) {
         this.relNum = relNum;
     }
+
     public Integer getCreateTime() {
         return createTime;
     }
@@ -72,6 +75,6 @@ public class Tags implements Serializable {
             ", tagName=" + tagName +
             ", relNum=" + relNum +
             ", createTime=" + createTime +
-        "}";
+            "}";
     }
 }

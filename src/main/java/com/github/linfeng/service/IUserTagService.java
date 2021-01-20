@@ -1,7 +1,7 @@
 package com.github.linfeng.service;
 
-import com.github.linfeng.entity.UserTag;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.linfeng.entity.UserTag;
 
 /**
  * 用户标签 服务类.

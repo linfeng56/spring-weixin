@@ -1,8 +1,7 @@
 package com.github.linfeng.view.auth;
 
-import com.github.linfeng.view.base.BaseRequestView;
-
 import java.util.Map;
+import com.github.linfeng.view.base.BaseRequestView;
 
 /**
  * access token请求

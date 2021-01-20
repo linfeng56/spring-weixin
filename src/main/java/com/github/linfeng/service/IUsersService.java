@@ -1,7 +1,7 @@
 package com.github.linfeng.service;
 
-import com.github.linfeng.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.linfeng.entity.Users;
 
 /**
  * 用户信息 服务类.

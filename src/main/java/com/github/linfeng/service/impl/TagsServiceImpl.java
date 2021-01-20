@@ -1,9 +1,10 @@
 package com.github.linfeng.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.linfeng.entity.Tags;
 import com.github.linfeng.mapper.TagsMapper;
 import com.github.linfeng.service.ITagsService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
 import org.springframework.stereotype.Service;
 
 /**

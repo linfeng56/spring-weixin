@@ -1,5 +1,12 @@
 package com.github.linfeng.utils;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import javax.net.ssl.SSLContext;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -9,13 +16,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
-
-import javax.net.ssl.SSLContext;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
 /**
  * Http请求工具类
@@ -63,7 +63,6 @@ public class HttpClientUtils {
             HttpGet httpget = new HttpGet(url);
 
             System.out.println("执行请求：" + httpget.getRequestLine());
-
 
             try (CloseableHttpResponse response = httpclient.execute(httpget)) {
                 HttpEntity entity = response.getEntity();

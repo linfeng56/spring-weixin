@@ -8,6 +8,7 @@ import com.github.linfeng.view.base.BaseResponseView;
  * @author 黄麟峰
  */
 public class JsCodeToSessionResponseView extends BaseResponseView {
+
     /**
      * 用户唯一标识
      */

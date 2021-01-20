@@ -1,9 +1,10 @@
 package com.github.linfeng.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.linfeng.entity.UserTag;
 import com.github.linfeng.mapper.UserTagMapper;
 import com.github.linfeng.service.IUserTagService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
 import org.springframework.stereotype.Service;
 
 /**
