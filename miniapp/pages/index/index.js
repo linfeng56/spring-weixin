@@ -51,5 +51,11 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
+  },
+  jump:function(){
+    console.log("点击页面跳转测试");
+    wx.navigateTo({
+      url: '../navTo/index'
+    })
   }
 })

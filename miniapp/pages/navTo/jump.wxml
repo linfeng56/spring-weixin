@@ -1,0 +1,10 @@
+<!--pages/navTo/jump.wxml-->
+<text>pages/navTo/jump.wxml</text>
+
+<view>
+  <button bindtap="toIndex">回到首页</button>
+</view>
+<view>
+  <button bindtap="toBack">回到上一页</button>
+</view>
+

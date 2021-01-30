@@ -13,4 +13,7 @@
   <view class="usermotto">
     <navigator url="../list/list">列表</navigator>
   </view>
+  <view>
+    <button bindtap="jump">页面跳转测试</button>
+  </view>
 </view>

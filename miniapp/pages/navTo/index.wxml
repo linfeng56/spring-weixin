@@ -1,0 +1,9 @@
+<!--pages/navTo/index.wxml-->
+<text>pages/navTo/index.wxml</text>
+
+<view>
+  <button bindtap="toIndex">回到首页</button>
+</view>
+<view>
+  <button bindtap="jump">测试页面间事件通信</button>
+</view>
