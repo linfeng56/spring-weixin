@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/logs/logs",
     "pages/navTo/index",
-    "pages/navTo/jump"
+    "pages/navTo/jump",
+    "pages/dialog/index"
   ],
   "tabBar": {
     "custom": true,
@@ -17,6 +18,12 @@
         "iconPath": "image/icon_component.png",
         "selectedIconPath": "image/icon_component_HL.png",
         "text": "首页"
+      },
+      {
+        "pagePath": "pages/dialog/index",
+        "iconPath": "image/icon_API.png",
+        "selectedIconPath": "image/icon_API_HL.png",
+        "text": "弹框测试"
       },
       {
         "pagePath": "pages/navTo/index",

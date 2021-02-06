@@ -54,20 +54,10 @@ Page({
   },
   jump:function(){
     console.log("点击页面跳转测试");
-    wx.navigateTo({
+    wx.switchTab({
       url: '../navTo/index'
     })
   }
 });
-Component({
-  pageLifetimes: {
-    show() {
-      if (typeof this.getTabBar === 'function' &&
-        this.getTabBar()) {
-        this.getTabBar().setData({
-          selected: 0
-        })
-      }
-    }
-  }
-})
+
+

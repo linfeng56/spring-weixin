@@ -9,6 +9,11 @@ Component({
       selectedIconPath: "/image/icon_component_HL.png",
       text: "首页"
     }, {
+      pagePath: "/pages/dialog/index",
+      iconPath: "/image/icon_API.png",
+      selectedIconPath: "/image/icon_API_HL.png",
+      text: "弹框测试"
+    }, {
       pagePath: "/pages/navTo/index",
       iconPath: "/image/icon_API.png",
       selectedIconPath: "/image/icon_API_HL.png",
