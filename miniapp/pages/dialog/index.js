@@ -12,7 +12,18 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    wx.showNavigationBarLoading()
+    wx.setNavigationBarTitle({
+      title: '弹窗测试'
+    })
+    wx.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#0000ff',
+      animation: {
+        duration: 400,
+        timingFunc: 'easeIn'
+      }
+    })
   },
 
   /**
@@ -27,7 +38,7 @@ Page({
    */
   onShow: function () {
 
-  },
+    },
 
   /**
    * 生命周期函数--监听页面隐藏
@@ -103,5 +114,8 @@ Page({
         console.log(res.errMsg)
       }
     })
+  },
+  hideLoading:function(){
+    wx.hideNavigationBarLoading()
   }
 })

@@ -13,3 +13,6 @@
 <view>
   <button bindtap="showMsg04">显示操作菜单</button>
 </view>
+<view>
+  <button bindtap="hideLoading">加载完成</button>
+</view>
