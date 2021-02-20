@@ -14,6 +14,11 @@ Component({
       selectedIconPath: "/image/icon_API_HL.png",
       text: "弹框测试"
     }, {
+      pagePath: "/pages/bg/index",
+      iconPath: "/image/icon_API.png",
+      selectedIconPath: "/image/icon_API_HL.png",
+      text: "背景测试"
+    }, {
       pagePath: "/pages/navTo/index",
       iconPath: "/image/icon_API.png",
       selectedIconPath: "/image/icon_API_HL.png",

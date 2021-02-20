@@ -1,0 +1,9 @@
+<!--pages/bg/index.wxml-->
+<text>pages/bg/index.wxml 背景示例</text>
+
+<view>
+  <button bindtap="bgTextStyle">设置背景文字样式</button>
+</view>
+<view>
+  <button bindtap="bgColor">窗口背景色</button>
+</view>

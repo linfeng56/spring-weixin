@@ -4,7 +4,8 @@
     "pages/logs/logs",
     "pages/navTo/index",
     "pages/navTo/jump",
-    "pages/dialog/index"
+    "pages/dialog/index",
+    "pages/bg/index"
   ],
   "tabBar": {
     "custom": true,
@@ -24,6 +25,12 @@
         "iconPath": "image/icon_API.png",
         "selectedIconPath": "image/icon_API_HL.png",
         "text": "弹框测试"
+      },
+      {
+        "pagePath": "pages/bg/index",
+        "iconPath": "image/icon_API.png",
+        "selectedIconPath": "image/icon_API_HL.png",
+        "text": "背景测试"
       },
       {
         "pagePath": "pages/navTo/index",
