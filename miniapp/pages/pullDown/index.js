@@ -5,7 +5,25 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    list:[{
+      color:"#00CED1",
+      text:"内容一"
+    },{
+      color:"#4169E1",
+      text:"内容二"
+    },{
+      color:"#CD5C5C",
+      text:"内容三"
+    },{
+      color:"#D2691E",
+      text:"内容四"
+    },{
+      color:"#CD2626",
+      text:"内容五"
+    },{
+      color:"#8B3626",
+      text:"内容六"
+    },]
   },
 
   /**
@@ -63,15 +81,27 @@ Page({
   onShareAppMessage: function () {
 
   },
-  startPull:function(){
+  startPull: function(){
     // 在开发者工具里没有效果,真机有效果
     wx.startPullDownRefresh({
       success: (res) => {console.log(res)},
     })
   },
-  stopPull:function(){
+  stopPull: function(){
     wx.stopPullDownRefresh({
       success: (res) => {console.log(res)},
+    })
+  },
+  testScrollTo01:function(){
+    wx.pageScrollTo({
+      scrollTop:68,
+      duration: 300,
+    })
+  },
+  testScrollTo02:function(){
+    wx.pageScrollTo({
+      duration: 300,
+      selector: ".p_1"
     })
   }
 })
