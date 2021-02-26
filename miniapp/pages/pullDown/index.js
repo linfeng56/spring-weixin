@@ -103,5 +103,11 @@ Page({
       duration: 300,
       selector: ".p_1"
     })
+  },
+  testTopBar:function(){
+    // 只有当前小程序被置顶时能生效，如果当前小程序没有被置顶，也能调用成功，但是不会立即生效
+    wx.setTopBarText({
+      text: '小程序测试示例!'
+    })
   }
 })
