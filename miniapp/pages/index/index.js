@@ -57,6 +57,12 @@ Page({
     wx.switchTab({
       url: '../navTo/index'
     })
+  },
+  toMap:function(){
+    console.log("测试地图")
+    wx.navigateTo({
+      url: '/pages/map/index',
+    })
   }
 });
 

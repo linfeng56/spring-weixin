@@ -6,7 +6,8 @@
     "pages/navTo/jump",
     "pages/dialog/index",
     "pages/bg/index",
-    "pages/pullDown/index"
+    "pages/pullDown/index",
+    "pages/map/index"
   ],
   "tabBar": {
     "custom": true,

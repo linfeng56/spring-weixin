@@ -1,0 +1,14 @@
+<!--pages/map/index.wxml-->
+<text>pages/map/index.wxml</text>
+<map id="testMap" style="width:680rpx; height:260rpx;"
+latitude="{{latitude}}"
+longitude="{{longitude}}"
+markers="{{markers}}"
+show-location></map>
+<button bindtap="getCenterLocation" type="primary">中心的经纬度</button>
+<button bindtap="moveToLocation" type="primary">移动到当前定位点</button>
+<button bindtap="translateMarker" type="primary">平移marker</button>
+<button bindtap="includePoints" type="primary">缩放</button>
+<button bindtap="scaleClick" type="primary">当前缩放级别</button>
+<button bindtap="getRegionClick" type="primary">当前视野范围</button>
+

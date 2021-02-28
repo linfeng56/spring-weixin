@@ -16,4 +16,7 @@
   <view>
     <button bindtap="jump">页面跳转测试</button>
   </view>
+  <view style="padding-top:1rpx">
+    <button type="primary" bindtap="toMap">地图测试</button>
+  </view>
 </view>
