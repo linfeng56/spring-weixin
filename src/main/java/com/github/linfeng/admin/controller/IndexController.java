@@ -1,8 +1,9 @@
 package com.github.linfeng.admin.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import com.github.linfeng.admin.view.AdminUser;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -14,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IndexController extends AdminBaseController {
 
     @RequestMapping("/index")
-    public String index(HttpServletRequest request) {
-        checkLogin();
+    public String index(Model model) {
+        AdminUser adminUser = new AdminUser();
+        if (!checkLogin(adminUser)) {
+            return "redirect:/admin/login/index";
+        }
+        model.addAttribute("admin", adminUser);
 
         return "admin/index/index";
     }
