@@ -1,8 +1,9 @@
 package com.github.linfeng.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import java.util.List;
 import com.github.linfeng.entity.UserTag;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Repository;
  * @author 黄麟峰
  */
 @Repository
-public interface UserTagMapper extends BaseMapper<UserTag> {
+public interface UserTagMapper {
 
+    List<UserTag> list();
+
+    UserTag getById(@Param("id") Integer id);
 }

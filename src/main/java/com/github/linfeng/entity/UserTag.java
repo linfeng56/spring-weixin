@@ -1,14 +1,12 @@
 package com.github.linfeng.entity;
 
 import java.io.Serializable;
-import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 用户标签.
  *
  * @author 黄麟峰
  */
-@TableName("spwx_user_tag")
 public class UserTag implements Serializable {
 
     private static final long serialVersionUID = 1L;

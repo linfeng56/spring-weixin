@@ -1,6 +1,6 @@
 package com.github.linfeng.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 import com.github.linfeng.entity.Users;
 
 /**
@@ -8,6 +8,9 @@ import com.github.linfeng.entity.Users;
  *
  * @author 黄麟峰
  */
-public interface IUsersService extends IService<Users> {
+public interface IUsersService {
 
+    List<Users> list();
+
+    Users getById(Integer id);
 }

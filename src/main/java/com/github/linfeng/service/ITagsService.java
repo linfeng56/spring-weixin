@@ -1,6 +1,6 @@
 package com.github.linfeng.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 import com.github.linfeng.entity.Tags;
 
 /**
@@ -8,6 +8,9 @@ import com.github.linfeng.entity.Tags;
  *
  * @author 黄麟峰
  */
-public interface ITagsService extends IService<Tags> {
+public interface ITagsService {
 
+    List<Tags> list();
+
+    Tags getById(Integer id);
 }

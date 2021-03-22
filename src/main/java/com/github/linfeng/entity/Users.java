@@ -2,16 +2,12 @@ package com.github.linfeng.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 用户信息.
  *
  * @author 黄麟峰
  */
-@TableName("spwx_users")
 public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -19,7 +15,6 @@ public class Users implements Serializable {
     /**
      * 用户编号
      */
-    @TableId(value = "uid", type = IdType.AUTO)
     private Integer uid;
 
     /**

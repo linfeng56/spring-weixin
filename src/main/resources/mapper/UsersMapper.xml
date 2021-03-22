@@ -37,4 +37,10 @@
         uid, user_name, nick_name, pwd, scores, openid, access_token, access_token_expire, refresh_token, wechat, phone, birthday, sex, stature, weight, domicile, native_place, marital_status, education, profession, narrate, family, interest, want_style, why_single, yearning_life
     </sql>
 
+    <select id="getById" resultType="com.github.linfeng.entity.Users" parameterType="integer">
+        select * from spwx_users where uid=#{uid,jdbcType=INTEGER}
+    </select>
+    <select id="list" resultType="com.github.linfeng.entity.Users">
+        select * from spwx_users
+    </select>
 </mapper>

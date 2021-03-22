@@ -1,6 +1,6 @@
 package com.github.linfeng.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 import com.github.linfeng.entity.UserTag;
 
 /**
@@ -8,6 +8,9 @@ import com.github.linfeng.entity.UserTag;
  *
  * @author 黄麟峰
  */
-public interface IUserTagService extends IService<UserTag> {
+public interface IUserTagService {
 
+    List<UserTag> list();
+
+    UserTag getById(Integer id);
 }

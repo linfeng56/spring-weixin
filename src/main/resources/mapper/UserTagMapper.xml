@@ -14,5 +14,11 @@
     <sql id="Base_Column_List">
         uid, tag_id, tag_name, bind_time
     </sql>
+  <select id="list" resultType="com.github.linfeng.entity.UserTag">
+      select * from spwx_user_tag;
+  </select>
+    <select id="getById" resultType="com.github.linfeng.entity.UserTag">
+        select * from spwx_user_tag where tag_id=#{id};
+    </select>
 
 </mapper>

@@ -1,16 +1,12 @@
 package com.github.linfeng.entity;
 
 import java.io.Serializable;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 标签.
  *
  * @author 黄麟峰
  */
-@TableName("spwx_tags")
 public class Tags implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -18,7 +14,6 @@ public class Tags implements Serializable {
     /**
      * 标签编号
      */
-    @TableId(value = "tag_id", type = IdType.AUTO)
     private Integer tagId;
 
     /**

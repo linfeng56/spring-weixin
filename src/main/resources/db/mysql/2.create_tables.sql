@@ -3,6 +3,56 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
+-- Table structure for spwx_plan_items
+-- ----------------------------
+DROP TABLE IF EXISTS `spwx_plan_items`;
+CREATE TABLE `spwx_plan_items`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` int(10) UNSIGNED NOT NULL COMMENT '用户编号',
+  `job_type` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '类型:1需求,2任务,3bug,4文档,5其他',
+  `job_num` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '工作编号',
+  `title` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '工作名称',
+  `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '工作内容',
+  `begin_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '开始日期',
+  `end_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '完成日期',
+  `job_finish_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '整体完成日期',
+  `remarks` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '备注',
+  `create_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建时间',
+  `edit_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '最后编辑时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for spwx_plan_users
+-- ----------------------------
+DROP TABLE IF EXISTS `spwx_plan_users`;
+CREATE TABLE `spwx_plan_users`  (
+  `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户编号',
+  `login_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户登录名',
+  `login_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '登录密码',
+  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户名',
+  `create_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建时间',
+  `login_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '登录时间',
+  PRIMARY KEY (`user_id`) USING BTREE,
+  UNIQUE INDEX `login_name`(`login_name`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for spwx_plan_weeks
+-- ----------------------------
+DROP TABLE IF EXISTS `spwx_plan_weeks`;
+CREATE TABLE `spwx_plan_weeks`  (
+  `week_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` int(10) UNSIGNED NOT NULL COMMENT '用户编号',
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '标题',
+  `remarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '备注',
+  `begin_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '开始日期',
+  `end_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '截止日期',
+  `create_date` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '创建时间',
+  PRIMARY KEY (`week_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
 -- Table structure for spwx_tags
 -- ----------------------------
 DROP TABLE IF EXISTS `spwx_tags`;

@@ -7,6 +7,7 @@ package com.github.linfeng.admin.view;
  * @date 2021-03-19 23:54
  */
 public class AdminUser {
+
     /**
      * 用户编号
      */
