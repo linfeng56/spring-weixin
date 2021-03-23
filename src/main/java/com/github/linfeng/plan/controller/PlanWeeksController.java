@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
+import com.github.linfeng.plan.entity.PlanUsers;
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.service.IPlanWeeksService;
 
@@ -23,34 +24,35 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author 黄麟峰
  */
 @Controller
-@RequestMapping("/plan-weeks")
-public class PlanWeeksController {
+@RequestMapping("/plan/weeks")
+public class PlanWeeksController extends PlanBaseController {
 
     @Autowired
     private IPlanWeeksService service;
 
     @RequestMapping("/index")
-    @ResponseBody
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
-        return "index";
+        PlanUsers planUser = new PlanUsers();
+        if (!checkLogin(planUser)) {
+            return "redirect:/plan/login/index";
+        }
+        model.addAttribute("admin", planUser);
+        return "plan/weeks/index";
     }
 
 
     @RequestMapping("/list")
-    @ResponseBody
     public String list(Model model, HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> ret = new HashMap<>(6);
-        List<PlanWeeks> list = service.list();
-        if (null != list) {
-            ret.put("retCode", "success");
-            ret.put("errMsg", "success");
-            ret.put("data", list);
-
-        } else {
-            ret.put("retCode", "fail");
-            ret.put("errMsg", "list is null");
+        PlanUsers planUser = new PlanUsers();
+        if (!checkLogin(planUser)) {
+            return "redirect:/plan/login/index";
         }
-        return JSONObject.toJSONString(ret);
+        model.addAttribute("admin", planUser);
+
+        List<PlanWeeks> list = service.list();
+        model.addAttribute("weeks", list);
+
+        return "plan/weeks/list";
     }
 
 

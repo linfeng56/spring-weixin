@@ -16,11 +16,17 @@
     <sql id="Base_Column_List">
         user_id, login_name, login_password, user_name, create_date, login_date
     </sql>
-  <select id="list" resultType="com.github.linfeng.plan.entity.PlanUsers">
+  <update id="updateLoginDate">
+      update spwx_plan_users set login_date=#{loginDate} where user_id=#{userId};
+  </update>
+    <select id="list" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanUsers">
       select * from spwx_plan_users;
-  </select>
-    <select id="getById" resultType="com.github.linfeng.plan.entity.PlanUsers">
-        select * from spwx_plan_users where id=#{id};
     </select>
+    <select id="getById" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanUsers">
+        select * from spwx_plan_users where user_id=#{id};
+    </select>
+  <select id="getUserByLoginName" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanUsers">
+      select * from spwx_plan_users where login_name=#{loginName};
+  </select>
 
 </mapper>

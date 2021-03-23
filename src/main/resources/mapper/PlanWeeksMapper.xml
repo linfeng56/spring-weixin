@@ -17,10 +17,10 @@
     <sql id="Base_Column_List">
         week_id, user_id, title, remarks, begin_date, end_date, create_date
     </sql>
-  <select id="list" resultType="com.github.linfeng.plan.entity.PlanWeeks">
-      select * from spwx_plan_weeks;
+  <select id="list" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
+      select * from spwx_plan_weeks order by begin_date desc;
   </select>
-    <select id="getById" resultType="com.github.linfeng.plan.entity.PlanWeeks">
+    <select id="getById" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
         select * from spwx_plan_weeks where id=#{id};
     </select>
 

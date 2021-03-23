@@ -3,7 +3,7 @@ package com.github.linfeng.plan.controller;
 import javax.servlet.http.HttpServletRequest;
 import com.github.linfeng.plan.entity.PlanUsers;
 
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -25,7 +25,7 @@ public abstract class PlanBaseController {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
             .getRequest();
         Object user = request.getSession().getAttribute("planUser");
-        if (!StringUtils.isEmpty(user)) {
+        if (!ObjectUtils.isEmpty(user)) {
             planUser.setUserName(user.toString());
             return true;
         } else {

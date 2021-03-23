@@ -1,6 +1,14 @@
 package com.github.linfeng.plan.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import com.github.linfeng.admin.view.message.MessageType;
+import com.github.linfeng.admin.view.message.ViewMessage;
+import com.github.linfeng.plan.service.IPlanUsersService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -14,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/plan/login")
 public class PlanLoginController {
 
+    @Autowired
+    private IPlanUsersService planUsersService;
+
     /**
      * 登录页.
      *
@@ -23,5 +34,40 @@ public class PlanLoginController {
     public String index() {
 
         return "plan/login/login";
+    }
+
+
+    /**
+     * 登录处理.
+     *
+     * @return 成功则进入页, 失败则登录页
+     */
+    @RequestMapping(value = "doLogin", method = RequestMethod.POST)
+    public String doLogin(HttpServletRequest request, String loginName, String loginPwd, Integer remember,
+        Model model) {
+
+        ViewMessage msg = null;
+        if (!StringUtils.hasText(loginName)
+            || !StringUtils.hasText(loginPwd)) {
+            msg = new ViewMessage(MessageType.ERROR, "请求参数不正确", "用户名或密码为空");
+            model.addAttribute("msg", msg);
+            return "plan/login/login";
+        }
+        if (remember == null) {
+            remember = 0;
+        }
+
+        if (planUsersService.checkLogin(loginName, loginPwd)) {
+            msg = new ViewMessage(MessageType.SUCCESS, "登录成功", "登录成功", "plan/login/into",
+                request.getContextPath() + "/plan/weeks/index");
+            request.getSession().setAttribute("planUser", loginName);
+        } else {
+            msg = new ViewMessage(MessageType.SUCCESS, "登录失败", "用户名或密码错误", "plan/login/login");
+        }
+
+        model.addAttribute("remember", remember);
+        model.addAttribute("loginName", loginName);
+        model.addAttribute("msg", msg);
+        return msg.getViewPath();
     }
 }

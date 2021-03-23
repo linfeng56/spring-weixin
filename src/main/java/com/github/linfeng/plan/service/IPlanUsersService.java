@@ -13,4 +13,13 @@ public interface IPlanUsersService {
     List<PlanUsers> list();
 
     PlanUsers getById(Integer id);
+
+    /**
+     * 用户登录验证
+     *
+     * @param loginName 登录名
+     * @param loginPwd  登录密码
+     * @return true验证通过, false验证不通过.
+     */
+    boolean checkLogin(String loginName, String loginPwd);
 }

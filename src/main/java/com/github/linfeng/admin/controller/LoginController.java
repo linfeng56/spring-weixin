@@ -46,8 +46,8 @@ public class LoginController {
         Model model) {
 
         ViewMessage msg = null;
-        if (StringUtils.isEmpty(loginName)
-            || StringUtils.isEmpty(loginPwd)) {
+        if (StringUtils.hasText(loginName)
+            || StringUtils.hasText(loginPwd)) {
             msg = new ViewMessage(MessageType.ERROR, "请求参数不正确", "用户名或密码为空");
             model.addAttribute("msg", msg);
             return "admin/login/login";
