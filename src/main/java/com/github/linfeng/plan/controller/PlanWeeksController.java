@@ -1,6 +1,13 @@
 package com.github.linfeng.plan.controller;
 
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +21,7 @@ import com.github.linfeng.plan.service.IPlanWeeksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,7 +36,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class PlanWeeksController extends PlanBaseController {
 
     @Autowired
-    private IPlanWeeksService service;
+    private IPlanWeeksService weeksService;
+
 
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -49,10 +58,67 @@ public class PlanWeeksController extends PlanBaseController {
         }
         model.addAttribute("admin", planUser);
 
-        List<PlanWeeks> list = service.list();
+        List<PlanWeeks> list = weeksService.list();
         model.addAttribute("weeks", list);
 
         return "plan/weeks/list";
+    }
+
+
+    @RequestMapping("/add")
+    public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
+        PlanUsers planUser = new PlanUsers();
+        if (!checkLogin(planUser)) {
+            return "redirect:/plan/login/index";
+        }
+        model.addAttribute("admin", planUser);
+        return "plan/weeks/add";
+    }
+
+    @RequestMapping("/doAdd")
+    public String doAdd(Model model, String weekTitle, String weekBegin, String weekEnd, String remarks) {
+        PlanUsers planUser = new PlanUsers();
+        if (!checkLogin(planUser)) {
+            return "redirect:/plan/login/index";
+        }
+        model.addAttribute("admin", planUser);
+
+        List<String> errorMessage = new ArrayList<>(5);
+        if (!StringUtils.hasText(weekTitle)) {
+            errorMessage.add("标题不能为空!");
+        }
+        if (!StringUtils.hasText(weekBegin)) {
+            errorMessage.add("请选择开始日期!");
+        }
+        if (!StringUtils.hasText(weekEnd)) {
+            errorMessage.add("请选择截止日期!");
+        }
+        if (!errorMessage.isEmpty()) {
+            return "plan/weeks/add";
+        }
+        if (!StringUtils.hasText(remarks)) {
+            remarks = "";
+        }
+
+        PlanWeeks weeks = new PlanWeeks();
+        weeks.setTitle(weekTitle);
+        LocalDate beginDateIso = LocalDate.parse(weekBegin, DateTimeFormatter.ISO_DATE);
+        LocalDateTime beginDateTime = LocalDateTime.of(beginDateIso, LocalTime.of(0, 0));
+        Long beginEpoch = beginDateTime.toEpochSecond(ZoneOffset.of("+8"));
+
+        LocalDate endDateIso = LocalDate.parse(weekEnd, DateTimeFormatter.ISO_DATE);
+        LocalDateTime endDateTime = LocalDateTime.of(endDateIso, LocalTime.of(0, 0));
+        Long endEpoch = endDateTime.toEpochSecond(ZoneOffset.of("+8"));
+
+        weeks.setBeginDate(beginEpoch.intValue());
+        weeks.setEndDate(endEpoch.intValue());
+        weeks.setCreateDate(Math.toIntExact(Instant.now().getEpochSecond()));
+        weeks.setRemarks(remarks);
+
+        Integer weekId = weeksService.add(weeks);
+        model.addAttribute("weekId", weekId);
+
+        return "redirect:list";
     }
 
 
@@ -66,7 +132,7 @@ public class PlanWeeksController extends PlanBaseController {
             ret.put("errMsg", "error id");
             return JSONObject.toJSONString(ret);
         }
-        PlanWeeks info = service.getById(id);
+        PlanWeeks info = weeksService.getById(id);
         if (null != info) {
             ret.put("retCode", "success");
             ret.put("errMsg", "success");

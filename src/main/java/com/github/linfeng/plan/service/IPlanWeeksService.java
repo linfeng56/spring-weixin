@@ -13,4 +13,6 @@ public interface IPlanWeeksService {
     List<PlanWeeks> list();
 
     PlanWeeks getById(Integer id);
+
+    Integer add(PlanWeeks weeks);
 }

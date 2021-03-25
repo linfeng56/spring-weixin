@@ -17,4 +17,6 @@ public interface PlanWeeksMapper {
     List<PlanWeeks> list();
 
     PlanWeeks getById(@Param("id") Integer id);
+
+    Integer add(@Param("week") PlanWeeks weeks);
 }

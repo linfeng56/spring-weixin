@@ -28,4 +28,9 @@ public class PlanWeeksServiceImpl implements IPlanWeeksService {
     public PlanWeeks getById(Integer id) {
         return planWeeksMapper.getById(id);
     }
+
+    @Override
+    public Integer add(PlanWeeks weeks) {
+        return planWeeksMapper.add(weeks);
+    }
 }
