@@ -13,4 +13,6 @@ public interface IPlanItemsService {
     List<PlanItems> list();
 
     PlanItems getById(Integer id);
+
+    Integer add(PlanItems item);
 }

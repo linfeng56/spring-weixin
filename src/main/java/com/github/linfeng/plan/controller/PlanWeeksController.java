@@ -1,12 +1,6 @@
 package com.github.linfeng.plan.controller;
 
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.linfeng.plan.entity.PlanUsers;
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.service.IPlanWeeksService;
+import com.github.linfeng.utils.DateTimeUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -102,17 +97,12 @@ public class PlanWeeksController extends PlanBaseController {
 
         PlanWeeks weeks = new PlanWeeks();
         weeks.setTitle(weekTitle);
-        LocalDate beginDateIso = LocalDate.parse(weekBegin, DateTimeFormatter.ISO_DATE);
-        LocalDateTime beginDateTime = LocalDateTime.of(beginDateIso, LocalTime.of(0, 0));
-        Long beginEpoch = beginDateTime.toEpochSecond(ZoneOffset.of("+8"));
+        Long beginEpoch = DateTimeUtils.DateToLong(weekBegin);
+        Long endEpoch = DateTimeUtils.DateToLong(weekEnd);
 
-        LocalDate endDateIso = LocalDate.parse(weekEnd, DateTimeFormatter.ISO_DATE);
-        LocalDateTime endDateTime = LocalDateTime.of(endDateIso, LocalTime.of(0, 0));
-        Long endEpoch = endDateTime.toEpochSecond(ZoneOffset.of("+8"));
-
-        weeks.setBeginDate(beginEpoch.intValue());
-        weeks.setEndDate(endEpoch.intValue());
-        weeks.setCreateDate(Math.toIntExact(Instant.now().getEpochSecond()));
+        weeks.setBeginDate(beginEpoch);
+        weeks.setEndDate(endEpoch);
+        weeks.setCreateDate(DateTimeUtils.DateTimeToLong());
         weeks.setRemarks(remarks);
 
         Integer weekId = weeksService.add(weeks);

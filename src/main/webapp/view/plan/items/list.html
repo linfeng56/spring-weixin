@@ -8,12 +8,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>工作周计划</h1>
+                    <h1>周计划工作内容</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">首页</a></li>
-                        <li class="breadcrumb-item active">周计划汇总</li>
+                        <li class="breadcrumb-item active">周计划工作内容</li>
                     </ol>
                 </div>
             </div>
@@ -27,52 +27,66 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">工作周计划</h3>
+                            <h3 class="card-title">周计划工作内容</h3>
 
                             <div class="card-tools">
-                                <div class="input-group input-group-sm" style="width: 350px;">
-                                    <a href="add" class="btn-sm btn-primary" style="margin-right: 20px;">添加</a>
-                                    <input type="text" name="table_search" class="form-control float-right"
-                                           placeholder="搜索">
+                                <form method="post">
+                                <div class="input-group input-group-sm" style="width: 500px;">
+                                <select class="form-control" name="searchWeekId" id="itemWeekId">
+                                    <#list weeks as week>
+                                    <option value="${week.weekId}">${week.title}</option>
+                                </#list>
+                                </select>
+                                    <a href="add" class="btn-sm btn-primary" style="margin-left: 20px; margin-right: 20px;">添加</a>
+                                    <input type="text" name="searchText" class="form-control float-right" placeholder="搜索">
 
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
                                     </div>
                                 </div>
+                                </form>
                             </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
                             <table class="table table-hover text-nowrap">
                                 <thead>
-                                <tr>
+                                <tr class="text-center">
                                     <th>编号</th>
                                     <th>名称</th>
                                     <th>开始日期</th>
                                     <th>截止日期</th>
+                                    <th>整体完成</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <#if weeks??>
-                                <#list weeks as weekPlan>
+                                <#if items??>
+                                <#list items as planItems>
+                                <#assign typeKey = "k_${planItems.jobType}">
                                 <tr>
-                                    <td>${weekPlan.weekId}</td>
-                                    <td>${weekPlan.title}</td>
-                                    <td>${weekPlan.beginDate?number_to_date}</td>
+                                    <td>${types[typeKey]}:${planItems.jobNum}</td>
+                                    <td>${planItems.title}</td>
+                                    <td class="text-center text-uppercase">${planItems.beginDate?number_to_date}</td>
+                                    <td class="text-center">${planItems.endDate?number_to_date}</td>
+                                    <td class="text-center"><#if planItems.jobFinishDate gt 0>${planItems.jobFinishDate?number_to_date}<#else>-</#if></td>
                                     <td>
-                                        <span class="tag tag-success">${weekPlan.endDate?number_to_date}</span>
+                                        <a href="?weekid=${planItems.weekId}" class="btn-sm btn-primary">本周计划</a>
+                                        <a href="sr?weekid=${planItems.weekId}" class="btn-sm btn-primary">本周总结</a>
+                                        <a href="#${planItems.weekId}" class="btn-sm btn-primary">汇总</a>
                                     </td>
-                                    <td>
-                                        <a href="#${weekPlan.weekId}" class="btn-sm btn-primary">计划</a>
-                                        <a href="#${weekPlan.weekId}" class="btn-sm btn-primary">总结</a>
-                                        <a href="#${weekPlan.weekId}" class="btn-sm btn-primary">汇总</a>
-                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">工作内容:${planItems.content}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">${planItems.remarks}</td>
+                                    <td>最后修改时间: ${planItems.editDate?number_to_date}</td>
                                 </tr>
                                 </#list>
                                 <#else>
                                 <tr>
-                                    <td colspan="5">没有记录.</td>
+                                    <td colspan="6">没有记录.</td>
                                 </tr>
                                 </#if>
                                 </tbody>

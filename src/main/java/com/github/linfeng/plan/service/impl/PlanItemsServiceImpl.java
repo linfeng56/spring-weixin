@@ -28,4 +28,9 @@ public class PlanItemsServiceImpl implements IPlanItemsService {
     public PlanItems getById(Integer id) {
         return planItemsMapper.getById(id);
     }
+
+    @Override
+    public Integer add(PlanItems item) {
+        return planItemsMapper.add(item);
+    }
 }

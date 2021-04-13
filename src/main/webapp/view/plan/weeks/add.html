@@ -8,7 +8,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>General Form</h1>
+            <h1>周计划添加</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -36,7 +36,7 @@
               <form role="form" method="post" action="doAdd">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-6">
                           <div class="form-group">
                             <label for="weekTitle">名称</label>
                             <input type="text" class="form-control" name="weekTitle" id="weekTitle"
@@ -44,10 +44,7 @@
                                    placeholder="yyyy年mm月第ww周" required>
                           </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-6">
+                        <div class="col-3">
                           <div class="form-group">
                               <label>起止日期:</label>
                               <div class="input-group date" id="weekBegin" data-target-input="nearest">
@@ -60,12 +57,11 @@
                               <!-- /.input group -->
                           </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-3">
                             <div class="form-group">
                                 <label>起止日期:</label>
                                 <div class="input-group date" id="weekEnd" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" name="weekEnd"
-                                           data-target="#weekEnd" required/>
+                                    <input type="text" class="form-control datetimepicker-input" name="weekEnd" data-target="#weekEnd" required/>
                                     <div class="input-group-append" data-target="#weekEnd" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>

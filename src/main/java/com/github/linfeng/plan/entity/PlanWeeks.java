@@ -34,17 +34,17 @@ public class PlanWeeks implements Serializable {
     /**
      * 开始日期
      */
-    private Integer beginDate;
+    private Long beginDate;
 
     /**
      * 截止日期
      */
-    private Integer endDate;
+    private Long endDate;
 
     /**
      * 创建时间
      */
-    private Integer createDate;
+    private Long createDate;
 
     public Integer getWeekId() {
         return weekId;
@@ -78,27 +78,27 @@ public class PlanWeeks implements Serializable {
         this.remarks = remarks;
     }
 
-    public Integer getBeginDate() {
+    public Long getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(Integer beginDate) {
+    public void setBeginDate(Long beginDate) {
         this.beginDate = beginDate;
     }
 
-    public Integer getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Integer endDate) {
+    public void setEndDate(Long endDate) {
         this.endDate = endDate;
     }
 
-    public Integer getCreateDate() {
+    public Long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Integer createDate) {
+    public void setCreateDate(Long createDate) {
         this.createDate = createDate;
     }
 

@@ -3,7 +3,7 @@ package com.github.linfeng.plan.entity;
 import java.io.Serializable;
 
 /**
- * .
+ * 周计划任务项.
  *
  * @author 黄麟峰
  */
@@ -20,6 +20,11 @@ public class PlanItems implements Serializable {
      * 用户编号
      */
     private Integer userId;
+
+    /**
+     * 所属周计划编号
+     */
+    private Integer weekId;
 
     /**
      * 类型:1需求,2任务,3bug,4文档,5其他
@@ -44,17 +49,17 @@ public class PlanItems implements Serializable {
     /**
      * 开始日期
      */
-    private Integer beginDate;
+    private Long beginDate;
 
     /**
      * 完成日期
      */
-    private Integer endDate;
+    private Long endDate;
 
     /**
      * 整体完成日期
      */
-    private Integer jobFinishDate;
+    private Long jobFinishDate;
 
     /**
      * 备注
@@ -64,12 +69,12 @@ public class PlanItems implements Serializable {
     /**
      * 创建时间
      */
-    private Integer createDate;
+    private Long createDate;
 
     /**
      * 最后编辑时间
      */
-    private Integer editDate;
+    private Long editDate;
 
     public Integer getId() {
         return id;
@@ -85,6 +90,14 @@ public class PlanItems implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getWeekId() {
+        return weekId;
+    }
+
+    public void setWeekId(Integer weekId) {
+        this.weekId = weekId;
     }
 
     public Integer getJobType() {
@@ -119,27 +132,27 @@ public class PlanItems implements Serializable {
         this.content = content;
     }
 
-    public Integer getBeginDate() {
+    public Long getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(Integer beginDate) {
+    public void setBeginDate(Long beginDate) {
         this.beginDate = beginDate;
     }
 
-    public Integer getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Integer endDate) {
+    public void setEndDate(Long endDate) {
         this.endDate = endDate;
     }
 
-    public Integer getJobFinishDate() {
+    public Long getJobFinishDate() {
         return jobFinishDate;
     }
 
-    public void setJobFinishDate(Integer jobFinishDate) {
+    public void setJobFinishDate(Long jobFinishDate) {
         this.jobFinishDate = jobFinishDate;
     }
 
@@ -151,19 +164,19 @@ public class PlanItems implements Serializable {
         this.remarks = remarks;
     }
 
-    public Integer getCreateDate() {
+    public Long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Integer createDate) {
+    public void setCreateDate(Long createDate) {
         this.createDate = createDate;
     }
 
-    public Integer getEditDate() {
+    public Long getEditDate() {
         return editDate;
     }
 
-    public void setEditDate(Integer editDate) {
+    public void setEditDate(Long editDate) {
         this.editDate = editDate;
     }
 

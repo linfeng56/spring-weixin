@@ -21,6 +21,11 @@
     <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/view/"/>
         <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="api_builtin_enabled">true</prop>
+            </props>
+        </property>
     </bean>
 
     <!--freeMarker视图解析器-->

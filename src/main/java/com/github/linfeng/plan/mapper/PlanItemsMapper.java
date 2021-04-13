@@ -17,4 +17,6 @@ public interface PlanItemsMapper {
     List<PlanItems> list();
 
     PlanItems getById(@Param("id") Integer id);
+
+    Integer add(@Param("item") PlanItems item);
 }
