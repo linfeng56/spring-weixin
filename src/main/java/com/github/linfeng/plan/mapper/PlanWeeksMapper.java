@@ -19,4 +19,12 @@ public interface PlanWeeksMapper {
     PlanWeeks getById(@Param("id") Integer id);
 
     Integer add(@Param("week") PlanWeeks weeks);
+
+    /**
+     * 列出指定周的周计划
+     *
+     * @param searchText 计划名称包含的文字
+     * @return 周计划列表
+     */
+    List<PlanWeeks> listByTitle(String searchText);
 }

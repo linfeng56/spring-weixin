@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -46,14 +47,20 @@ public class PlanWeeksController extends PlanBaseController {
 
 
     @RequestMapping("/list")
-    public String list(Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
+        HttpServletRequest request, HttpServletResponse response) {
         PlanUsers planUser = new PlanUsers();
         if (!checkLogin(planUser)) {
             return "redirect:/plan/login/index";
         }
         model.addAttribute("admin", planUser);
 
-        List<PlanWeeks> list = weeksService.list();
+        List<PlanWeeks> list;
+        if (StringUtils.hasText(searchText)) {
+            list = weeksService.list(searchText);
+        } else {
+            list = weeksService.list();
+        }
         model.addAttribute("weeks", list);
 
         return "plan/weeks/list";

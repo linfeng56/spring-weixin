@@ -27,5 +27,10 @@
     <select id="getById" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
         select * from spwx_plan_weeks where id=#{id};
     </select>
+  <select id="listByTitle" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
+      select * from spwx_plan_weeks
+      where title LIKE concat('%',#{searchText},'%')
+      order by begin_date desc, week_id desc;
+  </select>
 
 </mapper>
