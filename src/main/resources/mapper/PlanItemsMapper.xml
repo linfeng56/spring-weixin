@@ -37,5 +37,13 @@
   <select id="getById" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanItems">
       select * from spwx_plan_items where id=#{id};
   </select>
+  <select id="listByWeek" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanItems">
+      select * from spwx_plan_items
+      where week_id=#{weekId}
+      <if test="searchText != null">
+      AND title LIKE concat('%',#{searchText},'%')
+      </if>
+      order by  job_type desc,begin_date desc;
+  </select>
 
 </mapper>

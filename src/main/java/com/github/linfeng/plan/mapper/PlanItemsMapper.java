@@ -19,4 +19,6 @@ public interface PlanItemsMapper {
     PlanItems getById(@Param("id") Integer id);
 
     Integer add(@Param("item") PlanItems item);
+
+    List<PlanItems> listByWeek(@Param("weekId") Integer weekId, @Param("searchText") String searchText);
 }

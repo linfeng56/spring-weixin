@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -54,7 +55,8 @@ public class PlanItemsController extends PlanBaseController {
 
 
     @RequestMapping("/list")
-    public String list(Model model, Integer searchWeekId, String searchText,
+    public String list(Model model, @RequestParam(value = "searchWeekId", required = false) Integer searchWeekId,
+        @RequestParam(value = "searchText", required = false) String searchText,
         HttpServletRequest request, HttpServletResponse response) {
         PlanUsers planUser = new PlanUsers();
         if (!checkLogin(planUser)) {
@@ -66,7 +68,7 @@ public class PlanItemsController extends PlanBaseController {
         if (searchWeekId == null || searchWeekId < 1) {
             list = itemsService.list();
         } else {
-            list = itemsService.list();
+            list = itemsService.listByWeek(searchWeekId,searchText);
         }
 
         model.addAttribute("items", list);
