@@ -25,9 +25,9 @@
         create_date, edit_date
     </sql>
   <insert id="add" parameterType="com.github.linfeng.plan.entity.PlanItems">
-      insert into spwx_plan_items (user_id,job_type,job_num,title,content,begin_date,end_date,job_finish_date,
+      insert into spwx_plan_items (user_id,week_id,job_type,job_num,title,content,begin_date,end_date,job_finish_date,
                                    remarks,create_date,edit_date)
-      values (#{item.userId},#{item.jobType},#{item.jobNum},#{item.title},#{item.content},
+      values (#{item.userId},#{item.weekId},#{item.jobType},#{item.jobNum},#{item.title},#{item.content},
               #{item.beginDate},#{item.endDate},#{item.jobFinishDate},#{item.remarks},
               #{item.createDate},#{item.editDate});
   </insert>
