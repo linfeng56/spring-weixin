@@ -68,12 +68,13 @@ public class PlanItemsController extends PlanBaseController {
         if (searchWeekId == null || searchWeekId < 1) {
             list = itemsService.list();
         } else {
-            list = itemsService.listByWeek(searchWeekId,searchText);
+            list = itemsService.listByWeek(searchWeekId, searchText);
         }
 
         model.addAttribute("items", list);
         model.addAttribute("types", JobType.allMap());
         model.addAttribute("weeks", weeksService.list());
+        model.addAttribute("searchWeekId", searchWeekId != null ? searchWeekId : 0);
 
         return "plan/items/list";
     }

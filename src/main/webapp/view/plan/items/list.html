@@ -32,12 +32,17 @@
                             <div class="card-tools">
                                 <form method="post">
                                 <div class="input-group input-group-sm" style="width: 500px;">
-                                <select class="form-control" name="searchWeekId" id="itemWeekId">
-                                    <#list weeks as week>
-                                    <option value="${week.weekId}">${week.title}</option>
-                                </#list>
-                                </select>
                                     <a href="add" class="btn-sm btn-primary" style="margin-left: 20px; margin-right: 20px;">添加</a>
+                                    <select class="form-control" name="searchWeekId" id="itemWeekId">
+                                        <option value="">全部</option>
+                                        <#list weeks as week>
+                                        <#if searchWeekId==week.weekId>
+                                        <option value="${week.weekId}" selected>${week.title}</option>
+                                        <#else>
+                                        <option value="${week.weekId}">${week.title}</option>
+                                        </#if>
+                                        </#list>
+                                    </select>
                                     <input type="text" name="searchText" class="form-control float-right" placeholder="搜索">
 
                                     <div class="input-group-append">
@@ -71,7 +76,7 @@
                                     <td class="text-center">${planItems.endDate?number_to_date}</td>
                                     <td class="text-center"><#if planItems.jobFinishDate gt 0>${planItems.jobFinishDate?number_to_date}<#else>-</#if></td>
                                     <td>
-                                        <a href="?weekid=${planItems.weekId}" class="btn-sm btn-primary">本周计划</a>
+                                        <a href="?searchWeekId=${planItems.weekId}" class="btn-sm btn-primary">本周计划</a>
                                         <a href="sr?weekid=${planItems.weekId}" class="btn-sm btn-primary">本周总结</a>
                                         <a href="#${planItems.weekId}" class="btn-sm btn-primary">汇总</a>
                                     </td>
