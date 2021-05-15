@@ -76,14 +76,14 @@
                                     <td class="text-center">${planItems.endDate?number_to_date}</td>
                                     <td class="text-center"><#if planItems.jobFinishDate gt 0>${planItems.jobFinishDate?number_to_date}<#else>-</#if></td>
                                     <td>
-                                        <a href="?searchWeekId=${planItems.weekId}" class="btn-sm btn-primary">本周计划</a>
+                                        <a href="edit/${planItems.id}" class="btn-sm btn-primary">编辑</a>
                                         <a href="sr?weekid=${planItems.weekId}" class="btn-sm btn-primary">本周总结</a>
                                         <a href="#${planItems.weekId}" class="btn-sm btn-primary">汇总</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="5">工作内容:${planItems.content}</td>
-                                    <td><#list weeks as week><#if week.weekId==planItems.weekId><label class="btn btn-block btn-outline-info">${week.title}</label></#if></#list></td>
+                                    <td><#list weeks as week><#if week.weekId==planItems.weekId><a href="?searchWeekId=${planItems.weekId}"  class="btn btn-block btn-outline-info">${week.title}</a></#if></#list></td>
                                 </tr>
                                 <tr>
                                     <td colspan="5">${planItems.remarks}</td>

@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -80,7 +81,7 @@ public class PlanItemsController extends PlanBaseController {
     }
 
 
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
         PlanUsers planUser = new PlanUsers();
         if (!checkLogin(planUser)) {
@@ -97,7 +98,7 @@ public class PlanItemsController extends PlanBaseController {
         return "plan/items/add";
     }
 
-    @RequestMapping("/doAdd")
+    @RequestMapping(value = "/doAdd", method = RequestMethod.POST)
     public String doAdd(Model model, Integer itemJobType, Integer itemJobNum, String itemTitle, Integer itemUserId,
         Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
         PlanUsers planUser = new PlanUsers();
@@ -150,6 +151,89 @@ public class PlanItemsController extends PlanBaseController {
 
         return "redirect:list";
     }
+
+
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String edit(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
+        HttpServletResponse response) {
+        PlanUsers planUser = new PlanUsers();
+        if (!checkLogin(planUser)) {
+            return "redirect:/plan/login/index";
+        }
+        model.addAttribute("admin", planUser);
+        PlanItems item;
+        if (id > 0) {
+            item = itemsService.getById(id);
+        } else {
+            item = new PlanItems();
+            item.setId(-1);
+        }
+
+        Map<String, String> jobTypes = JobType.toMap();
+        model.addAttribute("jobTypes", jobTypes);
+
+        List<PlanUsers> users = usersService.list();
+        model.addAttribute("users", users);
+        model.addAttribute("weeks", weeksService.list());
+        model.addAttribute("item", item);
+        return "plan/items/edit";
+    }
+
+    @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
+    public String doEdit(@PathVariable("id") Integer id, Model model, Integer itemJobType, Integer itemJobNum,
+        String itemTitle, Integer itemUserId, Integer itemWeekId, String itemBegin, String itemEnd,
+        String itemFinish, String content, String remarks) {
+        PlanUsers planUser = new PlanUsers();
+        if (!checkLogin(planUser)) {
+            return "redirect:/plan/login/index";
+        }
+        model.addAttribute("admin", planUser);
+        model.addAttribute("itemsId", id);
+
+        List<String> errorMessage = new ArrayList<>(5);
+        if (!StringUtils.hasText(itemTitle)) {
+            errorMessage.add("标题不能为空!");
+        }
+        if (!StringUtils.hasText(itemBegin)) {
+            errorMessage.add("请选择开始日期!");
+        }
+        if (!StringUtils.hasText(itemEnd)) {
+            errorMessage.add("请选择截止日期!");
+        }
+        if (itemWeekId == null || itemWeekId < 1) {
+            errorMessage.add("请选择所属周计划!");
+        }
+        if (!errorMessage.isEmpty()) {
+            return "plan/items/edit";
+        }
+        if (!StringUtils.hasText(remarks)) {
+            remarks = "";
+        }
+
+        PlanItems item = new PlanItems();
+        item.setJobType(itemJobType);
+        item.setJobNum(itemJobNum);
+        item.setTitle(itemTitle);
+        item.setUserId(itemUserId);
+        item.setWeekId(itemWeekId);
+        Long beginEpoch = DateTimeUtils.DateToLong(itemBegin);
+        Long endEpoch = DateTimeUtils.DateToLong(itemEnd);
+        Long finishEpoch = DateTimeUtils.DateToLong(itemFinish);
+
+        item.setBeginDate(beginEpoch);
+        item.setEndDate(endEpoch);
+        item.setJobFinishDate(finishEpoch);
+
+        item.setContent(content);
+        item.setRemarks(remarks);
+        item.setEditDate(DateTimeUtils.DateTimeToLong());
+
+        Integer updateRows = itemsService.edit(id, item);
+        model.addAttribute("updateRows", updateRows);
+
+        return "redirect:/plan/items/list";
+    }
+
 
     @RequestMapping("/detail/{id}")
     @ResponseBody

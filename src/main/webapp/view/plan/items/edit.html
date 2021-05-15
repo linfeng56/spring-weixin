@@ -1,0 +1,190 @@
+<#include "/plan/layout/layout_default.html">
+
+<#macro container>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>周计划工作项</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">首页</a></li>
+              <li class="breadcrumb-item active">周计划工作内容添加</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">添加周计划工作内容</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form" method="post" action="${request.getContextPath()}/plan/items/doEdit/${item.id}">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="itemJobType">类型</label>
+                                <select class="form-control" name="itemJobType" id="itemJobType">
+                                    <option value="-1">请选择</option>
+                                    <#list jobTypes?keys as key>
+                                    <#if key==item.jobType?c>
+                                    <option value="${key}" selected>${jobTypes[key]}</option>
+                                    <#else>
+                                    <option value="${key}">${jobTypes[key]}</option>
+                                    </#if>
+                                </#list>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="itemJobNum">编号</label>
+                                <input type="text" class="form-control" name="itemJobNum" id="itemJobNum" value="${item.jobNum}" placeholder="编号" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label for="itemTitle">名称</label>
+                            <input type="text" class="form-control" name="itemTitle" id="itemTitle" value="${item.title}" placeholder="周计划项工作名称" required>
+                          </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="itemUserId">指派给</label>
+                                <select class="form-control" name="itemUserId" id="itemUserId">
+                                    <#list users as user>
+                                    <#if user.userId==item.userId>
+                                    <option value="${user.userId}" selected>${user.userName}</option>
+                                    <#else>
+                                    <option value="${user.userId}">${user.userName}</option>
+                                    </#if>
+                                    </#list>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                          <div class="form-group">
+                              <label>起始日期</label>
+                              <div class="input-group date" id="itemBegin" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input" name="itemBegin" value="${item.beginDate?number_to_datetime?string("yyyy-MM-dd")}" data-target="#itemBegin" required/>
+                                  <div class="input-group-append" data-target="#itemBegin" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                  </div>
+                              </div>
+                              <!-- /.input group -->
+                          </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label>截止日期</label>
+                                <div class="input-group date" id="itemEnd" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" name="itemEnd" value="${item.endDate?number_to_datetime?string("yyyy-MM-dd")}" data-target="#itemEnd" required/>
+                                    <div class="input-group-append" data-target="#itemEnd" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="itemWeekId">所属周计划</label>
+                                <select class="form-control" name="itemWeekId" id="itemWeekId">
+                                    <#list weeks as week>
+                                    <#if week.weekId==item.weekId>
+                                    <option value="${week.weekId}" selected>${week.title}</option>
+                                    <#else>
+                                    <option value="${week.weekId}">${week.title}</option>
+                                </#if>
+                                    </#list>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label>整体完成预期</label>
+                                <div class="input-group date" id="itemFinish" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" name="itemFinish" value="${item.jobFinishDate?number_to_datetime?string("yyyy-MM-dd")}" data-target="#itemFinish" required/>
+                                    <div class="input-group-append" data-target="#itemFinish" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>工作内容</label>
+                                <textarea class="form-control" rows="3" name="content" placeholder="具体工作内容">${item.content}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>备注</label>
+                                <textarea class="form-control" rows="3" name="remarks" placeholder="备注">${item.remarks}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                              <label>添加时间:${item.createDate?number_to_datetime?string("yyyy-MM-dd")}</label>
+                              <label>最后修改时间:${item.editDate?number_to_datetime?string("yyyy-MM-dd")}</label>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">提交</button>
+                    <a href="list" class="btn btn-primary">列表</a>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!--/.col (left) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+</#macro>
+
+<#macro footer_js>
+<script>
+    $('#itemBegin').datetimepicker({
+        format: 'YYYY-MM-DD'
+    });
+    $('#itemEnd').datetimepicker({
+        format: 'YYYY-MM-DD'
+    });
+    $('#itemFinish').datetimepicker({
+        format: 'YYYY-MM-DD'
+    });
+</script>
+</#macro>
