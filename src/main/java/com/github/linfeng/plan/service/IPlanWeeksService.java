@@ -23,4 +23,6 @@ public interface IPlanWeeksService {
      * @return 周计划列表
      */
     List<PlanWeeks> list(String searchText);
+
+    Integer update(Integer id, PlanWeeks weeks);
 }

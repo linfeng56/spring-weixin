@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -67,7 +68,7 @@ public class PlanWeeksController extends PlanBaseController {
     }
 
 
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
         PlanUsers planUser = new PlanUsers();
         if (!checkLogin(planUser)) {
@@ -77,7 +78,7 @@ public class PlanWeeksController extends PlanBaseController {
         return "plan/weeks/add";
     }
 
-    @RequestMapping("/doAdd")
+    @RequestMapping(value = "/doAdd", method = RequestMethod.POST)
     public String doAdd(Model model, String weekTitle, String weekBegin, String weekEnd, String remarks) {
         PlanUsers planUser = new PlanUsers();
         if (!checkLogin(planUser)) {
@@ -118,6 +119,67 @@ public class PlanWeeksController extends PlanBaseController {
         return "redirect:list";
     }
 
+
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String edit(@PathVariable("id") Integer id, Model model) {
+        PlanUsers planUser = new PlanUsers();
+        if (!checkLogin(planUser)) {
+            return "redirect:/plan/login/index";
+        }
+        model.addAttribute("admin", planUser);
+        PlanWeeks item;
+        if (id > 0) {
+            item = weeksService.getById(id);
+        } else {
+            item = new PlanWeeks();
+            item.setWeekId(-1);
+        }
+
+        model.addAttribute("item", item);
+        return "plan/weeks/edit";
+    }
+
+    @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
+    public String doEdit(@PathVariable("id") Integer id, Model model, String weekTitle, String weekBegin,
+        String weekEnd, String remarks) {
+        PlanUsers planUser = new PlanUsers();
+        if (!checkLogin(planUser)) {
+            return "redirect:/plan/login/index";
+        }
+        model.addAttribute("admin", planUser);
+        model.addAttribute("weekId", id);
+
+        List<String> errorMessage = new ArrayList<>(5);
+        if (!StringUtils.hasText(weekTitle)) {
+            errorMessage.add("标题不能为空!");
+        }
+        if (!StringUtils.hasText(weekBegin)) {
+            errorMessage.add("请选择开始日期!");
+        }
+        if (!StringUtils.hasText(weekEnd)) {
+            errorMessage.add("请选择截止日期!");
+        }
+        if (!errorMessage.isEmpty()) {
+            return "plan/weeks/edit";
+        }
+        if (!StringUtils.hasText(remarks)) {
+            remarks = "";
+        }
+
+        PlanWeeks weeks = new PlanWeeks();
+        weeks.setTitle(weekTitle);
+        Long beginEpoch = DateTimeUtils.DateToLong(weekBegin);
+        Long endEpoch = DateTimeUtils.DateToLong(weekEnd);
+
+        weeks.setBeginDate(beginEpoch);
+        weeks.setEndDate(endEpoch);
+        weeks.setRemarks(remarks);
+
+        Integer updateRows = weeksService.update(id, weeks);
+        model.addAttribute("updateRows", updateRows);
+
+        return "redirect:/plan/weeks/list";
+    }
 
     @RequestMapping("/detail/{id}")
     @ResponseBody

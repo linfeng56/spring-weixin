@@ -38,4 +38,9 @@ public class PlanWeeksServiceImpl implements IPlanWeeksService {
     public List<PlanWeeks> list(String searchText) {
         return planWeeksMapper.listByTitle(searchText);
     }
+
+    @Override
+    public Integer update(Integer id, PlanWeeks week) {
+        return planWeeksMapper.update(id, week);
+    }
 }

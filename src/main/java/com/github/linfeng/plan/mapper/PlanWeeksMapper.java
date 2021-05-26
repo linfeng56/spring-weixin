@@ -27,4 +27,6 @@ public interface PlanWeeksMapper {
      * @return 周计划列表
      */
     List<PlanWeeks> listByTitle(String searchText);
+
+    Integer update(@Param("id") Integer id, @Param("week") PlanWeeks week);
 }

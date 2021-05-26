@@ -154,8 +154,7 @@ public class PlanItemsController extends PlanBaseController {
 
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String edit(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-        HttpServletResponse response) {
+    public String edit(@PathVariable("id") Integer id, Model model) {
         PlanUsers planUser = new PlanUsers();
         if (!checkLogin(planUser)) {
             return "redirect:/plan/login/index";
