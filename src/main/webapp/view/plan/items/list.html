@@ -31,7 +31,7 @@
 
                             <div class="card-tools">
                                 <form method="post" action="list">
-                                <div class="input-group input-group-sm" style="width: 500px;">
+                                <div class="input-group input-group-sm" style="width: 580px;">
                                     <a href="add" class="btn-sm btn-primary" style="margin-left: 20px; margin-right: 20px;">添加</a>
                                     <select class="form-control" name="searchWeekId" id="itemWeekId">
                                         <option value="">全部</option>
@@ -43,6 +43,16 @@
                                         </#if>
                                         </#list>
                                     </select>
+                                    <select class="form-control" name="searchUserId" id="searchUserId">
+                                        <option value="">全部指派</option>
+                                        <#list planUsers as itemUser>
+                                        <#if searchUserId==itemUser.userId>
+                                        <option value="${itemUser.userId}" selected>${itemUser.userName}</option>
+                                        <#else>
+                                        <option value="${itemUser.userId}">${itemUser.userName}</option>
+                                    </#if>
+                                </#list>
+                                </select>
                                     <input type="text" name="searchText" class="form-control float-right" placeholder="搜索">
 
                                     <div class="input-group-append">

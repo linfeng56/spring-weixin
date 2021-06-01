@@ -55,6 +55,9 @@
   <select id="listByWeek" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanItems">
       select * from spwx_plan_items
       where week_id=#{weekId}
+      <if test="userId != null">
+          AND user_id=#{userId}
+      </if>
       <if test="searchText != null">
       AND title LIKE concat('%',#{searchText},'%')
       </if>

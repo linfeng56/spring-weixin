@@ -57,6 +57,7 @@ public class PlanItemsController extends PlanBaseController {
 
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "searchWeekId", required = false) Integer searchWeekId,
+        @RequestParam(value = "searchUserId", required = false) Integer searchUserId,
         @RequestParam(value = "searchText", required = false) String searchText,
         HttpServletRequest request, HttpServletResponse response) {
         PlanUsers planUser = new PlanUsers();
@@ -69,12 +70,14 @@ public class PlanItemsController extends PlanBaseController {
         if (searchWeekId == null || searchWeekId < 1) {
             list = itemsService.list();
         } else {
-            list = itemsService.listByWeek(searchWeekId, searchText);
+            list = itemsService.listByWeek(searchWeekId, searchUserId, searchText);
         }
 
         model.addAttribute("items", list);
         model.addAttribute("types", JobType.allMap());
         model.addAttribute("weeks", weeksService.list());
+        model.addAttribute("planUsers", usersService.list());
+        model.addAttribute("searchUserId", searchUserId != null ? searchUserId : 0);
         model.addAttribute("searchWeekId", searchWeekId != null ? searchWeekId : 0);
 
         return "plan/items/list";

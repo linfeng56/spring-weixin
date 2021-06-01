@@ -35,8 +35,8 @@ public class PlanItemsServiceImpl implements IPlanItemsService {
     }
 
     @Override
-    public List<PlanItems> listByWeek(Integer weekId, String searchText) {
-        return planItemsMapper.listByWeek(weekId, searchText);
+    public List<PlanItems> listByWeek(Integer weekId, Integer searchUserId, String searchText) {
+        return planItemsMapper.listByWeek(weekId, searchUserId, searchText);
     }
 
     @Override

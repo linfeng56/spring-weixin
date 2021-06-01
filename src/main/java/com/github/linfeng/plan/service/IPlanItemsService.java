@@ -16,7 +16,7 @@ public interface IPlanItemsService {
 
     Integer add(PlanItems item);
 
-    List<PlanItems> listByWeek(Integer weekId, String searchText);
+    List<PlanItems> listByWeek(Integer weekId, Integer searchUserId,String searchText);
 
     Integer edit(Integer id, PlanItems item);
 }
