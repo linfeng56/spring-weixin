@@ -67,7 +67,7 @@
                                     </td>
                                     <td>
                                         <a href="${request.getContextPath()}/plan/items/list?searchWeekId=${weekPlan.weekId}" class="btn-sm btn-primary">计划</a>
-                                        <a href="#${weekPlan.weekId}" class="btn-sm btn-primary">总结</a>
+                                        <a href="${request.getContextPath()}/plan/summary/list?searchWeekId=#${weekPlan.weekId}" class="btn-sm btn-primary">总结</a>
                                         <a href="#${weekPlan.weekId}" class="btn-sm btn-primary">汇总</a>
                                         <a href="edit/${weekPlan.weekId}" class="btn-sm btn-primary">编辑</a>
                                     </td>
