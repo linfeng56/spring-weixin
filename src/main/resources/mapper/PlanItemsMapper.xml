@@ -54,14 +54,18 @@
   </select>
   <select id="listByWeek" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanItems">
       select * from spwx_plan_items
-      where week_id=#{weekId}
-      <if test="userId != null">
-          AND user_id=#{userId}
-      </if>
-      <if test="searchText != null">
-      AND title LIKE concat('%',#{searchText},'%')
-      </if>
-      order by  job_type desc,begin_date desc;
+      <where>
+          <if test="weekId != null">
+              week_id=#{weekId}
+          </if>
+          <if test="userId != null">
+              AND user_id=#{userId}
+          </if>
+          <if test="searchText != null">
+          AND title LIKE concat('%',#{searchText},'%')
+          </if>
+      </where>
+      order by week_id desc,user_id desc,begin_date asc;
   </select>
 
 </mapper>

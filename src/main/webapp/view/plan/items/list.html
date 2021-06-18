@@ -50,9 +50,9 @@
                                         <option value="${itemUser.userId}" selected>${itemUser.userName}</option>
                                         <#else>
                                         <option value="${itemUser.userId}">${itemUser.userName}</option>
-                                    </#if>
-                                </#list>
-                                </select>
+                                        </#if>
+                                    </#list>
+                                    </select>
                                     <input type="text" name="searchText" class="form-control float-right" placeholder="搜索">
 
                                     <div class="input-group-append">
@@ -93,7 +93,10 @@
                                 </tr>
                                 <tr>
                                     <td colspan="5">工作内容:${planItems.content}</td>
-                                    <td><#list weeks as week><#if week.weekId==planItems.weekId><a href="?searchWeekId=${planItems.weekId}"  class="btn btn-block btn-outline-info">${week.title}</a></#if></#list></td>
+                                    <td>
+                                        <#list weeks as week><#if week.weekId==planItems.weekId><a href="?searchWeekId=${planItems.weekId}" class="btn btn-outline-info">${week.title}</a></#if></#list>
+                                        <#list planUsers as itemUser><#if itemUser.userId==planItems.userId><a href="#" class="btn btn-outline-info">${itemUser.userName}</a></#if></#list>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="5">${planItems.remarks}</td>
