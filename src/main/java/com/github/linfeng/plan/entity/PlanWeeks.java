@@ -46,6 +46,16 @@ public class PlanWeeks implements Serializable {
      */
     private Long createDate;
 
+    /**
+     * 总结
+     */
+    private String summary;
+
+    /**
+     * 总结时间
+     */
+    private Long summaryDate;
+
     public Integer getWeekId() {
         return weekId;
     }
@@ -102,16 +112,34 @@ public class PlanWeeks implements Serializable {
         this.createDate = createDate;
     }
 
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public Long getSummaryDate() {
+        return summaryDate;
+    }
+
+    public void setSummaryDate(Long summaryDate) {
+        this.summaryDate = summaryDate;
+    }
+
     @Override
     public String toString() {
         return "PlanWeeks{" +
             "weekId=" + weekId +
             ", userId=" + userId +
-            ", title=" + title +
-            ", remarks=" + remarks +
+            ", title='" + title + '\'' +
+            ", remarks='" + remarks + '\'' +
             ", beginDate=" + beginDate +
             ", endDate=" + endDate +
             ", createDate=" + createDate +
-            "}";
+            ", summary='" + summary + '\'' +
+            ", summaryDate=" + summaryDate +
+            '}';
     }
 }

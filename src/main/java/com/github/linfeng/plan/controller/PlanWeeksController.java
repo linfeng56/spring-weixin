@@ -1,7 +1,6 @@
 package com.github.linfeng.plan.controller;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.linfeng.plan.entity.PlanUsers;
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.service.IPlanWeeksService;
+import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,25 +79,17 @@ public class PlanWeeksController extends PlanBaseController {
     }
 
     @RequestMapping(value = "/doAdd", method = RequestMethod.POST)
-    public String doAdd(Model model, String weekTitle, String weekBegin, String weekEnd, String remarks) {
+    @ResponseBody
+    public ResponseView<Integer> doAdd(String weekTitle, String weekBegin, String weekEnd,
+        String remarks) {
         PlanUsers planUser = new PlanUsers();
         if (!checkLogin(planUser)) {
-            return "redirect:/plan/login/index";
+            return new ResponseView<>(301, "请登录后再操作");
         }
-        model.addAttribute("admin", planUser);
 
-        List<String> errorMessage = new ArrayList<>(5);
-        if (!StringUtils.hasText(weekTitle)) {
-            errorMessage.add("标题不能为空!");
-        }
-        if (!StringUtils.hasText(weekBegin)) {
-            errorMessage.add("请选择开始日期!");
-        }
-        if (!StringUtils.hasText(weekEnd)) {
-            errorMessage.add("请选择截止日期!");
-        }
-        if (!errorMessage.isEmpty()) {
-            return "plan/weeks/add";
+        ResponseView<Integer> errorMessage = validForm(weekTitle, weekBegin, weekEnd);
+        if (errorMessage != null) {
+            return errorMessage;
         }
         if (!StringUtils.hasText(remarks)) {
             remarks = "";
@@ -114,9 +106,25 @@ public class PlanWeeksController extends PlanBaseController {
         weeks.setRemarks(remarks);
 
         Integer weekId = weeksService.add(weeks);
-        model.addAttribute("weekId", weekId);
 
-        return "redirect:list";
+        return new ResponseView<>(200, "操作成功", weekId);
+    }
+
+    private ResponseView<Integer> validForm(String weekTitle, String weekBegin, String weekEnd) {
+        StringBuffer errorMessage = new StringBuffer(5);
+        if (!StringUtils.hasText(weekTitle)) {
+            errorMessage.append("标题不能为空!").append("\\n");
+        }
+        if (!StringUtils.hasText(weekBegin)) {
+            errorMessage.append("请选择开始日期!").append("\\n");
+        }
+        if (!StringUtils.hasText(weekEnd)) {
+            errorMessage.append("请选择截止日期!").append("\\n");
+        }
+        if (StringUtils.hasText(errorMessage)) {
+            return new ResponseView<>(401, errorMessage.toString());
+        }
+        return null;
     }
 
 
@@ -140,28 +148,19 @@ public class PlanWeeksController extends PlanBaseController {
     }
 
     @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
-    public String doEdit(@PathVariable("id") Integer id, Model model, String weekTitle, String weekBegin,
+    @ResponseBody
+    public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, String weekTitle, String weekBegin,
         String weekEnd, String remarks) {
         PlanUsers planUser = new PlanUsers();
         if (!checkLogin(planUser)) {
-            return "redirect:/plan/login/index";
+            return new ResponseView<>(301, "请登录后再操作");
         }
-        model.addAttribute("admin", planUser);
-        model.addAttribute("weekId", id);
 
-        List<String> errorMessage = new ArrayList<>(5);
-        if (!StringUtils.hasText(weekTitle)) {
-            errorMessage.add("标题不能为空!");
+        ResponseView<Integer> errorMessage = validForm(weekTitle, weekBegin, weekEnd);
+        if (errorMessage != null) {
+            return errorMessage;
         }
-        if (!StringUtils.hasText(weekBegin)) {
-            errorMessage.add("请选择开始日期!");
-        }
-        if (!StringUtils.hasText(weekEnd)) {
-            errorMessage.add("请选择截止日期!");
-        }
-        if (!errorMessage.isEmpty()) {
-            return "plan/weeks/edit";
-        }
+
         if (!StringUtils.hasText(remarks)) {
             remarks = "";
         }
@@ -176,14 +175,39 @@ public class PlanWeeksController extends PlanBaseController {
         weeks.setRemarks(remarks);
 
         Integer updateRows = weeksService.update(id, weeks);
-        model.addAttribute("updateRows", updateRows);
-
-        return "redirect:/plan/weeks/list";
+        if (updateRows > 0) {
+            return new ResponseView<>(200, "操作成功", id);
+        } else {
+            return new ResponseView<>(500, "操作失败", id);
+        }
     }
 
     @RequestMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
+        HttpServletResponse response) {
+        Map<String, Object> ret = new HashMap<>(6);
+        if (null == id || id <= 0) {
+            ret.put("retCode", "fail");
+            ret.put("errMsg", "error id");
+            return JSONObject.toJSONString(ret);
+        }
+        PlanWeeks info = weeksService.getById(id);
+        if (null != info) {
+            ret.put("retCode", "success");
+            ret.put("errMsg", "success");
+            ret.put("data", info);
+        } else {
+            ret.put("retCode", "fail");
+            ret.put("errMsg", "not exists id:[" + id + "]");
+        }
+        return JSONObject.toJSONString(ret);
+    }
+
+
+    @RequestMapping("/summary/{id}")
+    @ResponseBody
+    public String summary(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
         HttpServletResponse response) {
         Map<String, Object> ret = new HashMap<>(6);
         if (null == id || id <= 0) {
