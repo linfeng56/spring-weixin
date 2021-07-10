@@ -125,12 +125,14 @@
             type:'post',
             data:$(this).serialize(),
             success:function(data){
+                $('#myModalMessageTitle').text("操作提示");
                 if (data.status=="200"){
-                    alert("保存成功");
+                    $('.modal-body').text("保存成功");
                 }else{
-                    alert(data.code);
+                    $('.modal-body').text("保存失败。错误编码："+data.code);
                 }
-                alert(data);
+                console.log(data);
+                $('#myModalMessage').modal('show');
             }
         });
     });
