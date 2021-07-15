@@ -32,4 +32,20 @@ public abstract class PlanBaseController {
             return false;
         }
     }
+
+    /**
+     * 检查用户是否登录
+     *
+     * @return true已登录，false未登录。
+     */
+    protected boolean checkLogin() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+            .getRequest();
+        Object user = request.getSession().getAttribute("planUser");
+        if (!ObjectUtils.isEmpty(user)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

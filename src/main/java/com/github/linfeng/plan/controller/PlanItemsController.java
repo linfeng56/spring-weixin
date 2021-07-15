@@ -1,7 +1,6 @@
 package com.github.linfeng.plan.controller;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import com.github.linfeng.plan.service.IPlanItemsService;
 import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IPlanWeeksService;
 import com.github.linfeng.plan.view.JobType;
+import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,30 +97,20 @@ public class PlanItemsController extends PlanBaseController {
     }
 
     @RequestMapping(value = "/doAdd", method = RequestMethod.POST)
-    public String doAdd(Model model, Integer itemJobType, Integer itemJobNum, String itemTitle, Integer itemUserId,
+    @ResponseBody
+    public ResponseView<Integer> doAdd(Model model, Integer itemJobType, Integer itemJobNum,
+        String itemTitle, Integer itemUserId,
         Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
-            return "redirect:/plan/login/index";
+        if (!checkLogin()) {
+            return new ResponseView<>(301, "请登录后再操作");
         }
-        model.addAttribute("admin", planUser);
 
-        List<String> errorMessage = new ArrayList<>(5);
-        if (!StringUtils.hasText(itemTitle)) {
-            errorMessage.add("标题不能为空!");
+        ResponseView<Integer> errorMessage = validForm(itemTitle, itemWeekId,
+            itemBegin, itemEnd);
+        if (errorMessage != null) {
+            return errorMessage;
         }
-        if (!StringUtils.hasText(itemBegin)) {
-            errorMessage.add("请选择开始日期!");
-        }
-        if (!StringUtils.hasText(itemEnd)) {
-            errorMessage.add("请选择截止日期!");
-        }
-        if (itemWeekId == null || itemWeekId < 1) {
-            errorMessage.add("请选择所属周计划!");
-        }
-        if (!errorMessage.isEmpty()) {
-            return "plan/items/add";
-        }
+
         if (!StringUtils.hasText(remarks)) {
             remarks = "";
         }
@@ -145,9 +135,29 @@ public class PlanItemsController extends PlanBaseController {
         item.setEditDate(DateTimeUtils.DateTimeToLong());
 
         Integer itemId = itemsService.add(item);
-        model.addAttribute("itemsId", itemId);
 
-        return "redirect:list";
+        return new ResponseView<>(200, "操作成功", itemId);
+    }
+
+    private ResponseView<Integer> validForm(String itemTitle, Integer itemWeekId, String itemBegin,
+        String itemEnd) {
+        StringBuffer errorMessage = new StringBuffer(25);
+        if (!StringUtils.hasText(itemTitle)) {
+            errorMessage.append("标题不能为空!").append("\\n");
+        }
+        if (!StringUtils.hasText(itemBegin)) {
+            errorMessage.append("请选择开始日期!").append("\\n");
+        }
+        if (!StringUtils.hasText(itemEnd)) {
+            errorMessage.append("请选择截止日期!").append("\\n");
+        }
+        if (itemWeekId == null || itemWeekId < 1) {
+            errorMessage.append("请选择所属周计划!").append("\\n");
+        }
+        if (StringUtils.hasText(errorMessage)) {
+            return new ResponseView<>(401, errorMessage.toString());
+        }
+        return null;
     }
 
 
@@ -177,31 +187,18 @@ public class PlanItemsController extends PlanBaseController {
     }
 
     @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
-    public String doEdit(@PathVariable("id") Integer id, Model model, Integer itemJobType, Integer itemJobNum,
+    @ResponseBody
+    public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, Integer itemJobType, Integer itemJobNum,
         String itemTitle, Integer itemUserId, Integer itemWeekId, String itemBegin, String itemEnd,
         String itemFinish, String content, String remarks) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
-            return "redirect:/plan/login/index";
+        if (!checkLogin()) {
+            return new ResponseView<>(301, "请登录后再操作");
         }
-        model.addAttribute("admin", planUser);
-        model.addAttribute("itemsId", id);
 
-        List<String> errorMessage = new ArrayList<>(5);
-        if (!StringUtils.hasText(itemTitle)) {
-            errorMessage.add("标题不能为空!");
-        }
-        if (!StringUtils.hasText(itemBegin)) {
-            errorMessage.add("请选择开始日期!");
-        }
-        if (!StringUtils.hasText(itemEnd)) {
-            errorMessage.add("请选择截止日期!");
-        }
-        if (itemWeekId == null || itemWeekId < 1) {
-            errorMessage.add("请选择所属周计划!");
-        }
-        if (!errorMessage.isEmpty()) {
-            return "plan/items/edit";
+        ResponseView<Integer> errorMessage = validForm(itemTitle, itemWeekId,
+            itemBegin, itemEnd);
+        if (errorMessage != null) {
+            return errorMessage;
         }
         if (!StringUtils.hasText(remarks)) {
             remarks = "";
@@ -226,9 +223,11 @@ public class PlanItemsController extends PlanBaseController {
         item.setEditDate(DateTimeUtils.DateTimeToLong());
 
         Integer updateRows = itemsService.edit(id, item);
-        model.addAttribute("updateRows", updateRows);
-
-        return "redirect:/plan/items/list";
+        if (updateRows > 0) {
+            return new ResponseView<>(200, "操作成功", id);
+        } else {
+            return new ResponseView<>(500, "操作失败", id);
+        }
     }
 
 
