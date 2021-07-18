@@ -82,8 +82,7 @@ public class PlanWeeksController extends PlanBaseController {
     @ResponseBody
     public ResponseView<Integer> doAdd(String weekTitle, String weekBegin, String weekEnd,
         String remarks) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        if (!checkLogin()) {
             return new ResponseView<>(301, "请登录后再操作");
         }
 
@@ -91,27 +90,25 @@ public class PlanWeeksController extends PlanBaseController {
         if (errorMessage != null) {
             return errorMessage;
         }
-        if (!StringUtils.hasText(remarks)) {
-            remarks = "";
-        }
 
-        PlanWeeks weeks = new PlanWeeks();
-        weeks.setTitle(weekTitle);
-        Long beginEpoch = DateTimeUtils.DateToLong(weekBegin);
-        Long endEpoch = DateTimeUtils.DateToLong(weekEnd);
-
-        weeks.setBeginDate(beginEpoch);
-        weeks.setEndDate(endEpoch);
+        PlanWeeks weeks = buildPlanWeeks(weekTitle, weekBegin, weekEnd, remarks);
         weeks.setCreateDate(DateTimeUtils.DateTimeToLong());
-        weeks.setRemarks(remarks);
 
         Integer weekId = weeksService.add(weeks);
 
         return new ResponseView<>(200, "操作成功", weekId);
     }
 
+    /**
+     * 验证表单数据
+     *
+     * @param weekTitle 标题
+     * @param weekBegin 开始日期
+     * @param weekEnd   结束日期
+     * @return 异常提示对象或null
+     */
     private ResponseView<Integer> validForm(String weekTitle, String weekBegin, String weekEnd) {
-        StringBuffer errorMessage = new StringBuffer(5);
+        StringBuffer errorMessage = new StringBuffer(25);
         if (!StringUtils.hasText(weekTitle)) {
             errorMessage.append("标题不能为空!").append("\\n");
         }
@@ -151,8 +148,7 @@ public class PlanWeeksController extends PlanBaseController {
     @ResponseBody
     public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, String weekTitle, String weekBegin,
         String weekEnd, String remarks) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        if (!checkLogin()) {
             return new ResponseView<>(301, "请登录后再操作");
         }
 
@@ -161,6 +157,26 @@ public class PlanWeeksController extends PlanBaseController {
             return errorMessage;
         }
 
+        PlanWeeks weeks = buildPlanWeeks(weekTitle, weekBegin, weekEnd, remarks);
+
+        Integer updateRows = weeksService.update(id, weeks);
+        if (updateRows > 0) {
+            return new ResponseView<>(200, "操作成功", id);
+        } else {
+            return new ResponseView<>(500, "操作失败", id);
+        }
+    }
+
+    /**
+     * 构建周计划
+     *
+     * @param weekTitle 标题
+     * @param weekBegin 开始日期
+     * @param weekEnd   结束日期
+     * @param remarks   备注
+     * @return 周计划
+     */
+    private PlanWeeks buildPlanWeeks(String weekTitle, String weekBegin, String weekEnd, String remarks) {
         if (!StringUtils.hasText(remarks)) {
             remarks = "";
         }
@@ -173,13 +189,7 @@ public class PlanWeeksController extends PlanBaseController {
         weeks.setBeginDate(beginEpoch);
         weeks.setEndDate(endEpoch);
         weeks.setRemarks(remarks);
-
-        Integer updateRows = weeksService.update(id, weeks);
-        if (updateRows > 0) {
-            return new ResponseView<>(200, "操作成功", id);
-        } else {
-            return new ResponseView<>(500, "操作失败", id);
-        }
+        return weeks;
     }
 
     @RequestMapping("/detail/{id}")
