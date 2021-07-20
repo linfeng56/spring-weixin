@@ -87,7 +87,7 @@ public class PlanItemsController extends PlanBaseController {
         }
         model.addAttribute("admin", planUser);
 
-        Map jobTypes = JobType.toMap();
+        Map<String, String> jobTypes = JobType.toMap();
         model.addAttribute("jobTypes", jobTypes);
 
         List<PlanUsers> users = usersService.list();
@@ -111,10 +111,38 @@ public class PlanItemsController extends PlanBaseController {
             return errorMessage;
         }
 
+        PlanItems item = buildPlanItems(itemJobType, itemJobNum, itemTitle, itemUserId, itemWeekId, itemBegin, itemEnd,
+            itemFinish, content,
+            remarks);
+        item.setCreateDate(DateTimeUtils.DateTimeToLong());
+        item.setEditDate(DateTimeUtils.DateTimeToLong());
+
+        Integer itemId = itemsService.add(item);
+
+        return new ResponseView<>(200, "操作成功", itemId);
+    }
+
+    /**
+     * 构建周计划项
+     *
+     * @param itemJobType 计划项类型
+     * @param itemJobNum  计划项编号
+     * @param itemTitle   标题
+     * @param itemUserId  用户编号
+     * @param itemWeekId  周计划编号
+     * @param itemBegin   开始日期
+     * @param itemEnd     结束日期
+     * @param itemFinish  完成日期
+     * @param content     内容
+     * @param remarks     备注
+     * @return 周计划项
+     */
+    private PlanItems buildPlanItems(Integer itemJobType, Integer itemJobNum, String itemTitle, Integer itemUserId,
+        Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
+
         if (!StringUtils.hasText(remarks)) {
             remarks = "";
         }
-
         PlanItems item = new PlanItems();
         item.setJobType(itemJobType);
         item.setJobNum(itemJobNum);
@@ -131,14 +159,18 @@ public class PlanItemsController extends PlanBaseController {
 
         item.setContent(content);
         item.setRemarks(remarks);
-        item.setCreateDate(DateTimeUtils.DateTimeToLong());
-        item.setEditDate(DateTimeUtils.DateTimeToLong());
-
-        Integer itemId = itemsService.add(item);
-
-        return new ResponseView<>(200, "操作成功", itemId);
+        return item;
     }
 
+    /**
+     * 表单数据验证
+     *
+     * @param itemTitle  标题
+     * @param itemWeekId 周计划编号
+     * @param itemBegin  开始日期
+     * @param itemEnd    结束日期
+     * @return 异常提示对象或null
+     */
     private ResponseView<Integer> validForm(String itemTitle, Integer itemWeekId, String itemBegin,
         String itemEnd) {
         StringBuffer errorMessage = new StringBuffer(25);
@@ -188,7 +220,8 @@ public class PlanItemsController extends PlanBaseController {
 
     @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, Integer itemJobType, Integer itemJobNum,
+    public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, Integer itemJobType,
+        Integer itemJobNum,
         String itemTitle, Integer itemUserId, Integer itemWeekId, String itemBegin, String itemEnd,
         String itemFinish, String content, String remarks) {
         if (!checkLogin()) {
@@ -200,26 +233,9 @@ public class PlanItemsController extends PlanBaseController {
         if (errorMessage != null) {
             return errorMessage;
         }
-        if (!StringUtils.hasText(remarks)) {
-            remarks = "";
-        }
 
-        PlanItems item = new PlanItems();
-        item.setJobType(itemJobType);
-        item.setJobNum(itemJobNum);
-        item.setTitle(itemTitle);
-        item.setUserId(itemUserId);
-        item.setWeekId(itemWeekId);
-        Long beginEpoch = DateTimeUtils.DateToLong(itemBegin);
-        Long endEpoch = DateTimeUtils.DateToLong(itemEnd);
-        Long finishEpoch = DateTimeUtils.DateToLong(itemFinish);
-
-        item.setBeginDate(beginEpoch);
-        item.setEndDate(endEpoch);
-        item.setJobFinishDate(finishEpoch);
-
-        item.setContent(content);
-        item.setRemarks(remarks);
+        PlanItems item = buildPlanItems(itemJobType, itemJobNum, itemTitle, itemUserId, itemWeekId, itemBegin, itemEnd,
+            itemFinish, content, remarks);
         item.setEditDate(DateTimeUtils.DateTimeToLong());
 
         Integer updateRows = itemsService.edit(id, item);
