@@ -33,7 +33,7 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form role="form" method="post" action="${request.getContextPath()}/plan/items/doEdit/${item.id}">
+              <form role="form" class="from-ajax" method="post" action="${request.getContextPath()}/plan/items/doEdit/${item.id}">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-2">
@@ -185,6 +185,24 @@
     });
     $('#itemFinish').datetimepicker({
         format: 'YYYY-MM-DD'
+    });
+    $('.from-ajax').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:$(this).attr('action'),
+            type:'post',
+            data:$(this).serialize(),
+            success:function(data){
+                $('#myModalMessageTitle').text("操作提示");
+                if (data.status=="200"){
+                    $('.modal-body').text("保存成功");
+                }else{
+                    $('.modal-body').text("保存失败。错误编码："+data.code);
+                }
+                console.log(data);
+                $('#myModalMessage').modal('show');
+            }
+        });
     });
 </script>
 </#macro>
