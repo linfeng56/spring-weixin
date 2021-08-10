@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.github.linfeng.admin.view.message.MessageType;
 import com.github.linfeng.admin.view.message.ViewMessage;
 import com.github.linfeng.plan.service.IPlanUsersService;
+import com.github.linfeng.plan.view.LoginUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,11 +57,11 @@ public class PlanLoginController {
         if (remember == null) {
             remember = 0;
         }
-
-        if (planUsersService.checkLogin(loginName, loginPwd)) {
+        LoginUser loginUser = planUsersService.checkLogin(loginName, loginPwd);
+        if (loginUser != null && loginUser.getUserId() > 0) {
             msg = new ViewMessage(MessageType.SUCCESS, "登录成功", "登录成功", "plan/login/into",
                 request.getContextPath() + "/plan/weeks/index");
-            request.getSession().setAttribute("planUser", loginName);
+            request.getSession().setAttribute("loginUser", loginUser);
         } else {
             msg = new ViewMessage(MessageType.SUCCESS, "登录失败", "用户名或密码错误", "plan/login/login");
         }

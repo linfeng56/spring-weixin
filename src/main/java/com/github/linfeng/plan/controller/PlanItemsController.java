@@ -13,6 +13,7 @@ import com.github.linfeng.plan.service.IPlanItemsService;
 import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IPlanWeeksService;
 import com.github.linfeng.plan.view.JobType;
+import com.github.linfeng.plan.view.LoginUser;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
@@ -46,11 +47,11 @@ public class PlanItemsController extends PlanBaseController {
 
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        LoginUser loginUser = new LoginUser();
+        if (!checkLogin(loginUser)) {
             return "redirect:/plan/login/index";
         }
-        model.addAttribute("admin", planUser);
+        model.addAttribute("admin", loginUser);
         return "plan/items/index";
     }
 
@@ -60,11 +61,11 @@ public class PlanItemsController extends PlanBaseController {
         @RequestParam(value = "searchUserId", required = false) Integer searchUserId,
         @RequestParam(value = "searchText", required = false) String searchText,
         HttpServletRequest request, HttpServletResponse response) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        LoginUser loginUser = new LoginUser();
+        if (!checkLogin(loginUser)) {
             return "redirect:/plan/login/index";
         }
-        model.addAttribute("admin", planUser);
+        model.addAttribute("admin", loginUser);
 
         List<PlanItems> list = itemsService.listByWeek(searchWeekId, searchUserId, searchText);
 
@@ -81,11 +82,11 @@ public class PlanItemsController extends PlanBaseController {
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        LoginUser loginUser = new LoginUser();
+        if (!checkLogin(loginUser)) {
             return "redirect:/plan/login/index";
         }
-        model.addAttribute("admin", planUser);
+        model.addAttribute("admin", loginUser);
 
         Map<String, String> jobTypes = JobType.toMap();
         model.addAttribute("jobTypes", jobTypes);
@@ -195,11 +196,11 @@ public class PlanItemsController extends PlanBaseController {
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Integer id, Model model) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        LoginUser loginUser = new LoginUser();
+        if (!checkLogin(loginUser)) {
             return "redirect:/plan/login/index";
         }
-        model.addAttribute("admin", planUser);
+        model.addAttribute("admin", loginUser);
         PlanItems item;
         if (id > 0) {
             item = itemsService.getById(id);

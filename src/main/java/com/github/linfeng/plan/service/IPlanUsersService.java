@@ -2,6 +2,7 @@ package com.github.linfeng.plan.service;
 
 import java.util.List;
 import com.github.linfeng.plan.entity.PlanUsers;
+import com.github.linfeng.plan.view.LoginUser;
 
 /**
  * 服务类.
@@ -21,5 +22,5 @@ public interface IPlanUsersService {
      * @param loginPwd  登录密码
      * @return true验证通过, false验证不通过.
      */
-    boolean checkLogin(String loginName, String loginPwd);
+    LoginUser checkLogin(String loginName, String loginPwd);
 }

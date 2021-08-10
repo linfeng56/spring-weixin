@@ -7,9 +7,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
-import com.github.linfeng.plan.entity.PlanUsers;
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.service.IPlanWeeksService;
+import com.github.linfeng.plan.view.LoginUser;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
@@ -38,11 +38,11 @@ public class PlanWeeksController extends PlanBaseController {
 
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        LoginUser loginUser = new LoginUser();
+        if (!checkLogin(loginUser)) {
             return "redirect:/plan/login/index";
         }
-        model.addAttribute("admin", planUser);
+        model.addAttribute("admin", loginUser);
         return "plan/weeks/index";
     }
 
@@ -50,11 +50,11 @@ public class PlanWeeksController extends PlanBaseController {
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
         HttpServletRequest request, HttpServletResponse response) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        LoginUser loginUser = new LoginUser();
+        if (!checkLogin(loginUser)) {
             return "redirect:/plan/login/index";
         }
-        model.addAttribute("admin", planUser);
+        model.addAttribute("admin", loginUser);
 
         List<PlanWeeks> list;
         if (StringUtils.hasText(searchText)) {
@@ -70,11 +70,11 @@ public class PlanWeeksController extends PlanBaseController {
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        LoginUser loginUser = new LoginUser();
+        if (!checkLogin(loginUser)) {
             return "redirect:/plan/login/index";
         }
-        model.addAttribute("admin", planUser);
+        model.addAttribute("admin", loginUser);
         return "plan/weeks/add";
     }
 
@@ -127,11 +127,11 @@ public class PlanWeeksController extends PlanBaseController {
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Integer id, Model model) {
-        PlanUsers planUser = new PlanUsers();
-        if (!checkLogin(planUser)) {
+        LoginUser loginUser = new LoginUser();
+        if (!checkLogin(loginUser)) {
             return "redirect:/plan/login/index";
         }
-        model.addAttribute("admin", planUser);
+        model.addAttribute("admin", loginUser);
         PlanWeeks item;
         if (id > 0) {
             item = weeksService.getById(id);

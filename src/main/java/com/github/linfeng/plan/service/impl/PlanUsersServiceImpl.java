@@ -6,6 +6,8 @@ import java.util.List;
 import com.github.linfeng.plan.entity.PlanUsers;
 import com.github.linfeng.plan.mapper.PlanUsersMapper;
 import com.github.linfeng.plan.service.IPlanUsersService;
+import com.github.linfeng.plan.view.LoginUser;
+import com.github.linfeng.utils.DateTimeUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +35,8 @@ public class PlanUsersServiceImpl implements IPlanUsersService {
     }
 
     @Override
-    public boolean checkLogin(String loginName, String loginPwd) {
-        boolean ret = false;
+    public LoginUser checkLogin(String loginName, String loginPwd) {
+        LoginUser ret = null;
 
         if (StringUtils.hasText(loginName) && StringUtils.hasText(loginPwd)) {
             PlanUsers planUser = planUsersMapper.getUserByLoginName(loginName);
@@ -42,7 +44,13 @@ public class PlanUsersServiceImpl implements IPlanUsersService {
                 && encodePassword(loginPwd).equals(planUser.getLoginPassword())) {
                 Long time = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
                 boolean loginTime = planUsersMapper.updateLoginDate(planUser.getUserId(), time);
-                ret = true;
+                LoginUser loginUser = new LoginUser();
+                loginUser.setUserId(planUser.getUserId());
+                loginUser.setUserName(planUser.getUserName());
+                loginUser.setLoginName(planUser.getLoginName());
+                loginUser.setCreateDate(planUser.getCreateDate());
+                loginUser.setLoginDate(DateTimeUtils.DateTimeToLong());
+                ret = loginUser;
             }
         }
         return ret;
