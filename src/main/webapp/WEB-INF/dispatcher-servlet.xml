@@ -68,4 +68,12 @@
 
     <!--自动扫描装配-->
     <context:component-scan base-package="com.github.linfeng"/>
+    <mvc:interceptors>
+        <!-- 登录拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/plan/login/*"/>
+            <ref bean="checkLoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

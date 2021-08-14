@@ -31,6 +31,17 @@ public class PlanLoginController {
      *
      * @return 登录页
      */
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(HttpServletRequest request) {
+        request.getSession().setAttribute("loginUser", "");
+        return "plan/login/into";
+    }
+
+    /**
+     * 登录页.
+     *
+     * @return 登录页
+     */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index() {
 
