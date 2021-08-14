@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.github.linfeng.plan.entity.PlanItems;
 import com.github.linfeng.plan.entity.PlanUsers;
+import com.github.linfeng.plan.holder.LoginUserHolder;
 import com.github.linfeng.plan.service.IPlanItemsService;
 import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IPlanWeeksService;
@@ -47,10 +48,7 @@ public class PlanItemsController extends PlanBaseController {
 
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
-        LoginUser loginUser = new LoginUser();
-        if (!checkLogin(loginUser)) {
-            return "redirect:/plan/login/index";
-        }
+        LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
         return "plan/items/index";
     }
@@ -61,10 +59,7 @@ public class PlanItemsController extends PlanBaseController {
         @RequestParam(value = "searchUserId", required = false) Integer searchUserId,
         @RequestParam(value = "searchText", required = false) String searchText,
         HttpServletRequest request, HttpServletResponse response) {
-        LoginUser loginUser = new LoginUser();
-        if (!checkLogin(loginUser)) {
-            return "redirect:/plan/login/index";
-        }
+        LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
 
         List<PlanItems> list = itemsService.listByWeek(searchWeekId, searchUserId, searchText);
@@ -82,10 +77,7 @@ public class PlanItemsController extends PlanBaseController {
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
-        LoginUser loginUser = new LoginUser();
-        if (!checkLogin(loginUser)) {
-            return "redirect:/plan/login/index";
-        }
+        LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
 
         Map<String, String> jobTypes = JobType.toMap();
@@ -102,9 +94,6 @@ public class PlanItemsController extends PlanBaseController {
     public ResponseView<Integer> doAdd(Model model, Integer itemJobType, Integer itemJobNum,
         String itemTitle, Integer itemUserId,
         Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
-        if (!checkLogin()) {
-            return new ResponseView<>(301, "请登录后再操作");
-        }
 
         ResponseView<Integer> errorMessage = validForm(itemTitle, itemWeekId,
             itemBegin, itemEnd);
@@ -196,10 +185,7 @@ public class PlanItemsController extends PlanBaseController {
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Integer id, Model model) {
-        LoginUser loginUser = new LoginUser();
-        if (!checkLogin(loginUser)) {
-            return "redirect:/plan/login/index";
-        }
+        LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
         PlanItems item;
         if (id > 0) {
@@ -225,9 +211,6 @@ public class PlanItemsController extends PlanBaseController {
         Integer itemJobNum,
         String itemTitle, Integer itemUserId, Integer itemWeekId, String itemBegin, String itemEnd,
         String itemFinish, String content, String remarks) {
-        if (!checkLogin()) {
-            return new ResponseView<>(301, "请登录后再操作");
-        }
 
         ResponseView<Integer> errorMessage = validForm(itemTitle, itemWeekId,
             itemBegin, itemEnd);
