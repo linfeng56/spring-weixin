@@ -1,6 +1,10 @@
 package com.github.linfeng.plan.view;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import com.alibaba.fastjson.JSON;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * 登录用户信息
@@ -87,5 +91,30 @@ public class LoginUser implements Serializable {
         sb.append(", loginDate=").append(loginDate);
         sb.append('}');
         return sb.toString();
+    }
+
+    /**
+     * 登录用户加密
+     *
+     * @return 加密后的字串
+     */
+    public String encode() {
+        return Base64.encodeBase64URLSafeString(JSON.toJSONString(this).getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 登录用户解密
+     *
+     * @param userInfo 待解密字串
+     * @return 登录用户或null
+     */
+    public static LoginUser decode(String userInfo) {
+        String user = new String(Base64.decodeBase64(userInfo));
+        LoginUser loginUser = JSON.parseObject(user, LoginUser.class);
+        if (loginUser != null && loginUser.getUserId() > 0) {
+            return loginUser;
+        } else {
+            return null;
+        }
     }
 }
