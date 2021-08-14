@@ -12,13 +12,31 @@
     <!--配置注解驱动 可以将request参数绑定到controller参数上-->
     <mvc:annotation-driven>
         <!-- 设置不使用默认的消息转换器 -->
-        <mvc:message-converters register-defaults="false">
-            <bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
-                <!-- 加入媒体类型 返回contentType -->
+        <mvc:message-converters>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
                         <value>application/json;charset=UTF-8</value>
                     </list>
+                </property>
+                <property name="fastJsonConfig">
+                    <bean class="com.alibaba.fastjson.support.config.FastJsonConfig">
+                        <property name="serializerFeatures">
+                            <list>
+                                <value>WriteMapNullValue</value>
+                                <value>WriteNullNumberAsZero</value>
+                                <value>WriteNullListAsEmpty</value>
+                                <value>WriteNullStringAsEmpty</value>
+                                <value>WriteNullBooleanAsFalse</value>
+                                <value>WriteDateUseDateFormat</value>
+                            </list>
+                        </property>
+                        <property name="serializeConfig">
+                            <bean class="com.alibaba.fastjson.serializer.SerializeConfig">
+                                <property name="propertyNamingStrategy" value="SnakeCase"/>
+                            </bean>
+                        </property>
+                    </bean>
                 </property>
             </bean>
         </mvc:message-converters>
