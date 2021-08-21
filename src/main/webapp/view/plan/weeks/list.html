@@ -1,6 +1,33 @@
 <#include "/plan/layout/layout_default.html">
 
 <#macro container>
+
+
+<!-- Modal -->
+<div class="modal" data-backdrop="static" id="myModalDialog" tabindex="-1" aria-labelledby="myModalDialogTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form role="form" class="from-ajax" method="post" action="">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalDialogTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div><textarea class="summary-content" name="summary" cols="106" rows="10"></textarea> </div>
+            </div>
+            <div class="modal-footer">
+                <span class="tip-msg">...</span>
+                <button type="submit" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary">确定</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -67,7 +94,7 @@
                                     </td>
                                     <td>
                                         <a href="${request.getContextPath()}/plan/items/list?searchWeekId=${weekPlan.weekId}" class="btn-sm btn-primary">计划</a>
-                                        <a href="${request.getContextPath()}/plan/summary/list?searchWeekId=#${weekPlan.weekId}" class="btn-sm btn-primary">总结</a>
+                                        <a href="#" data-id="${weekPlan.weekId}" data-url="${request.getContextPath()}/plan/weeks/summary/${weekPlan.weekId}" class="btn-sm btn-primary ajax-edit">总结</a>
                                         <a href="#${weekPlan.weekId}" class="btn-sm btn-primary">汇总</a>
                                         <a href="edit/${weekPlan.weekId}" class="btn-sm btn-primary">编辑</a>
                                     </td>
@@ -95,4 +122,50 @@
 </#macro>
 
 <#macro footer_js>
+<script>
+    $('.ajax-edit').click(function(e){
+        e.preventDefault();
+        var url = $(this).data("url")
+        var id = $(this).data("id")
+        $('#myModalDialog .from-ajax').attr('action',url);
+        $.ajax({
+            url:url,
+            type:'get',
+            success:function(data){
+                $('#myModalDialogTitle').text("总结"+id);
+                $('.summary-content').val("");
+                if (data.status=="200"){
+                    $('#myModalDialogTitle').text(data.data.title+" - 总结");
+                    $('.summary-content').val(data.data.summary);
+                    $('#myModalDialog').modal('show');
+                }else{
+                    $('#myModalMessageTitle').text("操作提示");
+                    $('.modal-body-content').text("内容失败。错误编码："+data.code);
+                    $('#myModalMessage').modal('show');
+                }
+                console.log(data);
+            }
+        });
+    });
+
+    $('#myModalDialog .from-ajax').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:$(this).attr('action'),
+            type:'post',
+            data:$(this).serialize(),
+            success:function(data){
+                $('#myModalDialog .tip-msg').text("");
+                if (data.status=="200"){
+                    $('#myModalDialog .tip-msg').text("保存成功");
+                    $('#myModalMessage').modal('hide');
+                }else{
+                    $('#myModalDialog .tip-msg').text("保存失败。错误编码："+data.code);
+                }
+                console.log(data);
+            }
+        });
+    });
+
+</script>
 </#macro>

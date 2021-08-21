@@ -29,4 +29,6 @@ public interface PlanWeeksMapper {
     List<PlanWeeks> listByTitle(String searchText);
 
     Integer update(@Param("id") Integer id, @Param("week") PlanWeeks week);
+
+    Integer updateSummary(@Param("id") Integer id, @Param("summary") String summary,@Param("summaryDate") Long summaryDate);
 }

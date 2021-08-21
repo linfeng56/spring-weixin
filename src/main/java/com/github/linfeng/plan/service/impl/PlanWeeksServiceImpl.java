@@ -43,4 +43,9 @@ public class PlanWeeksServiceImpl implements IPlanWeeksService {
     public Integer update(Integer id, PlanWeeks week) {
         return planWeeksMapper.update(id, week);
     }
+
+    @Override
+    public Integer updateSummary(Integer id, String summary, Long summaryDate) {
+        return planWeeksMapper.updateSummary(id, summary, summaryDate);
+    }
 }

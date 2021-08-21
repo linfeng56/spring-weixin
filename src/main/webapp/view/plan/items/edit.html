@@ -195,9 +195,9 @@
             success:function(data){
                 $('#myModalMessageTitle').text("操作提示");
                 if (data.status=="200"){
-                    $('.modal-body').text("保存成功");
+                    $('.modal-body-content').text("保存成功");
                 }else{
-                    $('.modal-body').text("保存失败。错误编码："+data.code);
+                    $('.modal-body-content').text("保存失败。错误编码："+data.code);
                 }
                 console.log(data);
                 $('#myModalMessage').modal('show');

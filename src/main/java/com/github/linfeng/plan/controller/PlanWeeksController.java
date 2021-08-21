@@ -198,25 +198,39 @@ public class PlanWeeksController extends PlanBaseController {
     }
 
 
-    @RequestMapping("/summary/{id}")
+    @RequestMapping(value = "/summary/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String summary(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
+    public ResponseView summary(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
         HttpServletResponse response) {
-        Map<String, Object> ret = new HashMap<>(6);
         if (null == id || id <= 0) {
-            ret.put("retCode", "fail");
-            ret.put("errMsg", "error id");
-            return JSONObject.toJSONString(ret);
+            return new ResponseView<>(500, "参数不合法");
         }
         PlanWeeks info = weeksService.getById(id);
         if (null != info) {
-            ret.put("retCode", "success");
-            ret.put("errMsg", "success");
-            ret.put("data", info);
+            return new ResponseView<>(200, "成功", info);
         } else {
-            ret.put("retCode", "fail");
-            ret.put("errMsg", "not exists id:[" + id + "]");
+            return new ResponseView<>(400, "记录不存在");
         }
-        return JSONObject.toJSONString(ret);
+    }
+
+    @RequestMapping(value = "/summary/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseView<PlanWeeks> summaryEdit(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
+        HttpServletResponse response) {
+        if (null == id || id <= 0) {
+            return new ResponseView<>(500, "参数不合法");
+        }
+        PlanWeeks info = weeksService.getById(id);
+        if (null == info) {
+            return new ResponseView<>(400, "记录不存在");
+        }
+        String summary = request.getParameter("summary");
+        Long summaryDate = DateTimeUtils.DateTimeToLong();
+        Integer result = weeksService.updateSummary(id, summary, summaryDate);
+        if (result > 0) {
+            return new ResponseView<>(200, "保存成功");
+        } else {
+            return new ResponseView<>(500, "保存失败");
+        }
     }
 }
