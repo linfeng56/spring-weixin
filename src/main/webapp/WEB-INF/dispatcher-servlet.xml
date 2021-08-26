@@ -72,6 +72,7 @@
         <!-- 登录拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/statics/**"/>
             <mvc:exclude-mapping path="/plan/login/*"/>
             <ref bean="checkLoginInterceptor"/>
         </mvc:interceptor>
