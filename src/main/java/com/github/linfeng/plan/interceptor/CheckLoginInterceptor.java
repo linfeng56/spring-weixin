@@ -48,6 +48,10 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
                     if (loginUser != null) {
                         LoginUserHolder.setLoginUser(loginUser);
                         return true;
+                    }else{
+                        if (LOGGER.isDebugEnabled()){
+                            LOGGER.debug("解析用户登录信息失败.[{}]",user);
+                        }
                     }
                 }
             }
