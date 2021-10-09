@@ -23,8 +23,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/plan/login")
 public class PlanLoginController {
 
+
+    /**
+     * 用户信息服务
+     */
+    private final IPlanUsersService planUsersService;
+
     @Autowired
-    private IPlanUsersService planUsersService;
+    public PlanLoginController(IPlanUsersService planUsersService) {
+        this.planUsersService = planUsersService;
+    }
 
     /**
      * 登录页.
@@ -56,7 +64,7 @@ public class PlanLoginController {
      */
     @RequestMapping(value = "doLogin", method = RequestMethod.POST)
     public String doLogin(HttpServletRequest request, String loginName, String loginPwd, Integer remember,
-        Model model) {
+                          Model model) {
 
         ViewMessage msg = null;
         if (!StringUtils.hasText(loginName)
