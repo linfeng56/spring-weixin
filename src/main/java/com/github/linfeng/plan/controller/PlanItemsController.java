@@ -37,14 +37,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/plan/items")
 public class PlanItemsController extends PlanBaseController {
 
-    @Autowired
-    private IPlanItemsService itemsService;
+    /**
+     * 周计划项服务
+     */
+    private final IPlanItemsService itemsService;
+
+    /**
+     * 用户服务
+     */
+    private final IPlanUsersService usersService;
+
+    /**
+     * 周计划服务
+     */
+    private final IPlanWeeksService weeksService;
 
     @Autowired
-    private IPlanUsersService usersService;
+    public PlanItemsController(IPlanItemsService itemsService,
+                               IPlanUsersService usersService,
+                               IPlanWeeksService weeksService) {
+        this.itemsService = itemsService;
+        this.usersService = usersService;
+        this.weeksService = weeksService;
+    }
 
-    @Autowired
-    private IPlanWeeksService weeksService;
 
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -56,9 +72,9 @@ public class PlanItemsController extends PlanBaseController {
 
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "searchWeekId", required = false) Integer searchWeekId,
-        @RequestParam(value = "searchUserId", required = false) Integer searchUserId,
-        @RequestParam(value = "searchText", required = false) String searchText,
-        HttpServletRequest request, HttpServletResponse response) {
+                       @RequestParam(value = "searchUserId", required = false) Integer searchUserId,
+                       @RequestParam(value = "searchText", required = false) String searchText,
+                       HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
 
@@ -92,8 +108,8 @@ public class PlanItemsController extends PlanBaseController {
     @RequestMapping(value = "/doAdd", method = RequestMethod.POST)
     @ResponseBody
     public ResponseView<Integer> doAdd(Model model, Integer itemJobType, Integer itemJobNum,
-        String itemTitle, Integer itemUserId,
-        Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
+                                       String itemTitle, Integer itemUserId,
+                                       Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
 
         ResponseView<Integer> errorMessage = validForm(itemTitle, itemWeekId,
             itemBegin, itemEnd);
@@ -128,7 +144,7 @@ public class PlanItemsController extends PlanBaseController {
      * @return 周计划项
      */
     private PlanItems buildPlanItems(Integer itemJobType, Integer itemJobNum, String itemTitle, Integer itemUserId,
-        Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
+                                     Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
 
         if (!StringUtils.hasText(remarks)) {
             remarks = "";
@@ -162,7 +178,7 @@ public class PlanItemsController extends PlanBaseController {
      * @return 异常提示对象或null
      */
     private ResponseView<Integer> validForm(String itemTitle, Integer itemWeekId, String itemBegin,
-        String itemEnd) {
+                                            String itemEnd) {
         StringBuffer errorMessage = new StringBuffer(25);
         if (!StringUtils.hasText(itemTitle)) {
             errorMessage.append("标题不能为空!").append("\\n");
@@ -208,9 +224,9 @@ public class PlanItemsController extends PlanBaseController {
     @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
     @ResponseBody
     public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, Integer itemJobType,
-        Integer itemJobNum,
-        String itemTitle, Integer itemUserId, Integer itemWeekId, String itemBegin, String itemEnd,
-        String itemFinish, String content, String remarks) {
+                                        Integer itemJobNum,
+                                        String itemTitle, Integer itemUserId, Integer itemWeekId, String itemBegin, String itemEnd,
+                                        String itemFinish, String content, String remarks) {
 
         ResponseView<Integer> errorMessage = validForm(itemTitle, itemWeekId,
             itemBegin, itemEnd);
@@ -234,7 +250,7 @@ public class PlanItemsController extends PlanBaseController {
     @RequestMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-        HttpServletResponse response) {
+                       HttpServletResponse response) {
         Map<String, Object> ret = new HashMap<>(6);
         if (null == id || id <= 0) {
             ret.put("retCode", "fail");

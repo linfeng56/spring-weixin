@@ -23,8 +23,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/plan/login")
 public class PlanLoginController {
 
+
+    /**
+     * 用户信息服务
+     */
+    private final IPlanUsersService planUsersService;
+
     @Autowired
-    private IPlanUsersService planUsersService;
+    public PlanLoginController(IPlanUsersService planUsersService) {
+        this.planUsersService = planUsersService;
+    }
 
     /**
      * 登录页.

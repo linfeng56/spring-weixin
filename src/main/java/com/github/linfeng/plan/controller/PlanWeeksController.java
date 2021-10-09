@@ -33,9 +33,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/plan/weeks")
 public class PlanWeeksController extends PlanBaseController {
 
-    @Autowired
-    private IPlanWeeksService weeksService;
+    /**
+     * 周计划服务
+     */
+    private final IPlanWeeksService weeksService;
 
+    @Autowired
+    public PlanWeeksController(IPlanWeeksService weeksService) {
+        this.weeksService = weeksService;
+    }
 
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -47,7 +53,7 @@ public class PlanWeeksController extends PlanBaseController {
 
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
-        HttpServletRequest request, HttpServletResponse response) {
+                       HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
 
@@ -73,7 +79,7 @@ public class PlanWeeksController extends PlanBaseController {
     @RequestMapping(value = "/doAdd", method = RequestMethod.POST)
     @ResponseBody
     public ResponseView<Integer> doAdd(String weekTitle, String weekBegin, String weekEnd,
-        String remarks) {
+                                       String remarks) {
 
         ResponseView<Integer> errorMessage = validForm(weekTitle, weekBegin, weekEnd);
         if (errorMessage != null) {
@@ -133,7 +139,7 @@ public class PlanWeeksController extends PlanBaseController {
     @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
     @ResponseBody
     public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, String weekTitle, String weekBegin,
-        String weekEnd, String remarks) {
+                                        String weekEnd, String remarks) {
 
         ResponseView<Integer> errorMessage = validForm(weekTitle, weekBegin, weekEnd);
         if (errorMessage != null) {
@@ -178,7 +184,7 @@ public class PlanWeeksController extends PlanBaseController {
     @RequestMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-        HttpServletResponse response) {
+                       HttpServletResponse response) {
         Map<String, Object> ret = new HashMap<>(6);
         if (null == id || id <= 0) {
             ret.put("retCode", "fail");
@@ -201,7 +207,7 @@ public class PlanWeeksController extends PlanBaseController {
     @RequestMapping(value = "/summary/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseView summary(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-        HttpServletResponse response) {
+                                HttpServletResponse response) {
         if (null == id || id <= 0) {
             return new ResponseView<>(500, "参数不合法");
         }
@@ -216,7 +222,7 @@ public class PlanWeeksController extends PlanBaseController {
     @RequestMapping(value = "/summary/{id}", method = RequestMethod.POST)
     @ResponseBody
     public ResponseView<PlanWeeks> summaryEdit(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-        HttpServletResponse response) {
+                                               HttpServletResponse response) {
         if (null == id || id <= 0) {
             return new ResponseView<>(500, "参数不合法");
         }
