@@ -6,7 +6,7 @@ package com.github.linfeng.plan.controller;
  * @author 黄麟峰
  * @date 2021-03-22
  */
-public abstract class PlanBaseController {
+public abstract class BasePlanController {
 
 
 }
