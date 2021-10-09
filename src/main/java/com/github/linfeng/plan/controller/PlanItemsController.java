@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/plan/items")
-public class PlanItemsController extends PlanBaseController {
+public class PlanItemsController extends BasePlanController {
 
     /**
      * 周计划项服务

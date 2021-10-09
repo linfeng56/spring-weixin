@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/plan/weeks")
-public class PlanWeeksController extends PlanBaseController {
+public class PlanWeeksController extends BasePlanController {
 
     /**
      * 周计划服务
