@@ -10,17 +10,30 @@ public enum MessageType {
     /**
      * 成功
      */
-    SUCCESS,
+    SUCCESS(200),
     /**
      * 失败
      */
-    ERROR,
+    ERROR(500),
     /**
      * 一般信息
      */
-    INFO,
+    INFO(100),
     /**
      * 提示
      */
-    TIP
+    TIP(99);
+
+    /**
+     * 信息类型编码
+     */
+    private int code;
+
+    MessageType(int code) {
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
 }
