@@ -21,21 +21,19 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="#"><b>测试项目</b>管理后台</a>
+        <a href="#"><b>周计划</b>管理后台</a>
     </div>
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
             <p class="login-box-msg">管理后台登录</p>
-            <#if msg??>
-            <div class="row">
-                <div class="col-12"><p>${msg.content}</p></div>
+            <div class="row hidden" id="login-msg">
+                <div class="col-12"><p>提示信息</p></div>
             </div>
-        </#if>
-        <form action="doLogin" method="post">
+        <form id="form-login" action="doLogin" method="post">
             <div class="input-group mb-3">
                 <input type="email" name="loginName" class="form-control" placeholder="登录邮箱" required
-                       value="${loginName!''}">
+                       value="${loginName!'admin@google.com'}">
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-envelope"></span>
@@ -43,7 +41,7 @@
                 </div>
             </div>
             <div class="input-group mb-3">
-                <input type="password" name="loginPwd" class="form-control" placeholder="登录密码" required>
+                <input type="password" name="loginPwd" class="form-control" placeholder="登录密码" required value="111111">
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-lock"></span>
@@ -99,5 +97,38 @@
 <!-- AdminLTE App -->
 <script src="${request.getContextPath()}/statics/dist/js/adminlte.min.js"></script>
 
+<script>
+    $(function($){
+        $('#login-msg').hide();
+        let showTip = function (tip) {
+            $('#login-msg').show();
+            $('#login-msg>div>p').text(tip);
+        };
+        $('#form-login').submit(function() {
+            $.ajax({
+                url:'doLogin',
+                type:'post',
+                data:$('#form-login').serialize(),
+                dataType:'JSON',
+                success:function (data) {
+                    console.info(data);
+                    $('#login-msg').show();
+                    if (data && data.code==200) {
+                        showTip(data.title);
+                        window.location.href=data.to_url;
+                    }else if (data.title){
+                        showTip(data.title);
+                    }else{
+                        showTip('no data response');
+                    }
+                }
+            });
+            return false;
+        });
+
+
+        //$('#form-login').submit();
+    })
+</script>
 </body>
 </html>
