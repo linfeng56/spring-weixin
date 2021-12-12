@@ -2,6 +2,8 @@ package com.github.linfeng.plan.shiro;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
@@ -48,6 +50,9 @@ public class LoginTest {
         subject.logout();
     }
 
+    /**
+     * 测试用户名密码登录,JDBC
+     */
     @Test
     public void testJdbcLogin() {
         Factory<SecurityManager> factory =
@@ -57,12 +62,27 @@ public class LoginTest {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken("foo", "123456");
         try {
+            // 登录
             subject.login(token);
+        } catch (UnknownAccountException notUserEx) {
+            LOGGER.warn("用户不存在.", notUserEx);
+        } catch (IncorrectCredentialsException errorPasswordEx) {
+            LOGGER.warn("密码不正确.", errorPasswordEx);
         } catch (AuthenticationException e) {
             LOGGER.warn(e.getMessage(), e);
         }
+        // 验证登录
         Assert.assertTrue(subject.isAuthenticated());
-        subject.logout();
+        try {
+            // 验证角色
+            Assert.assertTrue(subject.hasRole("admin"));
+            // 验证权限
+            Assert.assertTrue(subject.isPermitted("plan:create"));
+        } finally {
+            // 登出
+            subject.logout();
+        }
+
     }
 
     @After

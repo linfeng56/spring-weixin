@@ -20,7 +20,16 @@ CREATE TABLE `roles_permissions`  (
   `permission` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_roles_permissions`(`role_name`, `permission`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of roles_permissions
+-- ----------------------------
+INSERT INTO `roles_permissions` VALUES (2, 'admin', 'plan:create');
+INSERT INTO `roles_permissions` VALUES (5, 'admin', 'plan:delete');
+INSERT INTO `roles_permissions` VALUES (4, 'admin', 'plan:update');
+INSERT INTO `roles_permissions` VALUES (3, 'admin', 'plan:view');
+INSERT INTO `roles_permissions` VALUES (1, 'admin', 'system:update');
 
 -- ----------------------------
 -- Table structure for user_roles
@@ -32,7 +41,12 @@ CREATE TABLE `user_roles`  (
   `role_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_user_roles`(`username`, `role_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of user_roles
+-- ----------------------------
+INSERT INTO `user_roles` VALUES (1, 'foo', 'admin');
 
 -- ----------------------------
 -- Table structure for users
@@ -45,7 +59,7 @@ CREATE TABLE `users`  (
   `password_salt` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_users_username`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of users
