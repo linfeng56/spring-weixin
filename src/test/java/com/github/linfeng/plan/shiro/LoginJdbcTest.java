@@ -12,6 +12,7 @@ import org.apache.shiro.util.Factory;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,16 +24,104 @@ public class LoginJdbcTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginJdbcTest.class);
 
-    /**
-     * 测试用户名密码登录,JDBC
-     */
-    @Test
-    public void testJdbcLogin() {
-        Factory<SecurityManager> factory =
-            new IniSecurityManagerFactory("classpath:shiro-jdbc-realm.ini");
+    private Subject subject;
+
+    @Before
+    public void setup() {
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro-jdbc-realm.ini");
         SecurityManager securityManager = factory.getInstance();
         SecurityUtils.setSecurityManager(securityManager);
-        Subject subject = SecurityUtils.getSubject();
+        subject = SecurityUtils.getSubject();
+        LOGGER.info("setup");
+    }
+
+    /**
+     * 测试用户不存在
+     */
+    @Test
+    public void testLoginNotUserFail() {
+        UsernamePasswordToken token = new UsernamePasswordToken("nobody", "123456");
+        try {
+            // 登录
+            subject.login(token);
+        } catch (AuthenticationException e) {
+            Assert.assertTrue(e instanceof UnknownAccountException);
+        }
+        // 验证登录
+        Assert.assertFalse(subject.isAuthenticated());
+    }
+
+    /**
+     * 测试密码不正确
+     */
+    @Test
+    public void testLoginPasswordFail() {
+        UsernamePasswordToken token = new UsernamePasswordToken("foo", "error password");
+        try {
+            // 登录
+            subject.login(token);
+        } catch (AuthenticationException e) {
+            Assert.assertTrue(e instanceof IncorrectCredentialsException);
+        }
+        // 验证登录
+        Assert.assertFalse(subject.isAuthenticated());
+    }
+
+    /**
+     * 测试角色
+     */
+    @Test
+    public void testNotRoleLogin() {
+        UsernamePasswordToken token = new UsernamePasswordToken("foo", "123456");
+        try {
+            // 登录
+            subject.login(token);
+        } catch (AuthenticationException e) {
+            LOGGER.warn(e.getMessage(), e);
+            Assert.fail("登录不成功,无法进行后续测试.");
+        }
+        // 验证登录
+        Assert.assertTrue(subject.isAuthenticated());
+        try {
+            // 验证角色
+            Assert.assertFalse(subject.hasRole("supper"));
+        } finally {
+            // 登出
+            subject.logout();
+        }
+
+    }
+
+    /**
+     * 测试角色
+     */
+    @Test
+    public void testRoleLogin() {
+        UsernamePasswordToken token = new UsernamePasswordToken("foo", "123456");
+        try {
+            // 登录
+            subject.login(token);
+        } catch (AuthenticationException e) {
+            LOGGER.warn(e.getMessage(), e);
+            Assert.fail("登录不成功,无法进行后续测试.");
+        }
+        // 验证登录
+        Assert.assertTrue(subject.isAuthenticated());
+        try {
+            // 验证角色
+            Assert.assertTrue(subject.hasRole("admin"));
+        } finally {
+            // 登出
+            subject.logout();
+        }
+
+    }
+
+    /**
+     * 测试用户登录
+     */
+    @Test
+    public void testMainLogin() {
         UsernamePasswordToken token = new UsernamePasswordToken("foo", "123456");
         try {
             // 登录
