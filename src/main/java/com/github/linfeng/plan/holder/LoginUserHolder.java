@@ -10,7 +10,7 @@ import com.github.linfeng.plan.view.LoginUser;
  */
 public class LoginUserHolder {
 
-    private static final ThreadLocal<LoginUser> userThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<LoginUser> LOGIN_USER_THREAD_LOCAL = new ThreadLocal<>();
 
     /**
      * 设置登录用户
@@ -18,7 +18,7 @@ public class LoginUserHolder {
      * @param user 登录用户信息
      */
     public static void setLoginUser(LoginUser user) {
-        userThreadLocal.set(user);
+        LOGIN_USER_THREAD_LOCAL.set(user);
     }
 
     /**
@@ -27,13 +27,13 @@ public class LoginUserHolder {
      * @return 当前登录用户或null
      */
     public static LoginUser getLoginUser() {
-        return userThreadLocal.get();
+        return LOGIN_USER_THREAD_LOCAL.get();
     }
 
     /**
      * 清理
      */
     public static void remove() {
-        userThreadLocal.remove();
+        LOGIN_USER_THREAD_LOCAL.remove();
     }
 }

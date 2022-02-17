@@ -26,8 +26,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/plan-users")
 public class PlanUsersController {
 
+    /**
+     * 用户服务
+     */
+    private final IPlanUsersService service;
+
     @Autowired
-    private IPlanUsersService service;
+    public PlanUsersController(IPlanUsersService service) {
+        this.service = service;
+    }
 
     @RequestMapping("/index")
     @ResponseBody
@@ -57,7 +64,7 @@ public class PlanUsersController {
     @RequestMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-        HttpServletResponse response) {
+                       HttpServletResponse response) {
         Map<String, Object> ret = new HashMap<>(6);
         if (null == id || id <= 0) {
             ret.put("retCode", "fail");
