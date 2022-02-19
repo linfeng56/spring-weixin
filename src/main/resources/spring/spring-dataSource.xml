@@ -8,9 +8,9 @@
     <!-- 数据源 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <property name="url"
-            value="jdbc:mysql://localhost:3306/spring_weixin?useUnicode=true&amp;useSSL=false&amp;characterEncoding=utf8"/>
-        <property name="username" value="root"/>
-        <property name="password" value="111111"/>
+            value="jdbc:mysql://${db.host}:${db.port}/${db.database}?useUnicode=true&amp;useSSL=false&amp;characterEncoding=${db.encoding}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 
         <property name="filters" value="stat,slf4f"/>
@@ -21,8 +21,6 @@
         <!-- 配置获取连接等待超时的时间 -->
         <property name="maxWait" value="60000"/>
         <property name="minIdle" value="3"/>
-
-
         <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
         <property name="timeBetweenEvictionRunsMillis" value="60000"/>
 
