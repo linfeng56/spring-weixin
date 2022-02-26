@@ -1,6 +1,6 @@
 package com.github.linfeng.plan.shiro;
 
-import java.util.Arrays;
+import java.util.Collections;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import org.apache.shiro.SecurityUtils;
@@ -58,7 +58,7 @@ public class LoginJdbcJavaTest {
         JdbcRealm jdbcRealm = new JdbcRealm();
         jdbcRealm.setDataSource(dataSource);
         jdbcRealm.setPermissionsLookupEnabled(true);
-        securityManager.setRealms(Arrays.asList((Realm) jdbcRealm));
+        securityManager.setRealms(Collections.singletonList((Realm) jdbcRealm));
 
         // 将SecurityManager设置到SecurityUtils中以便全局使用
         SecurityUtils.setSecurityManager(securityManager);
