@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 3 | Log in</title>
+    <title>周计划管理后台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -30,7 +30,7 @@
             <div class="row hidden" id="login-msg">
                 <div class="col-12"><p>提示信息</p></div>
             </div>
-        <form id="form-login" action="doLogin" method="post">
+        <form id="form-login" action="index" method="post">
             <div class="input-group mb-3">
                 <input type="email" name="loginName" class="form-control" placeholder="登录邮箱" required
                        value="${loginName!'admin@google.com'}">
@@ -106,7 +106,7 @@
         };
         $('#form-login').submit(function() {
             $.ajax({
-                url:'doLogin',
+                url:'index',
                 type:'post',
                 data:$('#form-login').serialize(),
                 dataType:'JSON',

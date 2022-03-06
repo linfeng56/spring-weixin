@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.plan.mapper.PermissionMapper">
+    <insert id="createPermission" parameterType="com.github.linfeng.plan.entity.Permission">
+        INSERT INTO `sys_permissions`(permission, description, available)
+        VALUES (#{permission.permission,jdbcType=VARCHAR}, #{permission.description,jdbcType=VARCHAR},
+                #{permission.available,jdbcType=TINYINT});
+    </insert>
+
+    <delete id="deletePermission" parameterType="long">
+        DELETE
+        FROM `sys_permissions`
+        WHERE id = #{permissionId,jdbcType=BIGINT};
+    </delete>
+</mapper>
