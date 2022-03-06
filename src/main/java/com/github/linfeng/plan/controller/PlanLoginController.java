@@ -6,6 +6,11 @@ import com.github.linfeng.admin.view.message.MessageType;
 import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.view.LoginUser;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -62,7 +67,7 @@ public class PlanLoginController {
      *
      * @return 成功则进入页, 失败则登录页
      */
-    @RequestMapping(value = "doLogin", method = RequestMethod.POST)
+    @RequestMapping(value = "/index", method = RequestMethod.POST)
     @ResponseBody
     public AjaxViewMessage doLogin(HttpServletRequest request, String loginName, String loginPwd, Integer remember) {
 
@@ -70,16 +75,32 @@ public class PlanLoginController {
         if (!StringUtils.hasText(loginName)
             || !StringUtils.hasText(loginPwd)) {
             msg = new AjaxViewMessage(MessageType.ERROR, "请求参数不正确", "用户名或密码为空");
-             return msg;
+            return msg;
         }
         if (remember == null) {
             remember = 0;
         }
         LoginUser loginUser = planUsersService.checkLogin(loginName, loginPwd);
         if (loginUser != null && loginUser.getUserId() > 0) {
-            msg = new AjaxViewMessage(MessageType.SUCCESS, "登录成功", "登录成功", "plan/login/into",
-                request.getContextPath() + "/plan/weeks/index");
-            request.getSession().setAttribute("loginUser", loginUser);
+
+            Subject subject = SecurityUtils.getSubject();
+            UsernamePasswordToken token = new UsernamePasswordToken(loginName, loginPwd);
+            try {
+                // 登录
+                subject.login(token);
+            } catch (AuthenticationException e) {
+                if (e instanceof UnknownAccountException) {
+                    msg = new AjaxViewMessage(MessageType.INFO, "登录失败", "用户不存在.shiro.", "plan/login/login");
+                } else {
+                    msg = new AjaxViewMessage(MessageType.INFO, "登录失败", "用户名或密码错误.shiro.", "plan/login/login");
+                }
+            }
+            // 验证登录
+            if (subject.isAuthenticated()) {
+                msg = new AjaxViewMessage(MessageType.SUCCESS, "登录成功", "登录成功.shiro.", "plan/login/into",
+                    request.getContextPath() + "/plan/weeks/index");
+                request.getSession().setAttribute("loginUser", loginUser);
+            }
         } else {
             msg = new AjaxViewMessage(MessageType.INFO, "登录失败", "用户名或密码错误", "plan/login/login");
         }

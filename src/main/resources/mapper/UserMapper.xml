@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.plan.mapper.UserMapper">
+    <insert id="createUser" parameterType="com.github.linfeng.plan.entity.User">
+        INSERT INTO `sys_users`(username, password, salt, locked)
+        VALUES (#{user.username,jdbcType=VARCHAR}, #{user.password,jdbcType=VARCHAR},
+                #{user.salt,jdbcType=VARCHAR}, #{user.locked,jdbcType=TINYINT});
+    </insert>
+    <update id="updateUser" parameterType="com.github.linfeng.plan.entity.User">
+        UPDATE `sys_users`
+        SET username=#{user.username,jdbcType=VARCHAR},
+            password=#{user.password,jdbcType=VARCHAR},
+            salt=#{user.salt,jdbcType=VARCHAR},
+            locked=#{user.locked,jdbcType=TINYINT}
+        WHERE id = #{user.id,jdbcType=BIGINT};
+    </update>
+
+    <delete id="deleteUser" parameterType="long">
+        DELETE
+        FROM `sys_users`
+        WHERE id = #{user.id,jdbcType=BIGINT};
+    </delete>
+
+    <insert id="correlationRoles" parameterType="map">
+        INSERT INTO `sys_users_roles`(user_id, role_id)
+        VALUES
+        <foreach collection="roleIds" item="id" separator=",">
+            (#{userId,jdbcType=BIGINT},#{id,jdbcType=BIGINT})
+        </foreach>
+        ;
+    </insert>
+    <delete id="unCorrelationRoles" parameterType="map">
+        DELETE
+        FROM `sys_users_roles`
+        WHERE user_id = #{userId,jdbcType=BIGINT}
+        AND role_id IN
+        <foreach collection="roleIds" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+        ;
+    </delete>
+
+
+    <select id="findUser" resultType="com.github.linfeng.plan.entity.User">
+        SELECT id, username, password, salt, locked
+        FROM sys_users
+        WHERE id = #{userId,jdbcType=BIGINT};
+    </select>
+    <select id="findByUsername" resultType="com.github.linfeng.plan.entity.User">
+        SELECT id, username, password, salt, locked
+        FROM sys_users
+        WHERE username = #{username,jdbcType=VARCHAR};
+    </select>
+    <select id="findRoles" resultType="java.util.Set">
+        SELECT `role`
+        FROM `sys_users` u,
+             `sys_roles` r,
+             `sys_users_roles` ur
+        WHERE u.username = #{username,jdbcType=VARCHAR}
+          AND u.id = ur.user_id
+          AND r.id = ur.role_id;
+    </select>
+    <select id="findPermissions" resultType="java.util.Set">
+        SELECT permission
+        FROM `sys_users` u,
+             `sys_roles` r,
+             `sys_permissions` p,
+             `sys_users_roles` ur,
+             `sys_roles_permissions` rp
+        WHERE u.username = #{username,jdbcType=VARCHAR}
+          AND u.id = ur.user_id
+          AND r.id = ur.role_id
+          AND r.id = rp.role_id
+          AND p.id = rp.permission_id;
+    </select>
+</mapper>
