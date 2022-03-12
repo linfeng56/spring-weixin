@@ -40,14 +40,14 @@ public class PlanLoginController {
     }
 
     /**
-     * 登录页.
+     * 登出页.
      *
-     * @return 登录页
+     * @return 登出页
      */
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpServletRequest request) {
         request.getSession().setAttribute("loginUser", "");
-        return "plan/login/into";
+        return "plan/login/login";
     }
 
     /**
@@ -105,5 +105,15 @@ public class PlanLoginController {
             msg = new AjaxViewMessage(MessageType.INFO, "登录失败", "用户名或密码错误", "plan/login/login");
         }
         return msg;
+    }
+
+    /**
+     * 登录成功跳转页.
+     *
+     * @return 登录成功跳转页
+     */
+    @RequestMapping(value = "/into", method = RequestMethod.GET)
+    public String into(HttpServletRequest request) {
+        return "plan/login/into";
     }
 }
