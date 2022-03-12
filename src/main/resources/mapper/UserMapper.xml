@@ -51,7 +51,7 @@
         FROM sys_users
         WHERE username = #{username,jdbcType=VARCHAR};
     </select>
-    <select id="findRoles" resultType="java.util.Set">
+    <select id="findRoles" resultType="string" parameterType="string">
         SELECT `role`
         FROM `sys_users` u,
              `sys_roles` r,
@@ -60,7 +60,7 @@
           AND u.id = ur.user_id
           AND r.id = ur.role_id;
     </select>
-    <select id="findPermissions" resultType="java.util.Set">
+    <select id="findPermissions" resultType="string" parameterType="string">
         SELECT permission
         FROM `sys_users` u,
              `sys_roles` r,

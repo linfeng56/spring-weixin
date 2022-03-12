@@ -14,6 +14,7 @@ import com.github.linfeng.plan.view.LoginUser;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +44,7 @@ public class PlanWeeksController extends BasePlanController {
         this.weeksService = weeksService;
     }
 
+    @RequiresRoles("normaladmin")
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
@@ -51,6 +53,7 @@ public class PlanWeeksController extends BasePlanController {
     }
 
 
+    @RequiresRoles("normaladmin")
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
                        HttpServletRequest request, HttpServletResponse response) {
@@ -69,6 +72,7 @@ public class PlanWeeksController extends BasePlanController {
     }
 
 
+    @RequiresRoles("normaladmin")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
@@ -76,6 +80,7 @@ public class PlanWeeksController extends BasePlanController {
         return "plan/weeks/add";
     }
 
+    @RequiresRoles("normaladmin")
     @RequestMapping(value = "/doAdd", method = RequestMethod.POST)
     @ResponseBody
     public ResponseView<Integer> doAdd(String weekTitle, String weekBegin, String weekEnd,
@@ -120,6 +125,7 @@ public class PlanWeeksController extends BasePlanController {
     }
 
 
+    @RequiresRoles("normaladmin")
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Integer id, Model model) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
@@ -136,6 +142,7 @@ public class PlanWeeksController extends BasePlanController {
         return "plan/weeks/edit";
     }
 
+    @RequiresRoles("normaladmin")
     @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
     @ResponseBody
     public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, String weekTitle, String weekBegin,
@@ -181,6 +188,7 @@ public class PlanWeeksController extends BasePlanController {
         return weeks;
     }
 
+    @RequiresRoles("normaladmin")
     @RequestMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
@@ -204,6 +212,7 @@ public class PlanWeeksController extends BasePlanController {
     }
 
 
+    @RequiresRoles("normaladmin")
     @RequestMapping(value = "/summary/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseView summary(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
@@ -219,6 +228,7 @@ public class PlanWeeksController extends BasePlanController {
         }
     }
 
+    @RequiresRoles("normaladmin")
     @RequestMapping(value = "/summary/{id}", method = RequestMethod.POST)
     @ResponseBody
     public ResponseView<PlanWeeks> summaryEdit(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
