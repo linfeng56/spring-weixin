@@ -48,8 +48,8 @@ public enum JobType {
      *
      * @return 检举信息
      */
-    public static HashMap<String, String> allMap() {
-        HashMap<String, String> ret = new HashMap<>(6);
+    public static Map<String, String> allMap() {
+        Map<String, String> ret = new HashMap<>(6);
         for (JobType jobType : JobType.values()) {
             ret.put("k_" + jobType.id, jobType.name);
         }

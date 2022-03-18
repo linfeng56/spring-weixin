@@ -14,8 +14,9 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -44,7 +45,7 @@ public class PlanLoginController {
      *
      * @return 登出页
      */
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @GetMapping(value = "/logout")
     public String logout(HttpServletRequest request) {
         request.getSession().setAttribute("loginUser", "");
         return "plan/login/login";
@@ -55,7 +56,7 @@ public class PlanLoginController {
      *
      * @return 登录页
      */
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @GetMapping(value = "/index")
     public String index() {
 
         return "plan/login/login";
@@ -67,7 +68,7 @@ public class PlanLoginController {
      *
      * @return 成功则进入页, 失败则登录页
      */
-    @RequestMapping(value = "/index", method = RequestMethod.POST)
+    @PostMapping(value = "/index")
     @ResponseBody
     public AjaxViewMessage doLogin(HttpServletRequest request, String loginName, String loginPwd, Integer remember) {
 
@@ -88,12 +89,10 @@ public class PlanLoginController {
             try {
                 // 登录
                 subject.login(token);
+            } catch (UnknownAccountException e) {
+                msg = new AjaxViewMessage(MessageType.INFO, "登录失败", "用户不存在.shiro.", "plan/login/login");
             } catch (AuthenticationException e) {
-                if (e instanceof UnknownAccountException) {
-                    msg = new AjaxViewMessage(MessageType.INFO, "登录失败", "用户不存在.shiro.", "plan/login/login");
-                } else {
-                    msg = new AjaxViewMessage(MessageType.INFO, "登录失败", "用户名或密码错误.shiro.", "plan/login/login");
-                }
+                msg = new AjaxViewMessage(MessageType.INFO, "登录失败", "用户名或密码错误.shiro.", "plan/login/login");
             }
             // 验证登录
             if (subject.isAuthenticated()) {
@@ -112,7 +111,7 @@ public class PlanLoginController {
      *
      * @return 登录成功跳转页
      */
-    @RequestMapping(value = "/into", method = RequestMethod.GET)
+    @GetMapping(value = "/into")
     public String into(HttpServletRequest request) {
         return "plan/login/into";
     }

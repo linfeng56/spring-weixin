@@ -83,7 +83,7 @@ public class LoginUser implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("LoginUser{");
+        final StringBuilder sb = new StringBuilder("LoginUser{");
         sb.append("userId=").append(userId);
         sb.append(", loginName='").append(loginName).append('\'');
         sb.append(", userName='").append(userName).append('\'');

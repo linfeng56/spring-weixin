@@ -80,7 +80,7 @@ public class Role implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Role{");
+        final StringBuilder sb = new StringBuilder("Role{");
         sb.append("id=").append(id);
         sb.append(", role='").append(role).append('\'');
         sb.append(", description='").append(description).append('\'');

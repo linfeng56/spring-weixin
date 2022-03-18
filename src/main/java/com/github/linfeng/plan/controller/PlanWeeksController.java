@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.holder.LoginUserHolder;
 import com.github.linfeng.plan.service.IPlanWeeksService;
@@ -19,9 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -56,7 +57,7 @@ public class PlanWeeksController extends BasePlanController {
     @RequiresRoles("normaladmin")
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
-                       HttpServletRequest request, HttpServletResponse response) {
+        HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
 
@@ -73,7 +74,7 @@ public class PlanWeeksController extends BasePlanController {
 
 
     @RequiresRoles("normaladmin")
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @GetMapping(value = "/add")
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
@@ -81,10 +82,10 @@ public class PlanWeeksController extends BasePlanController {
     }
 
     @RequiresRoles("normaladmin")
-    @RequestMapping(value = "/doAdd", method = RequestMethod.POST)
+    @PostMapping(value = "/doAdd")
     @ResponseBody
     public ResponseView<Integer> doAdd(String weekTitle, String weekBegin, String weekEnd,
-                                       String remarks) {
+        String remarks) {
 
         ResponseView<Integer> errorMessage = validForm(weekTitle, weekBegin, weekEnd);
         if (errorMessage != null) {
@@ -108,7 +109,7 @@ public class PlanWeeksController extends BasePlanController {
      * @return 异常提示对象或null
      */
     private ResponseView<Integer> validForm(String weekTitle, String weekBegin, String weekEnd) {
-        StringBuffer errorMessage = new StringBuffer(25);
+        StringBuilder errorMessage = new StringBuilder(25);
         if (!StringUtils.hasText(weekTitle)) {
             errorMessage.append("标题不能为空!").append("\\n");
         }
@@ -126,7 +127,7 @@ public class PlanWeeksController extends BasePlanController {
 
 
     @RequiresRoles("normaladmin")
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
@@ -143,10 +144,10 @@ public class PlanWeeksController extends BasePlanController {
     }
 
     @RequiresRoles("normaladmin")
-    @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/doEdit/{id}")
     @ResponseBody
     public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, String weekTitle, String weekBegin,
-                                        String weekEnd, String remarks) {
+        String weekEnd, String remarks) {
 
         ResponseView<Integer> errorMessage = validForm(weekTitle, weekBegin, weekEnd);
         if (errorMessage != null) {
@@ -192,12 +193,12 @@ public class PlanWeeksController extends BasePlanController {
     @RequestMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-                       HttpServletResponse response) {
+        HttpServletResponse response) {
         Map<String, Object> ret = new HashMap<>(6);
         if (null == id || id <= 0) {
             ret.put("retCode", "fail");
             ret.put("errMsg", "error id");
-            return JSONObject.toJSONString(ret);
+            return JSON.toJSONString(ret);
         }
         PlanWeeks info = weeksService.getById(id);
         if (null != info) {
@@ -208,15 +209,15 @@ public class PlanWeeksController extends BasePlanController {
             ret.put("retCode", "fail");
             ret.put("errMsg", "not exists id:[" + id + "]");
         }
-        return JSONObject.toJSONString(ret);
+        return JSON.toJSONString(ret);
     }
 
 
     @RequiresRoles("normaladmin")
-    @RequestMapping(value = "/summary/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/summary/{id}")
     @ResponseBody
     public ResponseView summary(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-                                HttpServletResponse response) {
+        HttpServletResponse response) {
         if (null == id || id <= 0) {
             return new ResponseView<>(500, "参数不合法");
         }
@@ -229,10 +230,10 @@ public class PlanWeeksController extends BasePlanController {
     }
 
     @RequiresRoles("normaladmin")
-    @RequestMapping(value = "/summary/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/summary/{id}")
     @ResponseBody
     public ResponseView<PlanWeeks> summaryEdit(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-                                               HttpServletResponse response) {
+        HttpServletResponse response) {
         if (null == id || id <= 0) {
             return new ResponseView<>(500, "参数不合法");
         }
