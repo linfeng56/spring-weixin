@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanItems;
 import com.github.linfeng.plan.entity.PlanUsers;
 import com.github.linfeng.plan.holder.LoginUserHolder;
@@ -22,9 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -91,7 +92,7 @@ public class PlanItemsController extends BasePlanController {
     }
 
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @GetMapping(value = "/add")
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
@@ -105,7 +106,7 @@ public class PlanItemsController extends BasePlanController {
         return "plan/items/add";
     }
 
-    @RequestMapping(value = "/doAdd", method = RequestMethod.POST)
+    @PostMapping(value = "/doAdd")
     @ResponseBody
     public ResponseView<Integer> doAdd(Model model, Integer itemJobType, Integer itemJobNum,
                                        String itemTitle, Integer itemUserId,
@@ -179,7 +180,7 @@ public class PlanItemsController extends BasePlanController {
      */
     private ResponseView<Integer> validForm(String itemTitle, Integer itemWeekId, String itemBegin,
                                             String itemEnd) {
-        StringBuffer errorMessage = new StringBuffer(25);
+        StringBuilder errorMessage = new StringBuilder(25);
         if (!StringUtils.hasText(itemTitle)) {
             errorMessage.append("标题不能为空!").append("\\n");
         }
@@ -199,7 +200,7 @@ public class PlanItemsController extends BasePlanController {
     }
 
 
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
@@ -221,7 +222,7 @@ public class PlanItemsController extends BasePlanController {
         return "plan/items/edit";
     }
 
-    @RequestMapping(value = "/doEdit/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/doEdit/{id}")
     @ResponseBody
     public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, Integer itemJobType,
                                         Integer itemJobNum,
@@ -247,7 +248,7 @@ public class PlanItemsController extends BasePlanController {
     }
 
 
-    @RequestMapping("/detail/{id}")
+    @GetMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
                        HttpServletResponse response) {
@@ -255,7 +256,7 @@ public class PlanItemsController extends BasePlanController {
         if (null == id || id <= 0) {
             ret.put("retCode", "fail");
             ret.put("errMsg", "error id");
-            return JSONObject.toJSONString(ret);
+            return JSON.toJSONString(ret);
         }
         PlanItems info = itemsService.getById(id);
         if (null != info) {
@@ -266,6 +267,6 @@ public class PlanItemsController extends BasePlanController {
             ret.put("retCode", "fail");
             ret.put("errMsg", "not exists id:[" + id + "]");
         }
-        return JSONObject.toJSONString(ret);
+        return JSON.toJSONString(ret);
     }
 }

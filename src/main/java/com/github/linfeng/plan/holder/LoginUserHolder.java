@@ -12,6 +12,7 @@ public class LoginUserHolder {
 
     private static final ThreadLocal<LoginUser> LOGIN_USER_THREAD_LOCAL = new ThreadLocal<>();
 
+    private LoginUserHolder(){}
     /**
      * 设置登录用户
      *

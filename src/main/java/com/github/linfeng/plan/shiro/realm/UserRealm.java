@@ -14,9 +14,12 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserRealm extends AuthorizingRealm {
 
+    private static final Logger log = LoggerFactory.getLogger(UserRealm.class);
 
     private IUserService userService;
 
@@ -56,7 +59,11 @@ public class UserRealm extends AuthorizingRealm {
             ByteSource.Util.bytes(user.getCredentialsSalt()),//salt=username+salt
             getName()  //realm name
         );
+        if (log.isDebugEnabled()) {
+            log.debug("UserRealm:{}" , authenticationInfo);
+        }
         return authenticationInfo;
+
     }
 
     @Override

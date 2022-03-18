@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanUsers;
 import com.github.linfeng.plan.service.IPlanUsersService;
 
@@ -57,19 +57,19 @@ public class PlanUsersController {
             ret.put("retCode", "fail");
             ret.put("errMsg", "list is null");
         }
-        return JSONObject.toJSONString(ret);
+        return JSON.toJSONString(ret);
     }
 
 
     @RequestMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-                       HttpServletResponse response) {
+        HttpServletResponse response) {
         Map<String, Object> ret = new HashMap<>(6);
         if (null == id || id <= 0) {
             ret.put("retCode", "fail");
             ret.put("errMsg", "error id");
-            return JSONObject.toJSONString(ret);
+            return JSON.toJSONString(ret);
         }
         PlanUsers info = service.getById(id);
         if (null != info) {
@@ -80,6 +80,6 @@ public class PlanUsersController {
             ret.put("retCode", "fail");
             ret.put("errMsg", "not exists id:[" + id + "]");
         }
-        return JSONObject.toJSONString(ret);
+        return JSON.toJSONString(ret);
     }
 }

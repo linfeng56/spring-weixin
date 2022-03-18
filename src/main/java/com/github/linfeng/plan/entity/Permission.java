@@ -80,7 +80,7 @@ public class Permission implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Permission{");
+        final StringBuilder sb = new StringBuilder("Permission{");
         sb.append("id=").append(id);
         sb.append(", permission='").append(permission).append('\'');
         sb.append(", description='").append(description).append('\'');

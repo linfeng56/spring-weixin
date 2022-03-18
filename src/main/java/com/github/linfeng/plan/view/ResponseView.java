@@ -59,7 +59,7 @@ public class ResponseView<E> {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("ResponseView{");
+        final StringBuilder sb = new StringBuilder("ResponseView{");
         sb.append("status=").append(status);
         sb.append(", code='").append(code).append('\'');
         sb.append(", server='").append(server).append('\'');

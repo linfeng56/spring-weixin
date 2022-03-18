@@ -65,7 +65,7 @@ public class RolePermssion implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("RolePermssion{");
+        final StringBuilder sb = new StringBuilder("RolePermssion{");
         sb.append("roleId=").append(roleId);
         sb.append(", permssionId=").append(permssionId);
         sb.append('}');
