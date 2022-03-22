@@ -23,16 +23,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * shiro使用JDBC存储方式登录测试
  */
-public class LoginJdbcJavaTest {
+public class LoginJdbcJavaTest extends BaseShiroTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginJdbcTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginJdbcJavaTest.class);
 
     private Subject subject;
 
+    @Autowired
+    private DruidDataSource dataSource;
     /**
      * 配置shiro
      */
@@ -49,11 +52,11 @@ public class LoginJdbcJavaTest {
         securityManager.setAuthorizer(authorizer);
 
         // 设置Realm
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/spring_weixin?useUnicode=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true");
-        dataSource.setUsername("root");
-        dataSource.setPassword("111111");
+        // DruidDataSource dataSource = new DruidDataSource();
+        // dataSource.setDriverClassName("org.h2.Driver");
+        // dataSource.setUrl("jdbc:h2:mem:spring_weixin;MODE=MySql;DB_CLOSE_DELAY=-1");
+        // dataSource.setUsername("root");
+        // dataSource.setPassword("");
 
         JdbcRealm jdbcRealm = new JdbcRealm();
         jdbcRealm.setDataSource(dataSource);

@@ -6,6 +6,7 @@ import com.github.linfeng.mapper.UsersMapper;
 import com.github.linfeng.service.IUsersService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,14 +15,12 @@ import org.springframework.stereotype.Service;
  * @author 黄麟峰
  */
 @Service
+@Qualifier("miniIUserService")
 public class UsersServiceImpl implements IUsersService {
-
+    @Autowired
+    @Qualifier("miniUserMapper")
     private UsersMapper usersMapper;
 
-    @Autowired
-    public UsersServiceImpl(UsersMapper usersMapper){
-        this.usersMapper=usersMapper;
-    }
     @Override
     public List<Users> list() {
         return usersMapper.list();
