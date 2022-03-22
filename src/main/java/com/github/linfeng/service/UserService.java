@@ -4,6 +4,7 @@ import java.util.List;
 import com.github.linfeng.entity.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,9 +13,11 @@ import org.springframework.stereotype.Service;
  * @author 黄麟峰
  */
 @Service
+@Qualifier("miniUserService")
 public class UserService {
 
     @Autowired
+    @Qualifier("miniIUserService")
     private IUsersService service;
 
     public List<Users> list() {
