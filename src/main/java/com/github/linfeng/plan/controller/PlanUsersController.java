@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author 黄麟峰
  */
 @Controller
-@RequestMapping("/plan-users")
+@RequestMapping("/plan/users")
 public class PlanUsersController {
 
     /**
