@@ -2,32 +2,6 @@
 
 <#macro container>
 
-
-<!-- Modal -->
-<div class="modal" data-backdrop="static" id="myModalDialog" tabindex="-1" aria-labelledby="myModalDialogTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <form role="form" class="from-ajax" method="post" action="">
-            <div class="modal-header">
-                <h5 class="modal-title" id="myModalDialogTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div><textarea class="summary-content" name="summary" cols="106" rows="10"></textarea> </div>
-            </div>
-            <div class="modal-footer">
-                <span class="tip-msg">...</span>
-                <button type="submit" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="submit" class="btn btn-primary">确定</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -95,9 +69,9 @@
                                     <td>
                                         <a href="${request.getContextPath()}/plan/users/power/${item.id}" class="btn-sm btn-primary">权限</a>
 										<#if item.locked==1>
-                                        <a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/users/lock/${item.id}" class="btn-sm btn-primary ajax-edit">锁定</a>
+                                        <a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/users/lock/${item.id}" class="btn-sm btn-warning ajax-lock">锁定</a>
 										<#else>
-										<a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/user/unlock/${item.id}" class="btn-sm btn-primary ajax-edit">开启</a>
+										<a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/user/unlock/${item.id}" class="btn-sm btn-primary ajax-lock">开启</a>
 										</#if>
                                         <a href="edit/${item.id}" class="btn-sm btn-primary">编辑</a>
                                         <a href="del/${item.id}" class="btn-sm btn-primary">删除</a>
@@ -127,49 +101,30 @@
 
 <#macro footer_js>
 <script>
-    $('.ajax-edit').click(function(e){
+    $('.ajax-lock').click(function(e){
         e.preventDefault();
-        var url = $(this).data("url")
-        var id = $(this).data("id")
-        $('#myModalDialog .from-ajax').attr('action',url);
+		let t = $(this);
+        let url = $(this).data("url");
+        let id = $(this).data("id");
         $.ajax({
             url:url,
-            type:'get',
-            success:function(data){
-                $('#myModalDialogTitle').text("总结"+id);
-                $('.summary-content').val("");
-                if (data.status=="200"){
-                    $('#myModalDialogTitle').text(data.data.title+" - 总结");
-                    $('.summary-content').val(data.data.summary);
-                    $('#myModalDialog').modal('show');
-                }else{
-                    $('#myModalMessageTitle').text("操作提示");
-                    $('.modal-body-content').text("内容失败。错误编码："+data.code);
-                    $('#myModalMessage').modal('show');
-                }
-                console.log(data);
-            }
-        });
-    });
-
-    $('#myModalDialog .from-ajax').submit(function(e){
-        e.preventDefault();
-        $.ajax({
-            url:$(this).attr('action'),
             type:'post',
-            data:$(this).serialize(),
             success:function(data){
-                $('#myModalDialog .tip-msg').text("");
                 if (data.status=="200"){
-                    $('#myModalDialog .tip-msg').text("保存成功");
-                    $('#myModalMessage').modal('hide');
+                    //锁定变更成功
+                    t.removeClass("btn-warning").removeClass("btn-primary");
+                    if (data.locked=="1"){
+                        t.addClass("btn-warning").text("锁定");
+                    }else{
+                        t.addClass("btn-primary").text("开启");
+                    }
                 }else{
-                    $('#myModalDialog .tip-msg').text("保存失败。错误编码："+data.code);
+                    // 锁定变更失败
+                    alert("变更失败。错误编码："+data.code);
                 }
                 console.log(data);
             }
         });
     });
-
 </script>
 </#macro>
