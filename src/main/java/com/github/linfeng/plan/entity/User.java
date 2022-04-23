@@ -1,14 +1,16 @@
 package com.github.linfeng.plan.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class User implements Serializable {
 
     private Long id;
     private String username;
+    private String name;
     private String password;
     private String salt;
-
+    private Date createDate;
     private Boolean locked = Boolean.FALSE;
 
     public User() {
@@ -35,6 +37,14 @@ public class User implements Serializable {
         this.username = username;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -49,6 +59,14 @@ public class User implements Serializable {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public String getCredentialsSalt() {
@@ -92,11 +110,13 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("User{");
+        final StringBuffer sb = new StringBuffer("User{");
         sb.append("id=").append(id);
         sb.append(", username='").append(username).append('\'');
+        sb.append(", name='").append(name).append('\'');
         sb.append(", password='").append(password).append('\'');
         sb.append(", salt='").append(salt).append('\'');
+        sb.append(", createDate=").append(createDate);
         sb.append(", locked=").append(locked);
         sb.append('}');
         return sb.toString();
