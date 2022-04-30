@@ -73,4 +73,7 @@
           AND r.id = rp.role_id
           AND p.id = rp.permission_id;
     </select>
+    <select id="allUsers" resultType="com.github.linfeng.plan.entity.User">
+        SELECT * FROM `sys_users`;
+    </select>
 </mapper>

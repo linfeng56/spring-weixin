@@ -1,5 +1,6 @@
 package com.github.linfeng.plan.mapper;
 
+import java.util.List;
 import java.util.Set;
 import com.github.linfeng.plan.entity.User;
 
@@ -26,4 +27,6 @@ public interface UserMapper {
     Set<String> findRoles(@Param("username")String username);
 
     Set<String> findPermissions(String username);
+
+    List<User> allUsers();
 }

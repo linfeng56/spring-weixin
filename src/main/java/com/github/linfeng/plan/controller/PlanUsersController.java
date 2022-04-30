@@ -8,7 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanUsers;
+import com.github.linfeng.plan.entity.User;
+import com.github.linfeng.plan.holder.LoginUserHolder;
 import com.github.linfeng.plan.service.IPlanUsersService;
+import com.github.linfeng.plan.service.IUserService;
+import com.github.linfeng.plan.view.LoginUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,16 +28,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/plan/users")
-public class PlanUsersController {
+public class PlanUsersController extends BasePlanController {
 
     /**
      * 用户服务
      */
     private final IPlanUsersService service;
+    private final IUserService userService;
 
     @Autowired
-    public PlanUsersController(IPlanUsersService service) {
+    public PlanUsersController(IPlanUsersService service, IUserService userService) {
         this.service = service;
+        this.userService = userService;
     }
 
     @RequestMapping("/index")
@@ -43,9 +49,9 @@ public class PlanUsersController {
     }
 
 
-    @RequestMapping("/list")
+    @RequestMapping("/list-rb")
     @ResponseBody
-    public String list(Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String listRb(Model model, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> ret = new HashMap<>(6);
         List<PlanUsers> list = service.list();
         if (null != list) {
@@ -58,6 +64,16 @@ public class PlanUsersController {
             ret.put("errMsg", "list is null");
         }
         return JSON.toJSONString(ret);
+    }
+
+    @RequestMapping("/list")
+    public String list(Model model, HttpServletRequest request, HttpServletResponse response) {
+        LoginUser loginUser = LoginUserHolder.getLoginUser();
+        model.addAttribute("admin", loginUser);
+        List<User> list = userService.allUsers();
+        model.addAttribute("users", list);
+        // TODO:增加权限的展示
+        return "plan/users/list";
     }
 
 

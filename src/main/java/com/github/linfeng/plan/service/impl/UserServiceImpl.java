@@ -1,5 +1,6 @@
 package com.github.linfeng.plan.service.impl;
 
+import java.util.List;
 import java.util.Set;
 import com.github.linfeng.plan.entity.User;
 import com.github.linfeng.plan.mapper.UserMapper;
@@ -53,5 +54,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Set<String> findPermissions(String username) {
         return userMapper.findPermissions(username);
+    }
+
+    @Override
+    public List<User> allUsers() {
+        return userMapper.allUsers();
     }
 }

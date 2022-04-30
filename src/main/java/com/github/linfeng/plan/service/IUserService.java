@@ -1,5 +1,6 @@
 package com.github.linfeng.plan.service;
 
+import java.util.List;
 import java.util.Set;
 import com.github.linfeng.plan.entity.User;
 
@@ -18,4 +19,6 @@ public interface IUserService {
     Set<String> findRoles(String username);
 
     Set<String> findPermissions(String username);
+
+    List<User> allUsers();
 }

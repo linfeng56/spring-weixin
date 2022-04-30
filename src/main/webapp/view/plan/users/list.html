@@ -64,11 +64,11 @@
                                     <td>${item.username}</td>
                                     <td>${item.name}</td>
                                     <td>
-                                        <span class="tag tag-success">${item.createDate?number_to_date}</span>
+                                        <span class="tag tag-success">${item.createDate?string('dd.MM.yyyy HH:mm:ss')}</span>
                                     </td>
                                     <td>
                                         <a href="${request.getContextPath()}/plan/users/power/${item.id}" class="btn-sm btn-primary">权限</a>
-										<#if item.locked==1>
+										<#if item.locked==true>
                                         <a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/users/lock/${item.id}" class="btn-sm btn-warning ajax-lock">锁定</a>
 										<#else>
 										<a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/user/unlock/${item.id}" class="btn-sm btn-primary ajax-lock">开启</a>
