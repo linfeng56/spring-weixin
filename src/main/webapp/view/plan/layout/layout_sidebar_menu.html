@@ -8,6 +8,31 @@
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-copy"></i>
                             <p>
+                                用户管理
+                                <i class="fas fa-angle-left right"></i>
+                                <span class="badge badge-info right">6</span>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="${request.getContextPath()}/plan/users/list" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>用户列表</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="${request.getContextPath()}/plan/power/list" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>权限管理</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-copy"></i>
+                            <p>
                                 工作周计划
                                 <i class="fas fa-angle-left right"></i>
                                 <span class="badge badge-info right">6</span>
@@ -27,25 +52,25 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/statics/pages/layout/fixed-sidebar.html" class="nav-link">
+                                <a href="${request.getContextPath()}/statics/pages/layout/fixed-sidebar.html" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>固定侧边栏</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/statics/pages/layout/fixed-topnav.html" class="nav-link">
+                                <a href="${request.getContextPath()}/statics/pages/layout/fixed-topnav.html" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>固定导航栏</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/statics/pages/layout/fixed-footer.html" class="nav-link">
+                                <a href="${request.getContextPath()}/statics/pages/layout/fixed-footer.html" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>固定底部</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/statics/index.html" target="_adminlte3" class="nav-link">
+                                <a href="${request.getContextPath()}/statics/index.html" target="_adminlte3" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>静态AdminLTE3</p>
                                 </a>
@@ -63,19 +88,19 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="/statics/index.html" class="nav-link active">
+                                <a href="${request.getContextPath()}/statics/index.html" class="nav-link active">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>仪表盘 v1</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/statics/index2.html" class="nav-link">
+                                <a href="${request.getContextPath()}/statics/index2.html" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>仪表盘 v2</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="/statics/index3.html" class="nav-link">
+                                <a href="${request.getContextPath()}/statics/index3.html" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>仪表盘 v3</p>
                                 </a>
@@ -83,7 +108,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="/statics/pages/widgets.html" class="nav-link">
+                        <a href="${request.getContextPath()}/statics/pages/widgets.html" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>
                             <p>
                                 小工具

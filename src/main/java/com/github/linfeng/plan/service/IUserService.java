@@ -21,4 +21,10 @@ public interface IUserService {
     Set<String> findPermissions(String username);
 
     List<User> allUsers();
+
+    boolean lock(Integer id);
+
+    User findUser(Integer userId);
+
+    boolean unlock(Integer id);
 }

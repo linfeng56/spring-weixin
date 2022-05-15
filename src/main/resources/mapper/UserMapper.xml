@@ -14,6 +14,12 @@
             locked=#{user.locked,jdbcType=TINYINT}
         WHERE id = #{user.id,jdbcType=BIGINT};
     </update>
+    <update id="lock" parameterType="integer">
+        UPDATE `sys_users` SET locked=1 WHERE id=#{user.id,jdbcType=BIGINT};
+    </update>
+    <update id="unlock" parameterType="integer">
+        UPDATE `sys_users` SET locked=0 WHERE id=#{user.id,jdbcType=BIGINT};
+    </update>
 
     <delete id="deleteUser" parameterType="long">
         DELETE

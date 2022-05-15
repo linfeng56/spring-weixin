@@ -29,4 +29,8 @@ public interface UserMapper {
     Set<String> findPermissions(String username);
 
     List<User> allUsers();
+
+    Integer lock(Integer id);
+
+    boolean unlock(Integer id);
 }

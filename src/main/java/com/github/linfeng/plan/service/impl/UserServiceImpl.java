@@ -60,4 +60,19 @@ public class UserServiceImpl implements IUserService {
     public List<User> allUsers() {
         return userMapper.allUsers();
     }
+
+    @Override
+    public boolean lock(Integer id) {
+        return userMapper.lock(id) > 0;
+    }
+
+    @Override
+    public User findUser(Integer userId) {
+        return userMapper.findUser(userId.longValue());
+    }
+
+    @Override
+    public boolean unlock(Integer id) {
+        return userMapper.unlock(id);
+    }
 }

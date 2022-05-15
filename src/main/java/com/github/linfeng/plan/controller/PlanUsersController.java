@@ -98,4 +98,53 @@ public class PlanUsersController extends BasePlanController {
         }
         return JSON.toJSONString(ret);
     }
+
+
+    @RequestMapping("/lock/{id}")
+    @ResponseBody
+    public Object lock(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
+        HttpServletResponse response) {
+        Map<String, Object> ret = new HashMap<>(6);
+        if (null == id || id <= 0) {
+            ret.put("status", "-1");
+            ret.put("errMsg", "用户编号不正确");
+            return ret;
+        }
+        boolean up = userService.lock(id);
+        if (up) {
+            ret.put("status", "200");
+            ret.put("errMsg", "success");
+            User user = userService.findUser(id);
+            ret.put("data", user);
+            ret.put("locked", user.getLocked() ? 1 : 0);
+        } else {
+            ret.put("status", "-2");
+            ret.put("errMsg", "锁定用户失败[" + id + "]");
+        }
+        return ret;
+    }
+
+    @RequestMapping("/unlock/{id}")
+    @ResponseBody
+    public Object unlock(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
+        HttpServletResponse response) {
+        Map<String, Object> ret = new HashMap<>(6);
+        if (null == id || id <= 0) {
+            ret.put("status", "-1");
+            ret.put("errMsg", "用户编号不正确");
+            return ret;
+        }
+        boolean up = userService.unlock(id);
+        if (up) {
+            ret.put("status", "200");
+            ret.put("errMsg", "success");
+            User user = userService.findUser(id);
+            ret.put("data", user);
+            ret.put("locked", user.getLocked() ? 1 : 0);
+        } else {
+            ret.put("status", "-2");
+            ret.put("errMsg", "开启用户失败[" + id + "]");
+        }
+        return ret;
+    }
 }
