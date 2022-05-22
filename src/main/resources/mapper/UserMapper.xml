@@ -24,7 +24,7 @@
     <delete id="deleteUser" parameterType="long">
         DELETE
         FROM `sys_users`
-        WHERE id = #{user.id,jdbcType=BIGINT};
+        WHERE id = #{userId,jdbcType=BIGINT};
     </delete>
 
     <insert id="correlationRoles" parameterType="map">

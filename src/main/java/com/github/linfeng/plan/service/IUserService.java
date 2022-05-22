@@ -27,4 +27,6 @@ public interface IUserService {
     User findUser(Integer userId);
 
     boolean unlock(Integer id);
+
+    boolean del(Integer id);
 }

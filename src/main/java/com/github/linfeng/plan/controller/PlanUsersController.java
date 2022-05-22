@@ -14,6 +14,7 @@ import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IUserService;
 import com.github.linfeng.plan.view.LoginUser;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,6 +67,7 @@ public class PlanUsersController extends BasePlanController {
         return JSON.toJSONString(ret);
     }
 
+    @RequiresRoles("normaladmin")
     @RequestMapping("/list")
     public String list(Model model, HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
@@ -144,6 +146,27 @@ public class PlanUsersController extends BasePlanController {
         } else {
             ret.put("status", "-2");
             ret.put("errMsg", "开启用户失败[" + id + "]");
+        }
+        return ret;
+    }
+
+    @RequestMapping("/del/{id}")
+    @ResponseBody
+    public Object del(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
+        HttpServletResponse response) {
+        Map<String, Object> ret = new HashMap<>(6);
+        if (null == id || id <= 0) {
+            ret.put("status", "-1");
+            ret.put("errMsg", "用户编号不正确");
+            return ret;
+        }
+        boolean up = userService.del(id);
+        if (up) {
+            ret.put("status", "200");
+            ret.put("errMsg", "success");
+        } else {
+            ret.put("status", "-2");
+            ret.put("errMsg", "删除用户失败[" + id + "]");
         }
         return ret;
     }

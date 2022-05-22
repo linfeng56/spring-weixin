@@ -14,7 +14,7 @@ public interface UserMapper {
 
     void updateUser(@Param("user") final User user);
 
-    void deleteUser(@Param("userId") Long userId);
+    int deleteUser(@Param("userId") Long userId);
 
     void correlationRoles(@Param("userId") Long userId, @Param("roleIds") Long... roleIds);
 

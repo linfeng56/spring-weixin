@@ -74,7 +74,7 @@
 										<a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/users/lock/${item.id}" class="btn-sm btn-primary ajax-lock">开启</a>
 										</#if>
                                         <a href="edit/${item.id}" class="btn-sm btn-primary">编辑</a>
-                                        <a href="del/${item.id}" class="btn-sm btn-primary">删除</a>
+                                        <a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/users/del/${item.id}" class="btn-sm btn-primary ajax-del">删除</a>
                                     </td>
                                 </tr>
                                 </#list>
@@ -123,6 +123,27 @@
                 }else{
                     // 锁定变更失败
                     alert("变更失败。错误编码："+data.status);
+                }
+                console.log(data);
+            }
+        });
+    });
+    $('.ajax-del').click(function(e){
+        e.preventDefault();
+        let t = $(this);
+        let url = $(this).data("url");
+        let id = $(this).data("id");
+        $.ajax({
+            url:url,
+            type:'post',
+            success:function(data){
+                if (data.status=="200"){
+                    //锁定变更成功
+                    t.removeClass("btn-warning").removeClass("btn-primary");
+                    t.addClass("btn-danger").text("已删除");
+                }else{
+                    // 锁定变更失败
+                    alert("变更失败。错误编码："+data.status +",错误描述："+data.errMsg);
                 }
                 console.log(data);
             }

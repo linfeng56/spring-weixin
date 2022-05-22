@@ -75,4 +75,9 @@ public class UserServiceImpl implements IUserService {
     public boolean unlock(Integer id) {
         return userMapper.unlock(id);
     }
+
+    @Override
+    public boolean del(Integer id) {
+        return userMapper.deleteUser(id.longValue()) > 0;
+    }
 }
