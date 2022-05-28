@@ -18,8 +18,10 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -69,10 +71,16 @@ public class PlanUsersController extends BasePlanController {
 
     @RequiresRoles("normaladmin")
     @RequestMapping("/list")
-    public String list(Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
+        HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
-        List<User> list = userService.allUsers();
+        List<User> list;
+        if (StringUtils.hasText(searchText)) {
+            list = userService.list(searchText);
+        } else {
+            list = userService.allUsers();
+        }
         model.addAttribute("users", list);
         // TODO:增加权限的展示
         return "plan/users/list";

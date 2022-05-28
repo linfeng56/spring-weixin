@@ -33,4 +33,6 @@ public interface UserMapper {
     Integer lock(Integer id);
 
     boolean unlock(Integer id);
+
+    List<User> list(String searchText);
 }

@@ -80,4 +80,9 @@ public class UserServiceImpl implements IUserService {
     public boolean del(Integer id) {
         return userMapper.deleteUser(id.longValue()) > 0;
     }
+
+    @Override
+    public List<User> list(String searchText) {
+        return userMapper.list(searchText);
+    }
 }

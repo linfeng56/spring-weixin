@@ -29,4 +29,6 @@ public interface IUserService {
     boolean unlock(Integer id);
 
     boolean del(Integer id);
+
+    List<User> list(String searchText);
 }
