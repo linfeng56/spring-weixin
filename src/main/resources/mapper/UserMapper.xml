@@ -83,6 +83,6 @@
         SELECT * FROM `sys_users`;
     </select>
     <select id="list" resultType="com.github.linfeng.plan.entity.User">
-        SELECT * FROM `sys_users` WHERE username contains
+        SELECT * FROM `sys_users` WHERE username like concat('%',#{paramMap.url,jdbcType=VARCHAR},'%');
     </select>
 </mapper>
