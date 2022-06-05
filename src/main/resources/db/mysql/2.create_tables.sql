@@ -193,7 +193,7 @@ CREATE TABLE `sys_users`  (
   `username` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
   `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `createdate` datetime(0) NULL DEFAULT NULL,
+  `createdate` bigint(0) NULL DEFAULT NULL,
   `salt` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `locked` tinyint(1) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,

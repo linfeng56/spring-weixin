@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper {
 
-    void createUser(@Param("user") final User user);
+    Long createUser(@Param("user") User user);
 
     void updateUser(@Param("user") final User user);
 
@@ -35,4 +35,5 @@ public interface UserMapper {
     boolean unlock(Integer id);
 
     List<User> list(String searchText);
+
 }

@@ -64,7 +64,7 @@
                                     <td>${item.username}</td>
                                     <td>${item.name}</td>
                                     <td>
-                                        <span class="tag tag-success">${item.createDate?string('yyyy-MM-dd HH:mm:ss')}</span>
+                                        <span class="tag tag-success">${item.createDate?number_to_date}</span>
                                     </td>
                                     <td>
                                         <a href="${request.getContextPath()}/plan/users/power/${item.id}" class="btn-sm btn-primary">权限</a>

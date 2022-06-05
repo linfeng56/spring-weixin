@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.linfeng.plan.mapper.UserMapper">
-    <insert id="createUser" parameterType="com.github.linfeng.plan.entity.User">
-        INSERT INTO `sys_users`(username, password, salt, locked)
-        VALUES (#{user.username,jdbcType=VARCHAR}, #{user.password,jdbcType=VARCHAR},
-                #{user.salt,jdbcType=VARCHAR}, #{user.locked,jdbcType=TINYINT});
+    <insert id="createUser" parameterType="com.github.linfeng.plan.entity.User" useGeneratedKeys="true"
+        keyProperty="id">
+        INSERT INTO `sys_users`(username, name, password, createdate, salt, locked)
+        VALUES (#{user.username,jdbcType=VARCHAR}, #{user.name,jdbcType=VARCHAR},
+                #{user.password,jdbcType=VARCHAR}, #{user.createDate,jdbcType=VARCHAR},
+                #{user.salt,jdbcType=VARCHAR}, #{user.locked,jdbcType=TINYINT})
     </insert>
     <update id="updateUser" parameterType="com.github.linfeng.plan.entity.User">
         UPDATE `sys_users`

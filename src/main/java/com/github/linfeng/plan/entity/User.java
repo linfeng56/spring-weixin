@@ -1,7 +1,6 @@
 package com.github.linfeng.plan.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class User implements Serializable {
 
@@ -10,7 +9,7 @@ public class User implements Serializable {
     private String name;
     private String password;
     private String salt;
-    private Date createDate;
+    private Long createDate;
     private Boolean locked = Boolean.FALSE;
 
     public User() {
@@ -61,11 +60,11 @@ public class User implements Serializable {
         this.salt = salt;
     }
 
-    public Date getCreateDate() {
+    public Long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Long createDate) {
         this.createDate = createDate;
     }
 

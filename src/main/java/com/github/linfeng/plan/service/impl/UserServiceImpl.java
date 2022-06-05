@@ -18,9 +18,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User createUser(User user) {
-        userMapper.createUser(user);
-        return null;
+    public Long createUser(User user) {
+        return userMapper.createUser(user);
     }
 
     @Override

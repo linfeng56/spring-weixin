@@ -1,9 +1,11 @@
 package com.github.linfeng.plan.controller;
 
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
@@ -13,8 +15,14 @@ import com.github.linfeng.plan.holder.LoginUserHolder;
 import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IUserService;
 import com.github.linfeng.plan.view.LoginUser;
+import com.github.linfeng.plan.view.ResponseView;
+import com.github.linfeng.utils.DateTimeUtils;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/plan/users")
 public class PlanUsersController extends BasePlanController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlanUsersController.class);
     /**
      * 用户服务
      */
@@ -67,6 +76,39 @@ public class PlanUsersController extends BasePlanController {
             ret.put("errMsg", "list is null");
         }
         return JSON.toJSONString(ret);
+    }
+
+    @RequiresRoles("normaladmin")
+    @RequestMapping("/add")
+    public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
+        LoginUser loginUser = LoginUserHolder.getLoginUser();
+        model.addAttribute("admin", loginUser);
+
+        return "plan/users/add";
+    }
+
+    @RequiresRoles("normaladmin")
+    @RequestMapping("/doAdd")
+    @ResponseBody
+    public ResponseView<Long> doAdd(String username, String name, String password, String rePassword,
+        Integer locked) {
+        locked = locked == null ? 0 : locked;
+        ResponseView<Long> errorMessage = validForm(username, name, password, rePassword, locked);
+        if (errorMessage != null) {
+            return errorMessage;
+        }
+
+        User user = new User(username, password);
+        user.setName(name);
+        user.setLocked(locked == 1);
+        user.setCreateDate(DateTimeUtils.DateTimeToLong());
+        String rnd = ((Long) new Random().nextLong()).toString();
+        user.setSalt(Base64.encodeBase64URLSafeString(rnd.getBytes(StandardCharsets.UTF_8)));
+        String encodePassword = new SimpleHash("MD5", password, user.getCredentialsSalt(), 2).toHex();
+        user.setPassword(encodePassword);
+        Long userId = userService.createUser(user);
+        LOGGER.info("新增加用户:" + user.toString());
+        return new ResponseView<>(200, "操作成功", userId);
     }
 
     @RequiresRoles("normaladmin")
@@ -177,5 +219,41 @@ public class PlanUsersController extends BasePlanController {
             ret.put("errMsg", "删除用户失败[" + id + "]");
         }
         return ret;
+    }
+
+    /**
+     * 验证表单数据
+     *
+     * @param weekTitle 标题
+     * @param weekBegin 开始日期
+     * @param weekEnd   结束日期
+     * @return 异常提示对象或null
+     */
+    /**
+     * @param username   登录名
+     * @param name       姓名
+     * @param password   密码
+     * @param rePassword 重复密码
+     * @param locked     是否锁定
+     * @return 异常提示对象或null
+     */
+    private ResponseView<Long> validForm(String username, String name, String password, String rePassword,
+        Integer locked) {
+        StringBuilder errorMessage = new StringBuilder(25);
+        if (!StringUtils.hasText(username)) {
+            errorMessage.append("登录名不能为空!").append("\\n");
+        }
+        if (!StringUtils.hasText(name)) {
+            errorMessage.append("姓名不能为空!").append("\\n");
+        }
+        if (!StringUtils.hasText(password)) {
+            errorMessage.append("密码不能为空!").append("\\n");
+        } else if (!password.equals(rePassword)) {
+            errorMessage.append("两次输入的密码不致!").append("\\n");
+        }
+        if (StringUtils.hasText(errorMessage)) {
+            return new ResponseView<>(401, errorMessage.toString());
+        }
+        return null;
     }
 }

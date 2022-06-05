@@ -6,7 +6,7 @@ import com.github.linfeng.plan.entity.User;
 
 public interface IUserService {
 
-    User createUser(User user);
+    Long createUser(User user);
 
     void changePassword(Long userId, String newPassword);
 
