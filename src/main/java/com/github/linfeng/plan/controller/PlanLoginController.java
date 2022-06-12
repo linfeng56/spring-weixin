@@ -52,6 +52,17 @@ public class PlanLoginController {
     }
 
     /**
+     * 没有权限页面.
+     *
+     * @return 无权限提示页
+     */
+    @GetMapping(value = "/unauthorized")
+    public String unauthorized() {
+
+        return "plan/login/unauthorized";
+    }
+
+    /**
      * 登录页.
      *
      * @return 登录页

@@ -103,7 +103,7 @@
             <value>
                 /statics/** = anon
                 /index.html = anon
-                /unauthorized.html = anon
+                /plan/login/unauthorized = anon
                 /plan/login/index = anon
                 /plan/login/index/logout =logout
                 /** = user
@@ -113,5 +113,12 @@
 
     <!-- Shiro生命周期处理器 -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
-
+    <!-- 没有权限时的展示页面 -->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.apache.shiro.authz.UnauthorizedException">/plan/login/unauthorized</prop>
+            </props>
+        </property>
+    </bean>
 </beans>
