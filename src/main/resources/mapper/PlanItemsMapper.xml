@@ -67,5 +67,8 @@
       </where>
       order by week_id desc,user_id desc,begin_date asc;
   </select>
+  <select id="count" resultType="java.lang.Integer">
+      SELECT COUNT(*) cnt FROM spwx_plan_items;
+  </select>
 
 </mapper>

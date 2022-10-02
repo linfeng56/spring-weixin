@@ -42,4 +42,6 @@ public interface IPlanWeeksService {
      * @return 受影响记录数, 大于0成功, 等于0失败.
      */
     Integer updateSummary(Integer id, String summary, Long summaryDate);
+
+    Integer count();
 }

@@ -23,4 +23,10 @@ public interface IPlanUsersService {
      * @return true验证通过, false验证不通过.
      */
     LoginUser checkLogin(String loginName, String loginPwd);
+
+    /**
+     * 所有用户数
+     * @return 所有用户数
+     */
+    Integer count();
 }

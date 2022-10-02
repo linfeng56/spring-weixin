@@ -43,4 +43,9 @@ public class PlanItemsServiceImpl implements IPlanItemsService {
     public Integer edit(Integer id, PlanItems item) {
         return planItemsMapper.edit(id, item);
     }
+
+    @Override
+    public Integer count() {
+        return planItemsMapper.count();
+    }
 }

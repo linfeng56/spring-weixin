@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.holder.LoginUserHolder;
+import com.github.linfeng.plan.service.IPlanItemsService;
+import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IPlanWeeksService;
 import com.github.linfeng.plan.view.LoginUser;
 import com.github.linfeng.plan.view.ResponseView;
@@ -39,10 +41,15 @@ public class PlanWeeksController extends BasePlanController {
      * 周计划服务
      */
     private final IPlanWeeksService weeksService;
+    private final IPlanItemsService itemsService;
+    private final IPlanUsersService planUsersService;
 
     @Autowired
-    public PlanWeeksController(IPlanWeeksService weeksService) {
+    public PlanWeeksController(IPlanWeeksService weeksService, IPlanItemsService itemsService,
+        IPlanUsersService planUsersService) {
         this.weeksService = weeksService;
+        this.itemsService = itemsService;
+        this.planUsersService = planUsersService;
     }
 
     @RequiresRoles("normaladmin")
@@ -50,6 +57,20 @@ public class PlanWeeksController extends BasePlanController {
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
+
+        // 周计划数
+        Integer planCount = weeksService.count();
+        model.addAttribute("planCount", planCount);
+
+        // 计划项总数
+        Integer itemCount = itemsService.count();
+        Integer planRate = (planCount*100)/itemCount;
+        model.addAttribute("planRate", planRate);
+
+        // 总用户数
+        Integer userCount = planUsersService.count();
+        model.addAttribute("userCount", userCount);
+
         return "plan/weeks/index";
     }
 

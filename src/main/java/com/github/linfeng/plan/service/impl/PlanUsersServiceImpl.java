@@ -35,6 +35,11 @@ public class PlanUsersServiceImpl implements IPlanUsersService {
     }
 
     @Override
+    public Integer count() {
+        return planUsersMapper.count();
+    }
+
+    @Override
     public LoginUser checkLogin(String loginName, String loginPwd) {
         LoginUser ret = null;
 

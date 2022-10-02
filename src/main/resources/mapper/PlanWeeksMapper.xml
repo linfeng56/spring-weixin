@@ -53,5 +53,8 @@
         where title LIKE concat('%', #{searchText}, '%')
         order by begin_date desc, week_id desc;
     </select>
+  <select id="count" resultType="java.lang.Integer">
+      SELECT COUNT(*) cnt FROM spwx_plan_weeks;
+  </select>
 
 </mapper>

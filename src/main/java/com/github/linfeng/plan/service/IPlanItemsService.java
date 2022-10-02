@@ -19,4 +19,6 @@ public interface IPlanItemsService {
     List<PlanItems> listByWeek(Integer weekId, Integer searchUserId,String searchText);
 
     Integer edit(Integer id, PlanItems item);
+
+    Integer count();
 }

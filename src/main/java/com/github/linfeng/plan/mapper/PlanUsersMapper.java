@@ -34,4 +34,6 @@ public interface PlanUsersMapper {
      * @return 更新是否成功
      */
     boolean updateLoginDate(@Param("userId") Integer userId, @Param("loginDate") Long time);
+
+    Integer count();
 }

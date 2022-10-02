@@ -24,4 +24,6 @@ public interface PlanItemsMapper {
         @Param("searchText") String searchText);
 
     Integer edit(@Param("id") Integer id, @Param("item") PlanItems item);
+
+    Integer count();
 }

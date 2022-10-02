@@ -28,5 +28,8 @@
   <select id="getUserByLoginName" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanUsers">
       select * from spwx_plan_users where login_name=#{loginName};
   </select>
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) cnt FROM spwx_plan_users;
+    </select>
 
 </mapper>

@@ -31,4 +31,6 @@ public interface PlanWeeksMapper {
     Integer update(@Param("id") Integer id, @Param("week") PlanWeeks week);
 
     Integer updateSummary(@Param("id") Integer id, @Param("summary") String summary,@Param("summaryDate") Long summaryDate);
+
+    Integer count();
 }
