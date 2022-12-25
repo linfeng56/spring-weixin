@@ -1,11 +1,14 @@
 package com.github.linfeng.plan.controller;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.CalendarEventObject;
+import com.github.linfeng.plan.entity.PlanItems;
 import com.github.linfeng.plan.holder.LoginUserHolder;
 import com.github.linfeng.plan.service.IPlanItemsService;
 import com.github.linfeng.plan.service.IPlanUsersService;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -29,7 +33,7 @@ public class PlanCalendarController extends BasePlanController {
 
     @Autowired
     public PlanCalendarController(IPlanWeeksService weeksService, IPlanItemsService itemsService,
-        IPlanUsersService planUsersService) {
+            IPlanUsersService planUsersService) {
         this.weeksService = weeksService;
         this.itemsService = itemsService;
         this.planUsersService = planUsersService;
@@ -60,15 +64,49 @@ public class PlanCalendarController extends BasePlanController {
     // @RequiresRoles("normaladmin")
     @RequestMapping(value = "/feed", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object feed(HttpServletRequest request, HttpServletResponse response) {
+    public Object feed(@RequestParam("start") String start, @RequestParam("end") String end, HttpServletRequest request,
+            HttpServletResponse response) {
         List<CalendarEventObject> ret = new ArrayList<>();
         ret.add(new CalendarEventObject("全天事件", System.currentTimeMillis(),
-            "#f56954", "#f56954", true));
+                "#f56954", "#f56954", true));
         ret.add(new CalendarEventObject("长事件", System.currentTimeMillis(),
-            System.currentTimeMillis() + 5 * 60 * 60 * 1000,
-            "#f56954", "#f56954", false));
+                System.currentTimeMillis() + 5 * 60 * 60 * 1000,
+                "#f56954", "#f56954", false));
+
+        Long startDate = OffsetDateTime.parse(start).toInstant().getEpochSecond() * 1000;
+        Long endDate = OffsetDateTime.parse(end).toInstant().getEpochSecond() * 1000;
+
+        String urlFormat = request.getContextPath() + "/plan/items/edit/";
+
+        List<PlanItems> items = itemsService.list(startDate, endDate);
+        for (PlanItems item : items) {
+            String color = color(item.getId() % 6);
+            CalendarEventObject evt = new CalendarEventObject(
+                    item.getTitle(), item.getBeginDate(), item.getEndDate(),
+                    color, color, false
+            );
+            evt.setUrl(urlFormat + item.getId());
+            ret.add(evt);
+        }
 
         // 两次转换目的是去除为null的项
         return JSON.parse(JSON.toJSONString(ret, true));
+    }
+
+    private final Random random = new Random();
+
+    private String color(int index) {
+        String[] colors = new String[]{
+                "#f56954", //red
+                "#f39c12", //yellow
+                "#0073b7", //Blue
+                "#00c0ef", //Info (aqua)
+                "#00a65a", //Success (green)
+                "#3c8dbc", //Primary (light-blue)
+        };
+        if (index < 0 || index >= colors.length) {
+            index = random.nextInt(colors.length);
+        }
+        return colors[index];
     }
 }

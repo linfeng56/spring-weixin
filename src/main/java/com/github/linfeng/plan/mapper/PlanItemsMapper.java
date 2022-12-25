@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlanItemsMapper {
 
-    List<PlanItems> list();
+    List<PlanItems> list(@Param("start") Long start, @Param("end") Long end);
 
     PlanItems getById(@Param("id") Integer id);
 
@@ -26,4 +26,5 @@ public interface PlanItemsMapper {
     Integer edit(@Param("id") Integer id, @Param("item") PlanItems item);
 
     Integer count();
+
 }

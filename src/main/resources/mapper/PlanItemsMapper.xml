@@ -47,7 +47,16 @@
         WHERE id=#{id}
     </update>
     <select id="list" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanItems">
-      select * from spwx_plan_items;
+      select * from spwx_plan_items
+        <where>
+            <if test="start!=null">
+              AND  begin_date&gt;=#{start}
+            </if>
+            <if test="end!=null">
+              AND  begin_date &lt;= #{end}
+            </if>
+        </where>
+        ;
   </select>
   <select id="getById" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanItems">
       select * from spwx_plan_items where id=#{id};
