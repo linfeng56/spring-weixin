@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | Calendar</title>
+  <title>AdminLTE 3 | 管理后台</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -32,7 +32,7 @@
            alt="AdminLTE Logo"
            class="brand-image img-circle elevation-3"
            style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+      <span class="brand-text font-weight-light">工作计划管理</span>
     </a>
 
     <!-- Sidebar -->
@@ -254,6 +254,13 @@
         right : 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       'themeSystem': 'bootstrap',
+      dateClick: function(info) {
+        alert('点击日期: ' + info.dateStr);
+        alert('点击坐标: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+        alert('展示视力: ' + info.view.type);
+        // change the day's background color just for fun
+        info.dayEl.style.backgroundColor = 'red';
+      },
       //Random default events
       eventSources    : [
           {
@@ -281,8 +288,13 @@
     });
 
     calendar.render();
-    // $('#calendar').fullCalendar()
-
+    // $('#calendar').fullCalendar
+    var toDate ='${date}';
+    if(toDate) {
+        console.log('gotoDate');
+        console.log(toDate);
+        calendar.gotoDate('${date}');
+    }
     /* ADDING EVENTS */
     var currColor = '#3c8dbc' //Red by default
     //Color chooser button

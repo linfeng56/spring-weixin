@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/plan/calendar")
 public class PlanCalendarController extends BasePlanController {
 
+    private final Random random = new Random();
+
     private final IPlanWeeksService weeksService;
     private final IPlanItemsService itemsService;
     private final IPlanUsersService planUsersService;
@@ -44,6 +46,12 @@ public class PlanCalendarController extends BasePlanController {
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
+
+        String date = request.getParameter("date");
+        if (date == null) {
+            date = "";
+        }
+        model.addAttribute("date", date);
 
         // 周计划数
         Integer planCount = weeksService.count();
@@ -67,11 +75,6 @@ public class PlanCalendarController extends BasePlanController {
     public Object feed(@RequestParam("start") String start, @RequestParam("end") String end, HttpServletRequest request,
             HttpServletResponse response) {
         List<CalendarEventObject> ret = new ArrayList<>();
-        ret.add(new CalendarEventObject("全天事件", System.currentTimeMillis(),
-                "#f56954", "#f56954", true));
-        ret.add(new CalendarEventObject("长事件", System.currentTimeMillis(),
-                System.currentTimeMillis() + 5 * 60 * 60 * 1000,
-                "#f56954", "#f56954", false));
 
         Long startDate = OffsetDateTime.parse(start).toInstant().getEpochSecond() * 1000;
         Long endDate = OffsetDateTime.parse(end).toInstant().getEpochSecond() * 1000;
@@ -81,10 +84,8 @@ public class PlanCalendarController extends BasePlanController {
         List<PlanItems> items = itemsService.list(startDate, endDate);
         for (PlanItems item : items) {
             String color = color(item.getId() % 6);
-            CalendarEventObject evt = new CalendarEventObject(
-                    item.getTitle(), item.getBeginDate(), item.getEndDate(),
-                    color, color, false
-            );
+            CalendarEventObject evt = new CalendarEventObject(item.getTitle(), item.getBeginDate(), item.getEndDate(),
+                    color, color, false);
             evt.setUrl(urlFormat + item.getId());
             ret.add(evt);
         }
@@ -93,11 +94,9 @@ public class PlanCalendarController extends BasePlanController {
         return JSON.parse(JSON.toJSONString(ret, true));
     }
 
-    private final Random random = new Random();
 
     private String color(int index) {
-        String[] colors = new String[]{
-                "#f56954", //red
+        String[] colors = new String[]{"#f56954", //red
                 "#f39c12", //yellow
                 "#0073b7", //Blue
                 "#00c0ef", //Info (aqua)

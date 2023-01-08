@@ -89,6 +89,7 @@
                                         <a href="edit/${planItems.id}" class="btn-sm btn-primary">编辑</a>
                                         <a href="sr?weekid=${planItems.weekId}" class="btn-sm btn-primary">本周总结</a>
                                         <a href="#${planItems.weekId}" class="btn-sm btn-primary">汇总</a>
+                                        <a href='${request.getContextPath()}/plan/calendar/index?date=${planItems.beginDate?number_to_date?string("yyyy-MM-dd")}' class="btn-sm btn-primary">日历查看</a>
                                     </td>
                                 </tr>
                                 <tr>

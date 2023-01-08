@@ -160,6 +160,7 @@
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">提交</button>
                     <a href="${request.getContextPath()}/plan/items/list" class="btn btn-primary">列表</a>
+                    <a href='${request.getContextPath()}/plan/calendar/index?date=${item.beginDate?number_to_datetime?string("yyyy-MM-dd")}' class="btn btn-primary">日历查看</a>
                 </div>
               </form>
             </div>
