@@ -193,7 +193,7 @@ CREATE TABLE `sys_permissions`  (
   `available` tinyint(1) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_sys_permissions_permission`(`permission`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for sys_roles
@@ -206,7 +206,7 @@ CREATE TABLE `sys_roles`  (
   `available` tinyint(1) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_sys_roles_role`(`role`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_roles
@@ -235,18 +235,23 @@ DROP TABLE IF EXISTS `sys_users`;
 CREATE TABLE `sys_users`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
   `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `createdate` bigint(0) NULL DEFAULT NULL,
   `salt` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `locked` tinyint(1) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_sys_users_username`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_users
 -- ----------------------------
-INSERT INTO `sys_users` VALUES (1, 'admin@google.com', 'cc3b9133daee15a7de303b3199fdd6f8', 'admin@google.com111111', 0);
-INSERT INTO `sys_users` VALUES (2, 'ls', '123456', '111111', 0);
+INSERT INTO `sys_users` VALUES (1, 'admin@google.com', '超管', 'cc3b9133daee15a7de303b3199fdd6f8', 1666144535000, 'admin@google.com111111', 0);
+INSERT INTO `sys_users` VALUES (2, 'ls', '临时', '123456', 1666144535000, '111111', 0);
+INSERT INTO `sys_users` VALUES (3, 'ls2', '临时', '123456', 1666144535000, '111111', 0);
+INSERT INTO `sys_users` VALUES (15, 'zhangsan@mail.com', '张三', '7388fab6bab2f31ec88406f8a55ae8aa', 1666148674000, 'LTUwODc2NDI4NDE4MDQ2MDYwNzM', 0);
+INSERT INTO `sys_users` VALUES (16, 'lisi@mail.com', '李四', '4d43a4f45f15544b8278bd02190357c2', 1666150421000, 'NjU2Nzg1NzEzNTc3NDY5Nzc3Mg', 0);
 
 -- ----------------------------
 -- Table structure for sys_users_roles
@@ -265,8 +270,11 @@ CREATE TABLE `sys_users_roles`  (
 -- Records of sys_users_roles
 -- ----------------------------
 INSERT INTO `sys_users_roles` VALUES (1, 1);
+INSERT INTO `sys_users_roles` VALUES (15, 1);
 INSERT INTO `sys_users_roles` VALUES (1, 2);
+INSERT INTO `sys_users_roles` VALUES (15, 2);
 INSERT INTO `sys_users_roles` VALUES (1, 3);
+INSERT INTO `sys_users_roles` VALUES (15, 3);
 
 -- ----------------------------
 -- Table structure for user_roles
