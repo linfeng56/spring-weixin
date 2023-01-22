@@ -14,7 +14,8 @@
   <link rel="stylesheet" href="${request.getContextPath()}/statics/plugins/fullcalendar/main.min.css">
   <link rel="stylesheet" href="${request.getContextPath()}/statics/plugins/fullcalendar-daygrid/main.min.css">
   <link rel="stylesheet" href="${request.getContextPath()}/statics/plugins/fullcalendar-timegrid/main.min.css">
-  <link rel="stylesheet" href="${request.getContextPath()}/statics/plugins/fullcalendar-bootstrap/main.min.css">
+    <link rel="stylesheet" href="${request.getContextPath()}/statics/plugins/fullcalendar-bootstrap/main.min.css">
+    <link rel="stylesheet" href="${request.getContextPath()}/statics/plugins/toastr/toastr.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="${request.getContextPath()}/statics/dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
@@ -146,6 +147,129 @@
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->
+
+        <div class="modal fade" id="taskModal">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">添加任务</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="taskForm">
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="itemJobType">类型</label>
+                                        <select class="form-control" name="itemJobType" id="itemJobType">
+                                            <option value="-1">请选择</option>
+                                            <#list jobTypes?keys as key>
+                                            <option value="${key}">${jobTypes[key]}</option>
+                                        </#list>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="itemJobNum">编号</label>
+                                        <input type="text" class="form-control" name="itemJobNum" id="itemJobNum" placeholder="编号" required>
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <label for="itemTitle">名称</label>
+                                        <input type="text" class="form-control" name="itemTitle" id="itemTitle" placeholder="周计划项工作名称" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label>起始日期</label>
+                                        <div class="input-group date" id="itemBegin" data-target-input="nearest">
+                                            <input type="text" class="form-control datetimepicker-input" name="itemBegin" data-target="#itemBegin" required/>
+                                            <div class="input-group-append" data-target="#itemBegin" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                        <!-- /.input group -->
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label>截止日期</label>
+                                        <div class="input-group date" id="itemEnd" data-target-input="nearest">
+                                            <input type="text" class="form-control datetimepicker-input" name="itemEnd" data-target="#itemEnd" required/>
+                                            <div class="input-group-append" data-target="#itemEnd" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                        <!-- /.input group -->
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="itemWeekId">所属周计划</label>
+                                        <select class="form-control" name="itemWeekId" id="itemWeekId">
+                                            <#list weeks as week>
+                                            <option value="${week.weekId}">${week.title}</option>
+                                        </#list>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="itemUserId">指派给</label>
+                                        <select class="form-control" name="itemUserId" id="itemUserId">
+                                            <#list users as user>
+                                            <option value="${user.userId}">${user.userName}</option>
+                                        </#list>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label>整体完成预期</label>
+                                        <div class="input-group date" id="itemFinish" data-target-input="nearest">
+                                            <input type="text" class="form-control datetimepicker-input" name="itemFinish" data-target="#itemFinish" required/>
+                                            <div class="input-group-append" data-target="#itemFinish" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                        <!-- /.input group -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>工作内容</label>
+                                        <textarea class="form-control" rows="3" name="content" placeholder="具体工作内容"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>备注</label>
+                                        <textarea class="form-control" rows="3" name="remarks" placeholder="备注"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="taskSubmit">提交</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
     </section>
     <!-- /.content -->
   </div>
@@ -185,6 +309,7 @@
 <script src="${request.getContextPath()}/statics/plugins/fullcalendar-timegrid/main.min.js"></script>
 <script src="${request.getContextPath()}/statics/plugins/fullcalendar-interaction/main.min.js"></script>
 <script src="${request.getContextPath()}/statics/plugins/fullcalendar-bootstrap/main.min.js"></script>
+<script src="${request.getContextPath()}/statics/plugins/toastr/toastr.min.js"></script>
 <!-- Page specific script -->
 <script>
   $(function () {
@@ -246,7 +371,8 @@
       }
     });
 
-    var calendar = new Calendar(calendarEl, {
+    let calendar = new Calendar(calendarEl, {
+      selectable: true,
       plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
       header    : {
         left  : 'prev,next today',
@@ -255,13 +381,21 @@
       },
       'themeSystem': 'bootstrap',
       dateClick: function(info) {
-        alert('点击日期: ' + info.dateStr);
-        alert('点击坐标: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-        alert('展示视力: ' + info.view.type);
+        // alert('点击日期: ' + info.dateStr);
+        // alert('点击坐标: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+        // alert('展示视力: ' + info.view.type);
         // change the day's background color just for fun
-        info.dayEl.style.backgroundColor = 'red';
+        // info.dayEl.style.backgroundColor = 'red';
+        $('#taskModal').modal('show');
       },
-      //Random default events
+      select: function(info) {
+        console.info(info);
+        // alert('selected ' + info.startStr + ' to ' + info.endStr);
+        $('#taskModal').modal('show');
+        $('#itemBegin>input').val(info.startStr);
+        $('#itemEnd>input').val(info.endStr);
+      },
+      //events
       eventSources    : [
           {
               url : 'feed',
@@ -289,16 +423,16 @@
 
     calendar.render();
     // $('#calendar').fullCalendar
-    var toDate ='${date}';
+    let toDate ='${date}';
     if(toDate) {
         console.log('gotoDate');
         console.log(toDate);
         calendar.gotoDate('${date}');
     }
     /* ADDING EVENTS */
-    var currColor = '#3c8dbc' //Red by default
+    let currColor = '#3c8dbc' //Red by default
     //Color chooser button
-    var colorChooser = $('#color-chooser-btn')
+    let colorChooser = $('#color-chooser-btn')
     $('#color-chooser > li > a').click(function (e) {
       e.preventDefault()
       //Save color
@@ -312,13 +446,13 @@
     $('#add-new-event').click(function (e) {
       e.preventDefault()
       //Get value and make sure it is not null
-      var val = $('#new-event').val()
+      let val = $('#new-event').val()
       if (val.length == 0) {
         return
       }
 
       //Create events
-      var event = $('<div />')
+      let event = $('<div />')
       event.css({
         'background-color': currColor,
         'border-color'    : currColor,
@@ -333,6 +467,26 @@
       //Remove event from text input
       $('#new-event').val('')
     })
+      $('#taskSubmit').click(function (e) {
+          e.preventDefault();
+          let data = $('#taskForm').serialize();
+          $.ajax({
+              url:'${request.getContextPath()}/plan/items/doAdd',
+              type:'post',
+              data:data,
+              success:function(data){
+                  if(!data){
+                      toastr.error("提交数据失败");
+                  }else if (data.status=="200"){
+                      toastr.success("保存成功");
+                      $('#taskModal').modal('hide');
+                  }else{
+                      toastr.warning("保存失败。错误编码："+data.code);
+                  }
+                  console.log(data);
+              }
+          });
+      })
   })
 </script>
 </body>
