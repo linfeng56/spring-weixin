@@ -65,6 +65,7 @@
         <property name="freemarkerSettings">
             <props>
                 <prop key="api_builtin_enabled">true</prop>
+                <prop key="number_format">0.#</prop>
             </props>
         </property>
     </bean>

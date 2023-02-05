@@ -181,14 +181,15 @@
             type:'post',
             data:$(this).serialize(),
             success:function(data){
-                $('#myModalMessageTitle').text("操作提示");
                 if (data.status=="200"){
-                    $('.modal-body-content').text("保存成功");
+                    toastr.success("保存成功");
                 }else{
-                    $('.modal-body-content').text("保存失败。错误编码："+data.code);
+                    toastr.warning("保存失败。错误编码："+data.code);
                 }
                 console.log(data);
-                $('#myModalMessage').modal('show');
+            },
+            error:function (xhr, status, thrown) {
+                toastr.error("请求出错:" + status);
             }
         });
     });
