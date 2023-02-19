@@ -2,6 +2,7 @@ package com.github.linfeng.plan.mapper;
 
 import java.util.List;
 import java.util.Set;
+import com.github.linfeng.plan.entity.Role;
 import com.github.linfeng.plan.entity.User;
 
 import org.apache.ibatis.annotations.Param;
@@ -35,5 +36,7 @@ public interface UserMapper {
     boolean unlock(Integer id);
 
     List<User> list(String searchText);
+
+    List<Role> selectRoleByUserId(Integer id);
 
 }

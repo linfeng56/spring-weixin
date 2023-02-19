@@ -11,7 +11,7 @@
             value="jdbc:mysql://${db.host}:${db.port}/${db.database}?useUnicode=true&amp;useSSL=false&amp;characterEncoding=${db.encoding}&amp;allowPublicKeyRetrieval=true"/>
         <property name="username" value="${db.username}"/>
         <property name="password" value="${db.password}"/>
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
 
         <property name="filters" value="stat,slf4f"/>
 

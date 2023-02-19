@@ -53,6 +53,7 @@
                                     <th>登录名</th>
                                     <th>姓名</th>
                                     <th>创建日期</th>
+                                    <th>权限</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -65,6 +66,17 @@
                                     <td>${item.name}</td>
                                     <td>
                                         <span class="tag tag-success">${item.createDate?number_to_date}</span>
+                                    </td>
+                                    <td>
+                                        <#if item.roles??>
+                                        <#list item.roles as r>
+                                        <span class="btn btn-block btn-info btn-xs disabled">${r.description}</span>
+                                        <#else>
+                                        <span class="btn btn-block btn-secondary btn-xs disabled">无</span>
+                                        </#list>
+                                        <#else>
+                                        <span class="btn btn-block btn-secondary btn-xs disabled">无</span>
+                                        </#if>
                                     </td>
                                     <td>
                                         <a href="${request.getContextPath()}/plan/users/power/${item.id}" class="btn-sm btn-primary">权限</a>
@@ -120,9 +132,10 @@
                         t.addClass("btn-primary").text("开启");
                         t.data("url",url.replaceAll('unlock','lock'));
                     }
+                    toastr.success("用户状态修改成功");
                 }else{
                     // 锁定变更失败
-                    alert("变更失败。错误编码："+data.status);
+                    toastr.error("变更失败。错误编码："+data.status);
                 }
                 console.log(data);
             }
@@ -143,7 +156,7 @@
                     t.addClass("btn-danger").text("已删除");
                 }else{
                     // 锁定变更失败
-                    alert("变更失败。错误编码："+data.status +",错误描述："+data.errMsg);
+                    toastr.error("变更失败。错误编码："+data.status +",错误描述："+data.errMsg);
                 }
                 console.log(data);
             }

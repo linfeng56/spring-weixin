@@ -1,6 +1,7 @@
 package com.github.linfeng.plan.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable {
 
@@ -11,6 +12,8 @@ public class User implements Serializable {
     private String salt;
     private Long createDate;
     private Boolean locked = Boolean.FALSE;
+
+    private List<Role> roles;
 
     public User() {
     }
@@ -78,6 +81,14 @@ public class User implements Serializable {
 
     public void setLocked(Boolean locked) {
         this.locked = locked;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     @Override

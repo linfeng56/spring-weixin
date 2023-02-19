@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.linfeng.plan.mapper.UserMapper">
+    <resultMap id="planUser" type="com.github.linfeng.plan.entity.User" autoMapping="true">
+        <id property="id" column="id"/>
+        <association property="roles" column="id" select="selectRoleByUserId"/>
+    </resultMap>
+
     <insert id="createUser" parameterType="com.github.linfeng.plan.entity.User" useGeneratedKeys="true"
         keyProperty="id">
         INSERT INTO `sys_users`(username, name, password, createdate, salt, locked)
@@ -81,10 +86,16 @@
           AND r.id = rp.role_id
           AND p.id = rp.permission_id;
     </select>
-    <select id="allUsers" resultType="com.github.linfeng.plan.entity.User">
+    <select id="allUsers" resultMap="planUser">
         SELECT * FROM `sys_users`;
     </select>
-    <select id="list" resultType="com.github.linfeng.plan.entity.User">
+    <select id="list" resultMap="planUser">
         SELECT * FROM `sys_users` WHERE username like concat('%',#{paramMap.url,jdbcType=VARCHAR},'%');
+    </select>
+    <select id="selectRoleByUserId" resultType="com.github.linfeng.plan.entity.Role">
+        SELECT r.*
+        FROM  `sys_users_roles` ur
+          LEFT JOIN `sys_roles` r ON ur.role_id=r.id
+        WHERE ur.user_id=#{userId,jdbcType=BIGINT};
     </select>
 </mapper>
