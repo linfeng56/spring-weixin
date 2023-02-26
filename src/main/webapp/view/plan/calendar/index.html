@@ -489,5 +489,27 @@
       })
   })
 </script>
+
+<script>
+    $(function(){
+        $.post("${request.getContextPath()}/plan/users/cnt", {},
+            function(info){
+                if (info.status===200){
+                    $('#planUserCount').text(info.data)
+                }else{
+                    console.log(info);
+                }
+            }, "json");
+
+        $.post("${request.getContextPath()}/plan/items/cnt", {},
+            function(info){
+                if (info.status===200){
+                    $('#weekItemCount').text(info.data)
+                }else{
+                    console.log(info);
+                }
+            }, "json");
+    });
+</script>
 </body>
 </html>

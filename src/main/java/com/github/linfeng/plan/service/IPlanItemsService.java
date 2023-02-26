@@ -20,7 +20,7 @@ public interface IPlanItemsService {
 
     Integer edit(Integer id, PlanItems item);
 
-    Integer count();
-
     List<PlanItems> list(Long start, Long end);
+
+    Integer cnt();
 }

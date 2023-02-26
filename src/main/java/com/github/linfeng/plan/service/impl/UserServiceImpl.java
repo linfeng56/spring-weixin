@@ -61,6 +61,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public Integer cnt() {
+        return userMapper.cnt();
+    }
+
+    @Override
     public boolean lock(Integer id) {
         return userMapper.lock(id) > 0;
     }

@@ -63,7 +63,7 @@ public class PlanWeeksController extends BasePlanController {
         model.addAttribute("planCount", planCount);
 
         // 计划项总数
-        Integer itemCount = itemsService.count();
+        Integer itemCount = itemsService.cnt();
         Integer planRate = (planCount*100)/itemCount;
         model.addAttribute("planRate", planRate);
 

@@ -22,6 +22,8 @@ public interface IUserService {
 
     List<User> allUsers();
 
+    Integer cnt();
+
     boolean lock(Integer id);
 
     User findUser(Integer userId);

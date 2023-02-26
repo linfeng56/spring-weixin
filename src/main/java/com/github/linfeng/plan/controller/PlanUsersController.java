@@ -128,6 +128,17 @@ public class PlanUsersController extends BasePlanController {
         return "plan/users/list";
     }
 
+    @RequiresRoles("normaladmin")
+    @RequestMapping("/cnt")
+    @ResponseBody
+    public ResponseView<Integer> cnt() {
+        Integer cnt = userService.cnt();
+        if (cnt == null) {
+            cnt = 0;
+        }
+        return new ResponseView<>(200, "OK", cnt);
+    }
+
 
     @RequestMapping("/detail/{id}")
     @ResponseBody

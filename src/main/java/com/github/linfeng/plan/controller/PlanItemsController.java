@@ -18,6 +18,7 @@ import com.github.linfeng.plan.view.LoginUser;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,8 +56,8 @@ public class PlanItemsController extends BasePlanController {
 
     @Autowired
     public PlanItemsController(IPlanItemsService itemsService,
-                               IPlanUsersService usersService,
-                               IPlanWeeksService weeksService) {
+        IPlanUsersService usersService,
+        IPlanWeeksService weeksService) {
         this.itemsService = itemsService;
         this.usersService = usersService;
         this.weeksService = weeksService;
@@ -73,9 +74,9 @@ public class PlanItemsController extends BasePlanController {
 
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "searchWeekId", required = false) Integer searchWeekId,
-                       @RequestParam(value = "searchUserId", required = false) Integer searchUserId,
-                       @RequestParam(value = "searchText", required = false) String searchText,
-                       HttpServletRequest request, HttpServletResponse response) {
+        @RequestParam(value = "searchUserId", required = false) Integer searchUserId,
+        @RequestParam(value = "searchText", required = false) String searchText,
+        HttpServletRequest request, HttpServletResponse response) {
         LoginUser loginUser = LoginUserHolder.getLoginUser();
         model.addAttribute("admin", loginUser);
 
@@ -89,6 +90,17 @@ public class PlanItemsController extends BasePlanController {
         model.addAttribute("searchWeekId", searchWeekId != null ? searchWeekId : 0);
 
         return "plan/items/list";
+    }
+
+    @RequiresRoles("normaladmin")
+    @RequestMapping("/cnt")
+    @ResponseBody
+    public ResponseView<Integer> cnt() {
+        Integer cnt = itemsService.cnt();
+        if (cnt == null) {
+            cnt = 0;
+        }
+        return new ResponseView<>(200, "OK", cnt);
     }
 
 
@@ -109,8 +121,8 @@ public class PlanItemsController extends BasePlanController {
     @PostMapping(value = "/doAdd")
     @ResponseBody
     public ResponseView<Integer> doAdd(Model model, Integer itemJobType, Integer itemJobNum,
-                                       String itemTitle, Integer itemUserId,
-                                       Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
+        String itemTitle, Integer itemUserId,
+        Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
 
         ResponseView<Integer> errorMessage = validForm(itemTitle, itemWeekId,
             itemBegin, itemEnd);
@@ -145,7 +157,7 @@ public class PlanItemsController extends BasePlanController {
      * @return 周计划项
      */
     private PlanItems buildPlanItems(Integer itemJobType, Integer itemJobNum, String itemTitle, Integer itemUserId,
-                                     Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
+        Integer itemWeekId, String itemBegin, String itemEnd, String itemFinish, String content, String remarks) {
 
         if (!StringUtils.hasText(remarks)) {
             remarks = "";
@@ -179,7 +191,7 @@ public class PlanItemsController extends BasePlanController {
      * @return 异常提示对象或null
      */
     private ResponseView<Integer> validForm(String itemTitle, Integer itemWeekId, String itemBegin,
-                                            String itemEnd) {
+        String itemEnd) {
         StringBuilder errorMessage = new StringBuilder(25);
         if (!StringUtils.hasText(itemTitle)) {
             errorMessage.append("标题不能为空!").append("\\n");
@@ -225,9 +237,9 @@ public class PlanItemsController extends BasePlanController {
     @PostMapping(value = "/doEdit/{id}")
     @ResponseBody
     public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, Integer itemJobType,
-                                        Integer itemJobNum,
-                                        String itemTitle, Integer itemUserId, Integer itemWeekId, String itemBegin, String itemEnd,
-                                        String itemFinish, String content, String remarks) {
+        Integer itemJobNum,
+        String itemTitle, Integer itemUserId, Integer itemWeekId, String itemBegin, String itemEnd,
+        String itemFinish, String content, String remarks) {
 
         ResponseView<Integer> errorMessage = validForm(itemTitle, itemWeekId,
             itemBegin, itemEnd);
@@ -251,7 +263,7 @@ public class PlanItemsController extends BasePlanController {
     @GetMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
-                       HttpServletResponse response) {
+        HttpServletResponse response) {
         Map<String, Object> ret = new HashMap<>(6);
         if (null == id || id <= 0) {
             ret.put("retCode", "fail");

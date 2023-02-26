@@ -45,12 +45,12 @@ public class PlanItemsServiceImpl implements IPlanItemsService {
     }
 
     @Override
-    public Integer count() {
-        return planItemsMapper.count();
+    public List<PlanItems> list(Long start, Long end) {
+        return planItemsMapper.list(start, end);
     }
 
     @Override
-    public List<PlanItems> list(Long start, Long end) {
-        return planItemsMapper.list(start, end);
+    public Integer cnt() {
+        return planItemsMapper.count();
     }
 }

@@ -31,6 +31,8 @@ public interface UserMapper {
 
     List<User> allUsers();
 
+    Integer cnt();
+
     Integer lock(Integer id);
 
     boolean unlock(Integer id);
