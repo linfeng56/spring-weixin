@@ -13,6 +13,13 @@
             (#{roleId,jdbcType=BIGINT},#{permission_id,jdbcType=BIGINT})
         </foreach>;
     </insert>
+    <update id="update">
+        UPDATE `sys_roles`
+        SET `role`=#{r.role},
+            `description`=#{r.description},
+            `available`=#{r.available}
+        WHERE `id` = #{id}
+    </update>
 
     <delete id="deleteRole" parameterType="long">
         DELETE
@@ -26,5 +33,14 @@
             #{pid,jdbcType=BIGINT}
         </foreach>
     </delete>
+    <select id="list" resultType="com.github.linfeng.plan.entity.Role">
+        SELECT *
+        FROM `sys_roles`;
+    </select>
+    <select id="getById" resultType="com.github.linfeng.plan.entity.Role">
+        SELECT *
+        FROM `sys_roles`
+        WHERE id = #{id,jdbcType=BIGINT};
+    </select>
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.github.linfeng.plan.mapper;
 
+import java.util.List;
 import com.github.linfeng.plan.entity.Role;
 
 import org.apache.ibatis.annotations.Param;
@@ -37,4 +38,28 @@ public interface RoleMapper {
      * @param permissionIds 权限编号
      */
     void unCorrelationPermissions(@Param("roleId") Long roleId, @Param("permissionIds") Long... permissionIds);
+
+    /**
+     * 角色列表
+     *
+     * @return 角色列表
+     */
+    List<Role> list();
+
+    /**
+     * 获取指定编号的角色
+     *
+     * @param id 角色编号
+     * @return 角色
+     */
+    Role getById(Integer id);
+
+    /**
+     * 更新角色信息
+     *
+     * @param id   角色编号
+     * @param role 角色信息
+     * @return 受影响条数
+     */
+    Integer update(@Param("id") Integer id, @Param("r") Role role);
 }
