@@ -11,12 +11,10 @@ import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.CalendarEventObject;
 import com.github.linfeng.plan.entity.PlanItems;
 import com.github.linfeng.plan.entity.PlanUsers;
-import com.github.linfeng.plan.holder.LoginUserHolder;
 import com.github.linfeng.plan.service.IPlanItemsService;
 import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IPlanWeeksService;
 import com.github.linfeng.plan.view.JobType;
-import com.github.linfeng.plan.view.LoginUser;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +45,6 @@ public class PlanCalendarController extends BasePlanController {
     @RequiresRoles("normaladmin")
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
         Map<String, String> jobTypes = JobType.toMap();
         model.addAttribute("jobTypes", jobTypes);
 

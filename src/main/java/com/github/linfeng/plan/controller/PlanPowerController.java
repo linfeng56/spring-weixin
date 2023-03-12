@@ -2,9 +2,7 @@ package com.github.linfeng.plan.controller;
 
 import java.util.List;
 import com.github.linfeng.plan.entity.Role;
-import com.github.linfeng.plan.holder.LoginUserHolder;
 import com.github.linfeng.plan.service.IRoleService;
-import com.github.linfeng.plan.view.LoginUser;
 import com.github.linfeng.plan.view.ResponseView;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +32,6 @@ public class PlanPowerController extends BasePlanController {
      */
     @GetMapping("/roles")
     public String roles(Model model) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
 
         List<Role> roles = roleService.list();
         model.addAttribute("pageRoles", roles);
@@ -51,8 +47,6 @@ public class PlanPowerController extends BasePlanController {
      */
     @GetMapping("roles/edit/{id}")
     public String rolesEdit(@PathVariable("id") Integer id, Model model) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
 
         Role role = roleService.getById(id);
         model.addAttribute("item", role);
@@ -70,8 +64,6 @@ public class PlanPowerController extends BasePlanController {
     @ResponseBody
     public ResponseView<Integer> rolesDoEdit(@PathVariable("id") Integer id, Model model,
         String role, String description, Boolean available) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
 
         if (available == null) {
             available = false;

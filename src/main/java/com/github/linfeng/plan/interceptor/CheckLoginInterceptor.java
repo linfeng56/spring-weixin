@@ -47,6 +47,7 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
                     LoginUser loginUser = LoginUser.decode(user);
                     if (loginUser != null) {
                         LoginUserHolder.setLoginUser(loginUser);
+                        request.setAttribute("admin", loginUser);
                         return true;
                     }else{
                         if (LOGGER.isDebugEnabled()){
@@ -63,6 +64,7 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
             LoginUser loginUser = (LoginUser) user;
             if (loginUser.getUserId() > 0) {
                 LoginUserHolder.setLoginUser(loginUser);
+                request.setAttribute("admin", loginUser);
                 return true;
             }
         }

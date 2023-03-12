@@ -8,11 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanWeeks;
-import com.github.linfeng.plan.holder.LoginUserHolder;
 import com.github.linfeng.plan.service.IPlanItemsService;
 import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IPlanWeeksService;
-import com.github.linfeng.plan.view.LoginUser;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
@@ -55,8 +53,6 @@ public class PlanWeeksController extends BasePlanController {
     @RequiresRoles("normaladmin")
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
 
         // 周计划数
         Integer planCount = weeksService.count();
@@ -79,8 +75,6 @@ public class PlanWeeksController extends BasePlanController {
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
         HttpServletRequest request, HttpServletResponse response) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
 
         List<PlanWeeks> list;
         if (StringUtils.hasText(searchText)) {
@@ -97,8 +91,6 @@ public class PlanWeeksController extends BasePlanController {
     @RequiresRoles("normaladmin")
     @GetMapping(value = "/add")
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
         return "plan/weeks/add";
     }
 
@@ -150,8 +142,6 @@ public class PlanWeeksController extends BasePlanController {
     @RequiresRoles("normaladmin")
     @GetMapping(value = "/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
         PlanWeeks item;
         if (id > 0) {
             item = weeksService.getById(id);

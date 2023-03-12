@@ -11,10 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanUsers;
 import com.github.linfeng.plan.entity.User;
-import com.github.linfeng.plan.holder.LoginUserHolder;
 import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IUserService;
-import com.github.linfeng.plan.view.LoginUser;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
@@ -81,8 +79,6 @@ public class PlanUsersController extends BasePlanController {
     @RequiresRoles("normaladmin")
     @RequestMapping("/add")
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
 
         return "plan/users/add";
     }
@@ -115,8 +111,6 @@ public class PlanUsersController extends BasePlanController {
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
         HttpServletRequest request, HttpServletResponse response) {
-        LoginUser loginUser = LoginUserHolder.getLoginUser();
-        model.addAttribute("admin", loginUser);
         List<User> list;
         if (StringUtils.hasText(searchText)) {
             list = userService.list(searchText);
