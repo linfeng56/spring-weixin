@@ -51,4 +51,14 @@ public class RoleServiceImpl implements IRoleService {
     public Integer update(Integer id, Role role) {
         return roleMapper.update(id, role);
     }
+
+    @Override
+    public boolean lock(Integer id) {
+        return roleMapper.lock(id) > 0;
+    }
+
+    @Override
+    public boolean unlock(Integer id) {
+        return roleMapper.unlock(id) > 0;
+    }
 }

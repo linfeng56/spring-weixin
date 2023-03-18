@@ -46,4 +46,20 @@ public interface IRoleService {
      * @return 受影响条数
      */
     Integer update(Integer id, Role role);
+
+    /**
+     * 禁用角色
+     *
+     * @param id 角色编号
+     * @return 禁用是否成功
+     */
+    boolean lock(Integer id);
+
+    /**
+     * 启用角色
+     *
+     * @param id 角色编号
+     * @return 启用记录数
+     */
+    boolean unlock(Integer id);
 }

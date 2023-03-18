@@ -21,6 +21,16 @@
         WHERE `id` = #{id}
     </update>
 
+    <update id="lock">
+        UPDATE `sys_roles` SET `available`=0
+        WHERE id = #{id};
+    </update>
+
+    <update id="unlock">
+        UPDATE `sys_roles` SET `available`=1
+        WHERE id = #{id};
+    </update>
+
     <delete id="deleteRole" parameterType="long">
         DELETE
         FROM `sys_roles`

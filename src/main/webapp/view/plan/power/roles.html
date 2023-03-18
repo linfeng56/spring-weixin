@@ -48,7 +48,13 @@
                                     <td>${item.id}</td>
                                     <td>${item.role}</td>
                                     <td>${item.description}</td>
-                                    <td>${item.available?string("开启","关闭")}</td>
+                                    <td>
+                                        <#if item.available==false>
+                                        <a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/power/roles/unlock/${item.id}" class="btn-sm btn-warning ajax-lock">禁用</a>
+                                        <#else>
+                                        <a href="#" data-id="${item.id}" data-url="${request.getContextPath()}/plan/power/roles/lock/${item.id}" class="btn-sm btn-primary ajax-lock">开启</a>
+                                        </#if>
+                                    </td>
                                     <td>
                                         <a href="roles/edit/${item.id}" class="btn-sm btn-primary">编辑</a>
                                     </td>
@@ -77,6 +83,35 @@
 
 <#macro footer_js>
 <script>
-    console.info('info');
+
+    $('.ajax-lock').click(function(e){
+        e.preventDefault();
+        let t = $(this);
+        let url = $(this).data("url");
+        let id = $(this).data("id");
+        $.ajax({
+            url:url,
+            type:'post',
+            success:function(data){
+                if (data.status=="200"){
+                    //锁定变更成功
+                    t.removeClass("btn-warning").removeClass("btn-primary");
+                    if (data.available=="0"){
+                        t.addClass("btn-warning").text("禁用");
+                        t.data("url",url.replaceAll('lock','unlock'));
+                        toastr.success("角色\""+data.data.description+"\"禁用成功");
+                    }else{
+                        t.addClass("btn-primary").text("开启");
+                        t.data("url",url.replaceAll('unlock','lock'));
+                        toastr.success("角色\""+data.data.description+"\"启用成功");
+                    }
+                }else{
+                    // 锁定变更失败
+                    toastr.error("变更失败。错误编码："+data.status);
+                }
+                console.log(data);
+            }
+        });
+    });
 </script>
 </#macro>

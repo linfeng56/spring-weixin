@@ -1,6 +1,10 @@
 package com.github.linfeng.plan.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import com.github.linfeng.plan.entity.Role;
 import com.github.linfeng.plan.service.IRoleService;
 import com.github.linfeng.plan.view.ResponseView;
@@ -80,4 +84,52 @@ public class PlanPowerController extends BasePlanController {
         }
     }
 
+    @RequestMapping("roles/lock/{id}")
+    @ResponseBody
+    public Object lock(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
+        HttpServletResponse response) {
+        Map<String, Object> ret = new HashMap<>(6);
+        if (null == id || id <= 0) {
+            ret.put("status", "-1");
+            ret.put("errMsg", "角色编号不正确");
+            return ret;
+        }
+        boolean up = roleService.lock(id);
+        if (up) {
+            ret.put("status", "200");
+            ret.put("errMsg", "success");
+            Role role = roleService.getById(id);
+            ret.put("data", role);
+            ret.put("available", role.getAvailable() ? 1 : 0);
+        } else {
+            ret.put("status", "-2");
+            ret.put("errMsg", "禁用角色失败[" + id + "]");
+        }
+        ResponseView<Role> data = new ResponseView<>(200, "success", new Role());
+        return ret;
+    }
+
+    @RequestMapping("roles/unlock/{id}")
+    @ResponseBody
+    public Object unlock(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
+        HttpServletResponse response) {
+        Map<String, Object> ret = new HashMap<>(6);
+        if (null == id || id <= 0) {
+            ret.put("status", "-1");
+            ret.put("errMsg", "角色编号不正确");
+            return ret;
+        }
+        boolean up = roleService.unlock(id);
+        if (up) {
+            ret.put("status", "200");
+            ret.put("errMsg", "success");
+            Role role = roleService.getById(id);
+            ret.put("data", role);
+            ret.put("available", role.getAvailable() ? 1 : 0);
+        } else {
+            ret.put("status", "-2");
+            ret.put("errMsg", "开启角色失败[" + id + "]");
+        }
+        return ret;
+    }
 }

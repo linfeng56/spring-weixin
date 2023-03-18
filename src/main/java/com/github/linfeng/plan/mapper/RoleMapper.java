@@ -62,4 +62,20 @@ public interface RoleMapper {
      * @return 受影响条数
      */
     Integer update(@Param("id") Integer id, @Param("r") Role role);
+
+    /**
+     * 禁用角色
+     *
+     * @param id 角色编号
+     * @return 禁用记录数
+     */
+    Integer lock(@Param("id") Integer id);
+
+    /**
+     * 启用角色
+     *
+     * @param id 角色编号
+     * @return 启用记录数
+     */
+    Integer unlock(@Param("id") Integer id);
 }
