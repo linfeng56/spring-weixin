@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--这个文件去买个整个MVC的配置-->
+
+    <aop:config proxy-target-class="true"/>
+
+    <!--启用spring的annotation-->
+    <context:annotation-config/>
+    <!--配置注解驱动 可以将request参数绑定到controller参数上-->
+    <mvc:annotation-driven>
+        <!-- 设置不使用默认的消息转换器 -->
+        <mvc:message-converters>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+                <property name="fastJsonConfig">
+                    <bean class="com.alibaba.fastjson.support.config.FastJsonConfig">
+                        <property name="serializerFeatures">
+                            <list>
+                                <value>WriteMapNullValue</value>
+                                <value>WriteNullNumberAsZero</value>
+                                <value>WriteNullListAsEmpty</value>
+                                <value>WriteNullStringAsEmpty</value>
+                                <value>WriteNullBooleanAsFalse</value>
+                                <value>WriteDateUseDateFormat</value>
+                            </list>
+                        </property>
+                        <property name="serializeConfig">
+                            <bean class="com.alibaba.fastjson.serializer.SerializeConfig">
+                                <property name="propertyNamingStrategy" value="SnakeCase"/>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--静态资源映射-->
+    <!--本项目把静态资源放在webapp的static目录下，资源映射如下-->
+<!--    <mvc:resources mapping="/statics/**" location="/statics/"/>-->
+
+    <!--对模型视图名称的解析，即在模型视图名称添加前后辍（如果最后一个还是表示文件夹，则最后的斜杠不要漏了）使用JSP-->
+    <!--配置freeMarker的模板路径-->
+    <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/view/"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="api_builtin_enabled">true</prop>
+                <prop key="number_format">0.#</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--freeMarker视图解析器-->
+    <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="suffix" value=".html"/>
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+        <!--变量pageContext.request在页面的别名-->
+        <property name="requestContextAttribute" value="request"/>
+    </bean>
+
+    <!--自动扫描装配-->
+    <context:component-scan base-package="com.github.linfeng"/>
+<!--    <mvc:interceptors>-->
+<!--        &lt;!&ndash; 登录拦截器 &ndash;&gt;-->
+<!--        <mvc:interceptor>-->
+<!--            <mvc:mapping path="/**"/>-->
+<!--            <mvc:exclude-mapping path="/statics/**"/>-->
+<!--            <mvc:exclude-mapping path="/plan/login/*"/>-->
+<!--            <ref bean="checkLoginInterceptor"/>-->
+<!--        </mvc:interceptor>-->
+<!--    </mvc:interceptors>-->
+</beans>

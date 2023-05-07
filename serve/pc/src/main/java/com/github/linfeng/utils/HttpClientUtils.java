@@ -7,15 +7,21 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import javax.net.ssl.SSLContext;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContexts;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.ssl.TLS;
+import org.apache.hc.core5.ssl.SSLContexts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Http请求工具类
@@ -23,6 +29,8 @@ import org.apache.http.util.EntityUtils;
  * @author 黄麟峰
  */
 public class HttpClientUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientUtils.class);
 
     private HttpClientUtils() {
     }
@@ -50,34 +58,37 @@ public class HttpClientUtils {
             e.printStackTrace();
         }
         // Allow TLSv1 protocol only
-        SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(
-            sslcontext,
-            new String[]{"TLSv1"},
-            null,
-            SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-
+        SSLConnectionSocketFactory sslSocketFactory = SSLConnectionSocketFactoryBuilder.create()
+            .setSslContext(sslcontext)
+            .setTlsVersions(TLS.V_1_0).build();
+        HttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder.create()
+            .setSSLSocketFactory(sslSocketFactory).build();
         try (CloseableHttpClient httpclient = HttpClients.custom()
-            .setSSLSocketFactory(sslSocketFactory)
+            .setConnectionManager(cm)
             .build()) {
 
             HttpGet httpget = new HttpGet(url);
 
-            System.out.println("执行请求：" + httpget.getRequestLine());
-
-            try (CloseableHttpResponse response = httpclient.execute(httpget)) {
+            LOGGER.info("执行{}请求：{}", httpget.getMethod(), httpget.getRequestUri());
+            ret = httpclient.execute(httpget, response -> {
                 HttpEntity entity = response.getEntity();
+                if (response.getCode() >= HttpStatus.SC_REDIRECTION) {
+                    EntityUtils.consume(entity);
+                    LOGGER.info("请求出现异常,状态码:{}", response.getCode());
+                    return null;
+                } else if (response.getEntity() != null) {
+                    String body = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("请求结果:{}", body);
+                    }
+                    return body;
+                } else {
+                    LOGGER.info("请求出现异常,状态码:{}", response.getCode());
+                    return null;
+                }
+            });
 
-                System.out.println("----------------------------------------");
-                System.out.println(response.getStatusLine());
-                ret = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-                EntityUtils.consume(entity);
-
-                System.out.println("执行返回：" + ret);
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            LOGGER.info("执行返回：{}", ret);
         } catch (IOException e) {
             e.printStackTrace();
         }

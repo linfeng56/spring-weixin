@@ -2,9 +2,9 @@ package com.github.linfeng.plan.view;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import com.alibaba.fastjson.JSON;
 
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * 登录用户信息
@@ -99,7 +99,7 @@ public class LoginUser implements Serializable {
      * @return 加密后的字串
      */
     public String encode() {
-        return Base64.encodeBase64URLSafeString(JSON.toJSONString(this).getBytes(StandardCharsets.UTF_8));
+        return Base64.getUrlEncoder().encodeToString(JSON.toJSONString(this).getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -109,7 +109,7 @@ public class LoginUser implements Serializable {
      * @return 登录用户或null
      */
     public static LoginUser decode(String userInfo) {
-        String user = new String(Base64.decodeBase64(userInfo));
+        String user = new String(Base64.getUrlDecoder().decode(userInfo));
         LoginUser loginUser = JSON.parseObject(user, LoginUser.class);
         if (loginUser != null && loginUser.getUserId() > 0) {
             return loginUser;

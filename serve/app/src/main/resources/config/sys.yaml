@@ -1,0 +1,8 @@
+sys:
+  version: 0.0.1
+  build: beta
+
+databases:
+  username: root
+  password: 111111
+  database: demo

@@ -2,6 +2,7 @@ package com.github.linfeng.plan.controller;
 
 
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,6 @@ import com.github.linfeng.plan.service.IUserService;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.slf4j.Logger;
@@ -99,7 +99,8 @@ public class PlanUsersController extends BasePlanController {
         user.setLocked(locked == 1);
         user.setCreateDate(DateTimeUtils.DateTimeToLong());
         String rnd = ((Long) new Random().nextLong()).toString();
-        user.setSalt(Base64.encodeBase64URLSafeString(rnd.getBytes(StandardCharsets.UTF_8)));
+        String salt = Base64.getUrlEncoder().encodeToString(rnd.getBytes(StandardCharsets.UTF_8));
+        user.setSalt(salt);
         String encodePassword = new SimpleHash("MD5", password, user.getCredentialsSalt(), 2).toHex();
         user.setPassword(encodePassword);
         Long userId = userService.createUser(user);
