@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Qualifier("miniIUserService")
 public class UsersServiceImpl implements IUsersService {
+    @Override
+    public Users getByUsername(String userName) {
+        return usersMapper.getByUsername(userName);
+    }
     @Autowired
     @Qualifier("miniUserMapper")
     private UsersMapper usersMapper;

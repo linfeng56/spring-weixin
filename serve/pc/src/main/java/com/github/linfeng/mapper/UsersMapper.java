@@ -19,4 +19,6 @@ public interface UsersMapper {
     List<Users> list();
 
     Users getById(@Param("uid") Integer uid);
+    Users getByUsername(@Param("userName") String userName);
 }
+

@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Qualifier("miniUserService")
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.github.linfeng.utils.JwtTokenUtil;
+
 public class UserService {
 
     @Autowired
@@ -38,8 +41,24 @@ public class UserService {
      * @param scope        scope
      * @return true更新成功, false更新失败
      */
-    public boolean updateUserToken(String openid, String accessToken, String expiresIn, String refreshToken,
+    private final JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
+private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+public boolean updateUserToken(String openid, String accessToken, String expiresIn, String refreshToken,
         String scope) {
+        return false;
+    }
+
+    /**
+     * 登录并返回 JWT Token。
+     */
+    public String login(String username, String rawPassword) {
+        Users user = service.getByUsername(username);
+        if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
+            return jwtTokenUtil.generateToken(username);
+        }
+        return null;
+    }
         return false;
     }
 }
