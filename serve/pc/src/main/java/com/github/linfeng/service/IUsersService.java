@@ -14,5 +14,7 @@ public interface IUsersService {
 
     Users getById(Integer id);
     Users getByUsername(String username);
+
+    boolean update(Users user);
 }
 

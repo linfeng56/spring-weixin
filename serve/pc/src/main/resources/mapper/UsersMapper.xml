@@ -30,11 +30,13 @@
         <result column="want_style" property="wantStyle" />
         <result column="why_single" property="whySingle" />
         <result column="yearning_life" property="yearningLife" />
+        <result column="avatar" property="avatar" />
+        <result column="email" property="email" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        uid, user_name, nick_name, pwd, scores, openid, access_token, access_token_expire, refresh_token, wechat, phone, birthday, sex, stature, weight, domicile, native_place, marital_status, education, profession, narrate, family, interest, want_style, why_single, yearning_life
+        uid, user_name, nick_name, pwd, scores, openid, access_token, access_token_expire, refresh_token, wechat, phone, birthday, sex, stature, weight, domicile, native_place, marital_status, education, profession, narrate, family, interest, want_style, why_single, yearning_life, avatar, email
     </sql>
 
     <select id="getById" resultType="com.github.linfeng.entity.Users" parameterType="integer">
@@ -43,4 +45,16 @@
     <select id="list" resultType="com.github.linfeng.entity.Users">
         select * from spwx_users
     </select>
+
+    <update id="update" parameterType="com.github.linfeng.entity.Users">
+        UPDATE spwx_users
+        <set>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="pwd != null">pwd = #{pwd},</if>
+        </set>
+        WHERE uid = #{uid}
+    </update>
 </mapper>

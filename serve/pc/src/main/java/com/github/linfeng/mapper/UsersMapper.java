@@ -20,5 +20,7 @@ public interface UsersMapper {
 
     Users getById(@Param("uid") Integer uid);
     Users getByUsername(@Param("userName") String userName);
+
+    int update(Users user);
 }
 

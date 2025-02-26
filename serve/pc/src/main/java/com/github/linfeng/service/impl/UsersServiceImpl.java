@@ -34,4 +34,9 @@ public class UsersServiceImpl implements IUsersService {
     public Users getById(Integer id) {
         return usersMapper.getById(id);
     }
+
+    @Override
+    public boolean update(Users user) {
+        return usersMapper.update(user) > 0;
+    }
 }

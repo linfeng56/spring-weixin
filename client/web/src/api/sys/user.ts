@@ -9,6 +9,9 @@ enum Api {
   GetUserInfo = '/getUserInfo',
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
+  UserInfo = '/api/user/info',
+  UserPassword = '/api/user/password',
+  AvatarUpload = '/api/upload/avatar',
 }
 
 /**
@@ -51,5 +54,44 @@ export function testRetry() {
         waitTime: 1000,
       },
     },
+  );
+}
+
+export interface UserInfoModel {
+  uid: number;
+  userName: string;
+  nickName: string;
+  phone: string;
+  email: string;
+  avatar: string;
+  sex: number;
+  birthday: number;
+  domicile: string;
+  nativePlace: string;
+  education: string;
+  profession: string;
+}
+
+export function getUserProfile() {
+  return defHttp.get<UserInfoModel>({ url: Api.UserInfo });
+}
+
+export function updateUserProfile(data: Partial<UserInfoModel>) {
+  return defHttp.put<UserInfoModel>({ url: Api.UserInfo, data });
+}
+
+export function changePassword(oldPassword: string, newPassword: string) {
+  return defHttp.put(
+    { url: Api.UserPassword, data: { oldPassword, newPassword } },
+    { errorMessageMode: 'message' },
+  );
+}
+
+export function uploadAvatar(file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return defHttp.post<{ url: string }>(
+    { url: Api.AvatarUpload, data: formData },
+    { headers: { 'Content-Type': 'multipart/form-data' } },
   );
 }
