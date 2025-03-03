@@ -120,6 +120,24 @@ public class WeekPlanController {
         return ResponseEntity.ok(filtered);
     }
 
+    @PutMapping("/{id}/summary")
+    public ResponseEntity<?> updateSummary(@PathVariable Integer id, @RequestBody Map<String, Object> summaryData) {
+        Integer userId = getCurrentUserId();
+        PlanWeeks existing = weeksService.getByIdAndUserId(id, userId);
+        if (existing == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+        }
+
+        String summary = (String) summaryData.get("summary");
+        Long summaryDate = DateTimeUtils.DateTimeToLong();
+
+        Integer result = weeksService.updateSummary(id, summary, summaryDate);
+        if (result > 0) {
+            return ResponseEntity.ok(Map.of("message", "Summary updated successfully"));
+        }
+        return ResponseEntity.status(500).body(Map.of("error", "Update failed"));
+    }
+
     private Integer getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() != null) {

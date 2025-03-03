@@ -51,3 +51,7 @@ export function deleteWeekPlan(id: number) {
 export function getWeekPlansByWeek(year: number, week: number) {
   return defHttp.get<PlanWeek[]>({ url: '/api/week-plans/week', params: { year, week } });
 }
+
+export function updateWeekPlanSummary(id: number, summary: string) {
+  return defHttp.put({ url: `/api/week-plans/${id}/summary`, data: { summary } });
+}

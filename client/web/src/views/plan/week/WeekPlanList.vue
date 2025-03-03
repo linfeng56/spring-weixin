@@ -39,6 +39,7 @@
         <template v-if="column.key === 'action'">
           <Space>
             <Button size="small" @click="handleEdit(record)">编辑</Button>
+            <Button size="small" @click="handleSummary(record)">总结</Button>
             <Button size="small" danger @click="handleDelete(record)">删除</Button>
           </Space>
         </template>
@@ -74,6 +75,19 @@
         </FormItem>
       </Form>
     </Modal>
+
+    <Modal
+      v-model:open="summaryModalVisible"
+      title="周计划总结"
+      @ok="handleSummarySubmit"
+      :confirm-loading="saving"
+    >
+      <Form ref="summaryFormRef" :model="summaryData">
+        <FormItem label="总结内容" name="summary">
+          <Textarea v-model:value="summaryData.summary" :rows="6" placeholder="请输入周计划总结" />
+        </FormItem>
+      </Form>
+    </Modal>
   </PageWrapper>
 </template>
 
@@ -103,6 +117,7 @@
     createWeekPlan,
     updateWeekPlan,
     deleteWeekPlan,
+    updateWeekPlanSummary,
     PlanWeek,
     PlanStatusText,
   } from '/@/api/plan/weekPlan';
@@ -129,6 +144,12 @@
   const isEdit = ref(false);
   const saving = ref(false);
   const formRef = ref();
+  const summaryModalVisible = ref(false);
+  const summaryFormRef = ref();
+  const summaryData = ref({
+    weekId: 0,
+    summary: '',
+  });
   const formData = ref({
     title: '',
     beginDate: null,
@@ -179,6 +200,28 @@
       endDate: record.endDate ? dayjs(record.endDate) : null,
     };
     modalVisible.value = true;
+  }
+
+  function handleSummary(record: PlanWeek) {
+    summaryData.value = {
+      weekId: record.weekId!,
+      summary: record.summary || '',
+    };
+    summaryModalVisible.value = true;
+  }
+
+  async function handleSummarySubmit() {
+    try {
+      saving.value = true;
+      await updateWeekPlanSummary(summaryData.value.weekId, summaryData.value.summary);
+      message.success('总结更新成功');
+      summaryModalVisible.value = false;
+      loadData();
+    } catch (e: any) {
+      message.error(e.message || '更新失败');
+    } finally {
+      saving.value = false;
+    }
   }
 
   async function handleSubmit() {
