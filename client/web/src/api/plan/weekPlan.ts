@@ -55,3 +55,23 @@ export function getWeekPlansByWeek(year: number, week: number) {
 export function updateWeekPlanSummary(id: number, summary: string) {
   return defHttp.put({ url: `/api/week-plans/${id}/summary`, data: { summary } });
 }
+
+export function exportWeekPlans(params: { year?: number; month?: number; format?: string }) {
+  return defHttp.get<string>({ url: '/api/week-plans/export', params, responseType: 'blob' });
+}
+
+export interface PlanSummary {
+  total: number;
+  thisWeek: number;
+  thisMonth: number;
+  statusCount: {
+    pending: number;
+    inProgress: number;
+    completed: number;
+  };
+  byMonth: Record<string, number>;
+}
+
+export function getPlanSummary(type?: string) {
+  return defHttp.get<PlanSummary>({ url: '/api/week-plans/summary', params: { type } });
+}

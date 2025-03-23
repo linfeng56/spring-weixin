@@ -3,7 +3,10 @@
     <template #headerContent>
       <div class="flex justify-between items-center">
         <span class="text-lg">我的周计划</span>
-        <Button type="primary" @click="handleAdd">新增计划</Button>
+        <Space>
+          <Button type="primary" @click="handleAdd">新增计划</Button>
+          <Button @click="handleExport">导出</Button>
+        </Space>
       </div>
     </template>
 
@@ -118,6 +121,7 @@
     updateWeekPlan,
     deleteWeekPlan,
     updateWeekPlanSummary,
+    exportWeekPlans,
     PlanWeek,
     PlanStatusText,
   } from '/@/api/plan/weekPlan';
@@ -275,5 +279,23 @@
   function getStatusColor(status: number) {
     const colors = ['', 'blue', 'green', 'default'];
     return colors[status] || '';
+  }
+
+  async function handleExport() {
+    try {
+      const data = await exportWeekPlans({});
+      const blob = new Blob([data as any], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `week-plans-${dayjs().format('YYYYMMDD')}.docx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      message.success('导出成功');
+    } catch (e: any) {
+      message.error(e.message || '导出失败');
+    }
   }
 </script>
