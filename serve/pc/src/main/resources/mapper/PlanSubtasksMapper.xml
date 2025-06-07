@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.plan.mapper.PlanSubtasksMapper">
+
+    <resultMap id="BaseResultMap" type="com.github.linfeng.plan.entity.PlanSubtasks">
+        <id column="subtask_id" property="subtaskId"/>
+        <result column="week_id" property="weekId"/>
+        <result column="user_id" property="userId"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="progress" property="progress"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+    </resultMap>
+
+    <select id="listByWeekId" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanSubtasks">
+        SELECT * FROM spwx_plan_subtasks
+        WHERE week_id = #{weekId}
+        ORDER BY subtask_id ASC
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanSubtasks">
+        SELECT * FROM spwx_plan_subtasks
+        WHERE subtask_id = #{id}
+    </select>
+
+    <insert id="add" parameterType="com.github.linfeng.plan.entity.PlanSubtasks" useGeneratedKeys="true" keyProperty="subtaskId">
+        INSERT INTO spwx_plan_subtasks (week_id, user_id, title, description, status, progress, create_date, update_date)
+        VALUES (#{subtask.weekId}, #{subtask.userId}, #{subtask.title}, #{subtask.description},
+                #{subtask.status}, #{subtask.progress}, #{subtask.createDate}, #{subtask.updateDate})
+    </insert>
+
+    <update id="update" parameterType="map">
+        UPDATE spwx_plan_subtasks
+        <set>
+            <if test="subtask.title != null">title = #{subtask.title},</if>
+            <if test="subtask.description != null">description = #{subtask.description},</if>
+            <if test="subtask.status != null">status = #{subtask.status},</if>
+            <if test="subtask.progress != null">progress = #{subtask.progress},</if>
+            <if test="subtask.updateDate != null">update_date = #{subtask.updateDate},</if>
+        </set>
+        WHERE subtask_id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM spwx_plan_subtasks WHERE subtask_id = #{id}
+    </delete>
+
+</mapper>

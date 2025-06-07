@@ -1,7 +1,9 @@
 package com.github.linfeng.plan.controller;
 
 import com.github.linfeng.plan.entity.PlanWeeks;
+import com.github.linfeng.plan.entity.PlanSubtasks;
 import com.github.linfeng.plan.service.IPlanWeeksService;
+import com.github.linfeng.plan.service.IPlanSubtasksService;
 import com.github.linfeng.plan.service.WeekPlanExportService;
 import com.github.linfeng.utils.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class WeekPlanController {
 
     @Autowired
     private IPlanWeeksService weeksService;
+
+    @Autowired
+    private IPlanSubtasksService subtasksService;
 
     @Autowired
     private WeekPlanExportService exportService;
@@ -191,6 +196,83 @@ public class WeekPlanController {
         cal.set(java.util.Calendar.MILLISECOND, 999);
         long end = cal.getTimeInMillis();
         return new long[]{start, end};
+    }
+
+    @GetMapping("/{id}/subtasks")
+    public ResponseEntity<?> getSubtasks(@PathVariable Integer id) {
+        Integer userId = getCurrentUserId();
+        PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
+        if (plan == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+        }
+        List<PlanSubtasks> subtasks = subtasksService.listByWeekId(id);
+        return ResponseEntity.ok(subtasks);
+    }
+
+    @PostMapping("/{id}/subtasks")
+    public ResponseEntity<?> createSubtask(@PathVariable Integer id, @RequestBody Map<String, Object> subtaskData) {
+        Integer userId = getCurrentUserId();
+        PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
+        if (plan == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+        }
+
+        PlanSubtasks subtask = new PlanSubtasks();
+        subtask.setWeekId(id);
+        subtask.setUserId(userId);
+        subtask.setTitle((String) subtaskData.get("title"));
+        subtask.setDescription((String) subtaskData.get("description"));
+        subtask.setStatus(0);
+        subtask.setProgress(0);
+        subtask.setCreateDate(DateTimeUtils.DateTimeToLong());
+        subtask.setUpdateDate(DateTimeUtils.DateTimeToLong());
+
+        Integer subtaskId = subtasksService.add(subtask);
+        return ResponseEntity.ok(Map.of("subtaskId", subtaskId));
+    }
+
+    @PutMapping("/{id}/subtasks/{subtaskId}")
+    public ResponseEntity<?> updateSubtask(
+            @PathVariable Integer id,
+            @PathVariable Integer subtaskId,
+            @RequestBody Map<String, Object> subtaskData) {
+        Integer userId = getCurrentUserId();
+        PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
+        if (plan == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+        }
+
+        PlanSubtasks subtask = new PlanSubtasks();
+        subtask.setTitle((String) subtaskData.get("title"));
+        subtask.setDescription((String) subtaskData.get("description"));
+        if (subtaskData.containsKey("status")) {
+            subtask.setStatus(((Number) subtaskData.get("status")).intValue());
+        }
+        if (subtaskData.containsKey("progress")) {
+            subtask.setProgress(((Number) subtaskData.get("progress")).intValue());
+        }
+        subtask.setUpdateDate(DateTimeUtils.DateTimeToLong());
+
+        Integer result = subtasksService.update(subtaskId, subtask);
+        if (result > 0) {
+            return ResponseEntity.ok(Map.of("message", "Updated successfully"));
+        }
+        return ResponseEntity.status(500).body(Map.of("error", "Update failed"));
+    }
+
+    @DeleteMapping("/{id}/subtasks/{subtaskId}")
+    public ResponseEntity<?> deleteSubtask(@PathVariable Integer id, @PathVariable Integer subtaskId) {
+        Integer userId = getCurrentUserId();
+        PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
+        if (plan == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+        }
+
+        Integer result = subtasksService.delete(subtaskId);
+        if (result > 0) {
+            return ResponseEntity.ok(Map.of("message", "Deleted successfully"));
+        }
+        return ResponseEntity.status(500).body(Map.of("error", "Delete failed"));
     }
 
     @GetMapping("/summary")
