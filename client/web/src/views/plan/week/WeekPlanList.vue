@@ -43,6 +43,8 @@
           <Space>
             <Button size="small" @click="handleEdit(record)">编辑</Button>
             <Button size="small" @click="handleSummary(record)">总结</Button>
+            <Button size="small" @click="handleSubtasks(record)">子任务</Button>
+            <Button size="small" v-if="record.status !== 3" @click="handleArchive(record)">归档</Button>
             <Button size="small" danger @click="handleDelete(record)">删除</Button>
           </Space>
         </template>
@@ -91,6 +93,38 @@
         </FormItem>
       </Form>
     </Modal>
+
+    <Modal
+      v-model:open="subtaskModalVisible"
+      title="子任务管理"
+      width="800px"
+      :footer="null"
+    >
+      <div class="mb-4">
+        <Button type="primary" size="small" @click="handleAddSubtask">新增子任务</Button>
+      </div>
+      <Table :columns="subtaskColumns" :data-source="subtasks" :pagination="false" size="small">
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'status'">
+            <Select
+              size="small"
+              :value="record.status"
+              @change="(val) => handleSubtaskStatusChange(record, val)"
+            >
+              <SelectOption :value="0">待完成</SelectOption>
+              <SelectOption :value="1">进行中</SelectOption>
+              <SelectOption :value="2">已完成</SelectOption>
+            </Select>
+          </template>
+          <template v-if="column.key === 'progress'">
+            <Progress :percent="record.progress" size="small" />
+          </template>
+          <template v-if="column.key === 'action'">
+            <Button size="small" danger @click="handleDeleteSubtask(record)">删除</Button>
+          </template>
+        </template>
+      </Table>
+    </Modal>
   </PageWrapper>
 </template>
 
@@ -112,6 +146,7 @@
     Select,
     SelectOption,
     DatePicker,
+    Progress,
     message,
   } from 'ant-design-vue';
   import { PageWrapper } from '/@/components/Page';
@@ -125,6 +160,7 @@
     PlanWeek,
     PlanStatusText,
   } from '/@/api/plan/weekPlan';
+  import { getSubtasks, createSubtask, updateSubtask, deleteSubtask, PlanSubtask } from '/@/api/plan/subtask';
   import { dayjs } from '/@/utils/dateUtil';
 
   const columns = [
@@ -154,6 +190,18 @@
     weekId: 0,
     summary: '',
   });
+
+  const subtaskModalVisible = ref(false);
+  const currentWeekId = ref(0);
+  const subtasks = ref<PlanSubtask[]>([]);
+  const subtaskColumns = [
+    { title: '标题', dataIndex: 'title', key: 'title' },
+    { title: '描述', dataIndex: 'description', key: 'description' },
+    { title: '状态', dataIndex: 'status', key: 'status' },
+    { title: '进度', dataIndex: 'progress', key: 'progress' },
+    { title: '操作', key: 'action', width: 80 },
+  ];
+
   const formData = ref({
     title: '',
     beginDate: null,
@@ -256,6 +304,22 @@
     }
   }
 
+  async function handleArchive(record: PlanWeek) {
+    Modal.confirm({
+      title: '确认归档',
+      content: '确定要将此计划归档吗？归档后将不可编辑。',
+      async onOk() {
+        try {
+          await updateWeekPlan(record.weekId!, { ...record, status: 3 });
+          message.success('归档成功');
+          loadData();
+        } catch (e: any) {
+          message.error(e.message || '归档失败');
+        }
+      },
+    });
+  }
+
   async function handleDelete(record: PlanWeek) {
     Modal.confirm({
       title: '确认删除',
@@ -274,6 +338,38 @@
 
   function formatDate(timestamp: number) {
     return timestamp ? dayjs(timestamp).format('YYYY-MM-DD') : '-';
+  }
+
+  async function handleSubtasks(record: PlanWeek) {
+    currentWeekId.value = record.weekId!;
+    subtaskModalVisible.value = true;
+    await loadSubtasks();
+  }
+
+  async function loadSubtasks() {
+    const data = await getSubtasks(currentWeekId.value);
+    subtasks.value = data;
+  }
+
+  async function handleAddSubtask() {
+    const title = prompt('请输入子任务标题');
+    if (!title) return;
+    await createSubtask(currentWeekId.value, { title, status: 0, progress: 0 });
+    message.success('子任务添加成功');
+    await loadSubtasks();
+  }
+
+  async function handleSubtaskStatusChange(record: PlanSubtask, status: number) {
+    const progress = status === 2 ? 100 : (status === 1 ? 50 : 0);
+    await updateSubtask(currentWeekId.value, record.subtaskId!, { status, progress });
+    message.success('状态更新成功');
+    await loadSubtasks();
+  }
+
+  async function handleDeleteSubtask(record: PlanSubtask) {
+    await deleteSubtask(currentWeekId.value, record.subtaskId!);
+    message.success('子任务删除成功');
+    await loadSubtasks();
   }
 
   function getStatusColor(status: number) {

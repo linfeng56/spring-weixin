@@ -326,6 +326,62 @@ public class WeekPlanController {
         return ResponseEntity.ok(summary);
     }
 
+    @PostMapping("/linked-summary")
+    public ResponseEntity<?> getLinkedSummary(@RequestBody Map<String, Object> request) {
+        Integer userId = getCurrentUserId();
+        List<Integer> weekIds = (List<Integer>) request.get("weekIds");
+
+        if (weekIds == null || weekIds.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "weekIds is required"));
+        }
+
+        List<PlanWeeks> linkedPlans = new java.util.ArrayList<>();
+        for (Integer weekId : weekIds) {
+            PlanWeeks plan = weeksService.getByIdAndUserId(weekId, userId);
+            if (plan != null) {
+                linkedPlans.add(plan);
+            }
+        }
+
+        StringBuilder linkedSummary = new StringBuilder();
+        linkedSummary.append("# 关联总结报告\n\n");
+
+        for (PlanWeeks plan : linkedPlans) {
+            linkedSummary.append("## ").append(plan.getTitle()).append("\n");
+            linkedSummary.append("- 时间: ").append(formatDate(plan.getBeginDate()))
+                .append(" ~ ").append(formatDate(plan.getEndDate())).append("\n");
+            linkedSummary.append("- 状态: ").append(getStatusText(plan.getStatus())).append("\n");
+            if (plan.getSummary() != null && !plan.getSummary().isEmpty()) {
+                linkedSummary.append("\n### 总结\n").append(plan.getSummary()).append("\n");
+            }
+            linkedSummary.append("\n");
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("plans", linkedPlans);
+        result.put("summary", linkedSummary.toString());
+        result.put("total", linkedPlans.size());
+
+        return ResponseEntity.ok(result);
+    }
+
+    private String formatDate(Long timestamp) {
+        if (timestamp == null) return "";
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new java.util.Date(timestamp));
+    }
+
+    private String getStatusText(Integer status) {
+        if (status == null) return "未知";
+        switch (status) {
+            case 0: return "待提交";
+            case 1: return "进行中";
+            case 2: return "已完成";
+            case 3: return "已归档";
+            default: return "未知";
+        }
+    }
+
     private Integer getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() != null) {
