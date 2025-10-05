@@ -2,8 +2,10 @@ package com.github.linfeng.plan.controller;
 
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.entity.PlanSubtasks;
+import com.github.linfeng.plan.entity.PlanChangeHistory;
 import com.github.linfeng.plan.service.IPlanWeeksService;
 import com.github.linfeng.plan.service.IPlanSubtasksService;
+import com.github.linfeng.plan.service.IPlanChangeHistoryService;
 import com.github.linfeng.plan.service.WeekPlanExportService;
 import com.github.linfeng.utils.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class WeekPlanController {
 
     @Autowired
     private IPlanSubtasksService subtasksService;
+
+    @Autowired
+    private IPlanChangeHistoryService changeHistoryService;
 
     @Autowired
     private WeekPlanExportService exportService;
@@ -363,6 +368,17 @@ public class WeekPlanController {
         result.put("total", linkedPlans.size());
 
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}/history")
+    public ResponseEntity<?> getChangeHistory(@PathVariable Integer id) {
+        Integer userId = getCurrentUserId();
+        PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
+        if (plan == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+        }
+        List<PlanChangeHistory> history = changeHistoryService.listByWeekId(id);
+        return ResponseEntity.ok(history);
     }
 
     private String formatDate(Long timestamp) {

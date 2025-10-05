@@ -75,3 +75,18 @@ export interface PlanSummary {
 export function getPlanSummary(type?: string) {
   return defHttp.get<PlanSummary>({ url: '/api/week-plans/summary', params: { type } });
 }
+
+export interface PlanChangeHistory {
+  changeId: number;
+  weekId: number;
+  userId: number;
+  fieldName: string;
+  oldValue: string;
+  newValue: string;
+  changeReason: string;
+  createDate: number;
+}
+
+export function getChangeHistory(weekId: number) {
+  return defHttp.get<PlanChangeHistory[]>({ url: `/api/week-plans/${weekId}/history` });
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.plan.mapper.PlanChangeHistoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.github.linfeng.plan.entity.PlanChangeHistory">
+        <id column="change_id" property="changeId"/>
+        <result column="week_id" property="weekId"/>
+        <result column="user_id" property="userId"/>
+        <result column="field_name" property="fieldName"/>
+        <result column="old_value" property="oldValue"/>
+        <result column="new_value" property="newValue"/>
+        <result column="change_reason" property="changeReason"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <select id="listByWeekId" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanChangeHistory">
+        SELECT * FROM spwx_plan_change_history
+        WHERE week_id = #{weekId}
+        ORDER BY create_date DESC
+    </select>
+
+    <insert id="add" parameterType="com.github.linfeng.plan.entity.PlanChangeHistory" useGeneratedKeys="true" keyProperty="changeId">
+        INSERT INTO spwx_plan_change_history (week_id, user_id, field_name, old_value, new_value, change_reason, create_date)
+        VALUES (#{history.weekId}, #{history.userId}, #{history.fieldName}, #{history.oldValue},
+                #{history.newValue}, #{history.changeReason}, #{history.createDate})
+    </insert>
+
+</mapper>

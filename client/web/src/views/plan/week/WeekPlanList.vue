@@ -45,6 +45,7 @@
             <Button size="small" @click="handleSummary(record)">总结</Button>
             <Button size="small" @click="handleSubtasks(record)">子任务</Button>
             <Button size="small" v-if="record.status !== 3" @click="handleArchive(record)">归档</Button>
+            <Button size="small" @click="handleHistory(record)">历史</Button>
             <Button size="small" danger @click="handleDelete(record)">删除</Button>
           </Space>
         </template>
@@ -125,6 +126,21 @@
         </template>
       </Table>
     </Modal>
+
+    <Modal
+      v-model:open="historyModalVisible"
+      title="变更历史"
+      width="700px"
+      :footer="null"
+    >
+      <Table :columns="historyColumns" :data-source="changeHistory" :pagination="false" size="small">
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'createDate'">
+            {{ formatDate(record.createDate) }}
+          </template>
+        </template>
+      </Table>
+    </Modal>
   </PageWrapper>
 </template>
 
@@ -157,8 +173,10 @@
     deleteWeekPlan,
     updateWeekPlanSummary,
     exportWeekPlans,
+    getChangeHistory,
     PlanWeek,
     PlanStatusText,
+    PlanChangeHistory,
   } from '/@/api/plan/weekPlan';
   import { getSubtasks, createSubtask, updateSubtask, deleteSubtask, PlanSubtask } from '/@/api/plan/subtask';
   import { dayjs } from '/@/utils/dateUtil';
@@ -200,6 +218,16 @@
     { title: '状态', dataIndex: 'status', key: 'status' },
     { title: '进度', dataIndex: 'progress', key: 'progress' },
     { title: '操作', key: 'action', width: 80 },
+  ];
+
+  const historyModalVisible = ref(false);
+  const changeHistory = ref<PlanChangeHistory[]>([]);
+  const historyColumns = [
+    { title: '字段', dataIndex: 'fieldName', key: 'fieldName' },
+    { title: '旧值', dataIndex: 'oldValue', key: 'oldValue' },
+    { title: '新值', dataIndex: 'newValue', key: 'newValue' },
+    { title: '变更原因', dataIndex: 'changeReason', key: 'changeReason' },
+    { title: '时间', dataIndex: 'createDate', key: 'createDate' },
   ];
 
   const formData = ref({
@@ -318,6 +346,12 @@
         }
       },
     });
+  }
+
+  async function handleHistory(record: PlanWeek) {
+    historyModalVisible.value = true;
+    const data = await getChangeHistory(record.weekId!);
+    changeHistory.value = data;
   }
 
   async function handleDelete(record: PlanWeek) {
