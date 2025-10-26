@@ -74,3 +74,49 @@ INSERT INTO sys_role_perms (role_id, perm_id)
 SELECT 3, perm_id FROM sys_permissions WHERE perm_key IN (
   'week-plan', 'week-plan:list', 'week-plan:add', 'week-plan:edit', 'week-plan:delete'
 );
+
+-- =====================================================
+-- 周计划提醒相关表
+-- =====================================================
+
+-- 用户通知设置表
+CREATE TABLE IF NOT EXISTS `user_notification_settings` (
+  `user_id` INT NOT NULL COMMENT '用户ID',
+  `email` VARCHAR(100) COMMENT '邮箱地址',
+  `dingtalk_webhook` VARCHAR(255) COMMENT '钉钉Webhook地址',
+  `enable_email` TINYINT DEFAULT 1 COMMENT '启用邮件提醒: 0-禁用 1-启用',
+  `enable_dingtalk` TINYINT DEFAULT 1 COMMENT '启用钉钉提醒: 0-禁用 1-启用',
+  `create_time` BIGINT COMMENT '创建时间',
+  `update_time` BIGINT COMMENT '更新时间',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户通知设置表';
+
+-- 计划提醒设置表
+CREATE TABLE IF NOT EXISTS `plan_reminder_settings` (
+  `setting_id` INT NOT NULL AUTO_INCREMENT COMMENT '设置ID',
+  `week_id` INT NOT NULL COMMENT '周计划ID',
+  `user_id` INT NOT NULL COMMENT '用户ID',
+  `remind_before_1day` TINYINT DEFAULT 1 COMMENT '截止前1天提醒: 0-禁用 1-启用',
+  `remind_on_day` TINYINT DEFAULT 1 COMMENT '截止当天提醒: 0-禁用 1-启用',
+  `reminded_before_1day` TINYINT DEFAULT 0 COMMENT '是否已发送截止前1天提醒',
+  `reminded_on_day` TINYINT DEFAULT 0 COMMENT '是否已发送截止当天提醒',
+  `create_time` BIGINT COMMENT '创建时间',
+  `update_time` BIGINT COMMENT '更新时间',
+  PRIMARY KEY (`setting_id`),
+  UNIQUE KEY `uk_week_id` (`week_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='计划提醒设置表';
+
+-- 提醒发送记录表
+CREATE TABLE IF NOT EXISTS `notification_send_log` (
+  `log_id` INT NOT NULL AUTO_INCREMENT COMMENT '日志ID',
+  `week_id` INT NOT NULL COMMENT '周计划ID',
+  `user_id` INT NOT NULL COMMENT '用户ID',
+  `channel` VARCHAR(20) NOT NULL COMMENT '发送渠道: email/dingtalk',
+  `content` TEXT COMMENT '发送内容',
+  `status` TINYINT DEFAULT 0 COMMENT '发送状态: 0-失败 1-成功',
+  `error_msg` VARCHAR(500) COMMENT '错误信息',
+  `send_time` BIGINT COMMENT '发送时间',
+  PRIMARY KEY (`log_id`),
+  INDEX `idx_week_id` (`week_id`),
+  INDEX `idx_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='提醒发送记录表';
