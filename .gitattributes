@@ -1,8 +1,93 @@
-/mvnw text eol=lf
+
+# ==========================================
+# 1. 全局默认设置
+# ==========================================
+# 自动检测文本文件，并统一使用 LF (Line Feed) 作为换行符
+# 这有助于解决 Windows (CRLF) 与 Unix/Linux/macOS (LF) 之间的换行符冲突
+* text=auto eol=lf
+
+# ==========================================
+# 2. 明确标记二进制文件
+# ==========================================
+# 防止 Git 对二进制文件进行文本差异比较或换行符转换，避免文件损坏
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+# SVG 是文本格式，建议保留 text 属性以便 diff
+*.svg text
+*.zip binary
+*.tar.gz binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+
+# ==========================================
+# 3. 特定文件类型的换行符或编码处理
+# ==========================================
+# Windows 批处理文件通常需要 CRLF 才能正确执行
+*.bat text eol=crlf
 *.cmd text eol=crlf
-*.java text eol=lf
-*.xml text eol=lf
-*.yml text eol=lf
-*.yaml text eol=lf
-*.md text eol=lf
-*.properties text eol=lf
+
+# Shell 脚本在 Unix 环境下运行，强制 LF
+*.sh text eol=lf
+*.bash text eol=lf
+
+# 某些旧式 Windows 项目文件可能需要特定处理
+*.vcproj text eol=crlf
+
+# ==========================================
+# 4. 合并策略与差异比较优化
+# ==========================================
+# 对于锁文件（如 package-lock.json, yarn.lock, go.sum），
+# 通常希望采用“联合”合并策略，或者在发生冲突时手动处理，
+# 这里设置 union 可以在非冲突行自动合并，减少冲突噪音
+*.lock merge=union
+go.sum merge=union
+
+# 禁用某些生成文件或大型文件的 diff，提高性能
+*.min.js -diff
+*.map -diff
+node_modules/** -diff
+
+# ==========================================
+# 5. 导出归档控制 (git archive)
+# ==========================================
+# 在打包发布版本时，排除测试目录和 CI 配置，减小包体积
+tests/ export-ignore
+.github/ export-ignore
+.gitlab-ci.yml export-ignore
+Makefile export-ignore
+
+# ==========================================
+# 6. GitHub Linguist 语言统计优化
+# ==========================================
+# 标记第三方依赖库，不计入代码语言统计
+node_modules/ linguist-vendored
+vendor/ linguist-vendored
+dist/ linguist-vendored
+
+# 标记自动生成的文件，不计入代码语言统计
+*.pb.go linguist-generated
+*_generated.go linguist-generated
+dist/** linguist-generated
+
+# 标记文档文件，不计入代码语言统计
+docs/** linguist-documentation
+README.md linguist-documentation
+LICENSE linguist-documentation
+
+# 纠正特定文件的语言识别
+*.jsx linguist-language=JavaScript
+*.tsx linguist-language=TypeScript
+*.vue linguist-language=Vue

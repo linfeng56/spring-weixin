@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: spring-cloud-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: pc-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/**
+        - id: h2-console
+          uri: http://localhost:8081
+          predicates:
+            - Path=/h2-console/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+
+jwt:
+  secret: mySecretKey12345678901234567890
+  expiration: 86400000
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.github.linfeng.gateway: DEBUG
