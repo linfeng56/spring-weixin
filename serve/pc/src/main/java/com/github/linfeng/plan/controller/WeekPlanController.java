@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class WeekPlanController {
         Integer userId = getCurrentUserId();
         PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
         if (plan == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Plan not found"));
         }
         return ResponseEntity.ok(plan);
     }
@@ -72,7 +73,7 @@ public class WeekPlanController {
         plan.setStatus(0);
 
         Integer weekId = weeksService.add(plan);
-        return ResponseEntity.ok(Map.of("weekId", weekId));
+        return ResponseEntity.ok(Collections.singletonMap("weekId", weekId));
     }
 
     @PutMapping("/{id}")
@@ -80,7 +81,7 @@ public class WeekPlanController {
         Integer userId = getCurrentUserId();
         PlanWeeks existing = weeksService.getByIdAndUserId(id, userId);
         if (existing == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Plan not found"));
         }
 
         PlanWeeks plan = new PlanWeeks();
@@ -97,9 +98,9 @@ public class WeekPlanController {
 
         Integer result = weeksService.update(id, plan);
         if (result > 0) {
-            return ResponseEntity.ok(Map.of("message", "Updated successfully"));
+            return ResponseEntity.ok(Collections.singletonMap("message", "Updated successfully"));
         }
-        return ResponseEntity.status(500).body(Map.of("error", "Update failed"));
+        return ResponseEntity.status(500).body(Collections.singletonMap("error", "Update failed"));
     }
 
     @DeleteMapping("/{id}")
@@ -107,14 +108,14 @@ public class WeekPlanController {
         Integer userId = getCurrentUserId();
         PlanWeeks existing = weeksService.getByIdAndUserId(id, userId);
         if (existing == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Plan not found"));
         }
 
         Integer result = weeksService.delete(id, userId);
         if (result > 0) {
-            return ResponseEntity.ok(Map.of("message", "Deleted successfully"));
+            return ResponseEntity.ok(Collections.singletonMap("message", "Deleted successfully"));
         }
-        return ResponseEntity.status(500).body(Map.of("error", "Delete failed"));
+        return ResponseEntity.status(500).body(Collections.singletonMap("error", "Delete failed"));
     }
 
     @GetMapping("/week")
@@ -142,7 +143,7 @@ public class WeekPlanController {
         Integer userId = getCurrentUserId();
         PlanWeeks existing = weeksService.getByIdAndUserId(id, userId);
         if (existing == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Plan not found"));
         }
 
         String summary = (String) summaryData.get("summary");
@@ -150,9 +151,9 @@ public class WeekPlanController {
 
         Integer result = weeksService.updateSummary(id, summary, summaryDate);
         if (result > 0) {
-            return ResponseEntity.ok(Map.of("message", "Summary updated successfully"));
+            return ResponseEntity.ok(Collections.singletonMap("message", "Summary updated successfully"));
         }
-        return ResponseEntity.status(500).body(Map.of("error", "Update failed"));
+        return ResponseEntity.status(500).body(Collections.singletonMap("error", "Update failed"));
     }
 
     @GetMapping("/export")
@@ -184,7 +185,9 @@ public class WeekPlanController {
                     .headers(headers)
                     .body(documentBytes);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(Map.of("error", "Export failed: " + e.getMessage()));
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("error", "Export failed: " + e.getMessage());
+            return ResponseEntity.status(500).body(errorMap);
         }
     }
 
@@ -208,7 +211,7 @@ public class WeekPlanController {
         Integer userId = getCurrentUserId();
         PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
         if (plan == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Plan not found"));
         }
         List<PlanSubtasks> subtasks = subtasksService.listByWeekId(id);
         return ResponseEntity.ok(subtasks);
@@ -219,7 +222,7 @@ public class WeekPlanController {
         Integer userId = getCurrentUserId();
         PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
         if (plan == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Plan not found"));
         }
 
         PlanSubtasks subtask = new PlanSubtasks();
@@ -233,7 +236,7 @@ public class WeekPlanController {
         subtask.setUpdateDate(DateTimeUtils.DateTimeToLong());
 
         Integer subtaskId = subtasksService.add(subtask);
-        return ResponseEntity.ok(Map.of("subtaskId", subtaskId));
+        return ResponseEntity.ok(Collections.singletonMap("subtaskId", subtaskId));
     }
 
     @PutMapping("/{id}/subtasks/{subtaskId}")
@@ -244,7 +247,7 @@ public class WeekPlanController {
         Integer userId = getCurrentUserId();
         PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
         if (plan == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Plan not found"));
         }
 
         PlanSubtasks subtask = new PlanSubtasks();
@@ -260,9 +263,9 @@ public class WeekPlanController {
 
         Integer result = subtasksService.update(subtaskId, subtask);
         if (result > 0) {
-            return ResponseEntity.ok(Map.of("message", "Updated successfully"));
+            return ResponseEntity.ok(Collections.singletonMap("message", "Updated successfully"));
         }
-        return ResponseEntity.status(500).body(Map.of("error", "Update failed"));
+        return ResponseEntity.status(500).body(Collections.singletonMap("error", "Update failed"));
     }
 
     @DeleteMapping("/{id}/subtasks/{subtaskId}")
@@ -270,14 +273,14 @@ public class WeekPlanController {
         Integer userId = getCurrentUserId();
         PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
         if (plan == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Plan not found"));
         }
 
         Integer result = subtasksService.delete(subtaskId);
         if (result > 0) {
-            return ResponseEntity.ok(Map.of("message", "Deleted successfully"));
+            return ResponseEntity.ok(Collections.singletonMap("message", "Deleted successfully"));
         }
-        return ResponseEntity.status(500).body(Map.of("error", "Delete failed"));
+        return ResponseEntity.status(500).body(Collections.singletonMap("error", "Delete failed"));
     }
 
     @GetMapping("/summary")
@@ -337,7 +340,7 @@ public class WeekPlanController {
         List<Integer> weekIds = (List<Integer>) request.get("weekIds");
 
         if (weekIds == null || weekIds.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "weekIds is required"));
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "weekIds is required"));
         }
 
         List<PlanWeeks> linkedPlans = new java.util.ArrayList<>();
@@ -375,7 +378,7 @@ public class WeekPlanController {
         Integer userId = getCurrentUserId();
         PlanWeeks plan = weeksService.getByIdAndUserId(id, userId);
         if (plan == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Plan not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Plan not found"));
         }
         List<PlanChangeHistory> history = changeHistoryService.listByWeekId(id);
         return ResponseEntity.ok(history);

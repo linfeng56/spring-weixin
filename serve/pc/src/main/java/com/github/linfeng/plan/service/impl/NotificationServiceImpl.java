@@ -6,6 +6,7 @@ import com.github.linfeng.plan.entity.UserNotificationSettings;
 import com.github.linfeng.plan.mapper.PlanReminderSettingsMapper;
 import com.github.linfeng.plan.mapper.UserNotificationSettingsMapper;
 import com.github.linfeng.plan.service.INotificationService;
+import com.github.linfeng.plan.service.IPlanWeeksService;
 import com.github.linfeng.utils.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

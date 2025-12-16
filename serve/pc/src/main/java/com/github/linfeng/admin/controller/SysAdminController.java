@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class SysAdminController {
     public ResponseEntity<?> getRole(@PathVariable Integer id) {
         SysRole role = roleService.getById(id);
         if (role == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "Role not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Role not found"));
         }
         return ResponseEntity.ok(role);
     }
@@ -40,19 +41,19 @@ public class SysAdminController {
     @PostMapping("/roles")
     public ResponseEntity<?> createRole(@RequestBody SysRole role) {
         Integer id = roleService.add(role);
-        return ResponseEntity.ok(Map.of("roleId", id));
+        return ResponseEntity.ok(Collections.singletonMap("roleId", id));
     }
 
     @PutMapping("/roles/{id}")
     public ResponseEntity<?> updateRole(@PathVariable Integer id, @RequestBody SysRole role) {
         roleService.update(id, role);
-        return ResponseEntity.ok(Map.of("message", "Updated successfully"));
+        return ResponseEntity.ok(Collections.singletonMap("message", "Updated successfully"));
     }
 
     @DeleteMapping("/roles/{id}")
     public ResponseEntity<?> deleteRole(@PathVariable Integer id) {
         roleService.delete(id);
-        return ResponseEntity.ok(Map.of("message", "Deleted successfully"));
+        return ResponseEntity.ok(Collections.singletonMap("message", "Deleted successfully"));
     }
 
     @GetMapping("/permissions")

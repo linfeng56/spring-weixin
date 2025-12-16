@@ -15,7 +15,6 @@ public class WeekPlanExportService {
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
             XWPFParagraph title = document.createParagraph();
-            title.setAlignment(org.apache.poi.util.EnumUtil.getAlignment(org.apache.poi.sl.draw.geom.Enum.GetFromClass.class, org.apache.poi.common.usermodel.Enum.GetFromClass.class, 1));
             XWPFRun titleRun = title.createRun();
             titleRun.setText("周计划导出");
             titleRun.setFontSize(20);

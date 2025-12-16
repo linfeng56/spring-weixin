@@ -4,6 +4,7 @@ import com.github.linfeng.plan.entity.PlanReminderSettings;
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.mapper.PlanReminderSettingsMapper;
 import com.github.linfeng.plan.service.INotificationService;
+import com.github.linfeng.plan.service.IPlanWeeksService;
 import com.github.linfeng.utils.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -27,7 +28,7 @@ public class NotificationController {
     public ResponseEntity<?> saveUserSettings(@RequestBody UserNotificationSettings settings) {
         Integer userId = getCurrentUserId();
         notificationService.saveUserSettings(userId, settings);
-        return ResponseEntity.ok(Map.of("message", "Settings saved successfully"));
+        return ResponseEntity.ok(Collections.singletonMap("message", "Settings saved successfully"));
     }
 
     @GetMapping("/plan/{weekId}/settings")
@@ -39,7 +40,7 @@ public class NotificationController {
     @PutMapping("/plan/{weekId}/settings")
     public ResponseEntity<?> savePlanSettings(@PathVariable Integer weekId, @RequestBody PlanReminderSettings settings) {
         notificationService.saveReminderSettings(weekId, settings);
-        return ResponseEntity.ok(Map.of("message", "Settings saved successfully"));
+        return ResponseEntity.ok(Collections.singletonMap("message", "Settings saved successfully"));
     }
 
     private Integer getCurrentUserId() {

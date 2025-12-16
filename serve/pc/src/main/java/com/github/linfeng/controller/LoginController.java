@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -30,9 +31,9 @@ public class LoginController {
         String password = payload.get("password");
         String token = userService.login(username, password);
         if (token != null) {
-            return ResponseEntity.ok(Map.of("token", token));
+            return ResponseEntity.ok(Collections.singletonMap("token", token));
         } else {
-            return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
+            return ResponseEntity.status(401).body(Collections.singletonMap("error", "Invalid credentials"));
         }
     }
 }

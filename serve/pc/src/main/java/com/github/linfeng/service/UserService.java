@@ -5,7 +5,10 @@ import com.github.linfeng.entity.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.github.linfeng.utils.JwtTokenUtil;
 
 /**
  * 用户服务类
@@ -14,14 +17,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Qualifier("miniUserService")
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import com.github.linfeng.utils.JwtTokenUtil;
-
 public class UserService {
 
     @Autowired
     @Qualifier("miniIUserService")
     private IUsersService service;
+
+    private final JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public List<Users> list() {
         return service.list();
@@ -29,6 +32,17 @@ public class UserService {
 
     public Users getById(Integer id) {
         return service.getById(id);
+    }
+
+    /**
+     * 登录并返回 JWT Token
+     */
+    public String login(String username, String rawPassword) {
+        Users user = service.getByUsername(username);
+        if (user != null && passwordEncoder.matches(rawPassword, user.getPwd())) {
+            return jwtTokenUtil.generateToken(username);
+        }
+        return null;
     }
 
     /**
@@ -41,24 +55,8 @@ public class UserService {
      * @param scope        scope
      * @return true更新成功, false更新失败
      */
-    private final JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
-private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-public boolean updateUserToken(String openid, String accessToken, String expiresIn, String refreshToken,
+    public boolean updateUserToken(String openid, String accessToken, String expiresIn, String refreshToken,
         String scope) {
-        return false;
-    }
-
-    /**
-     * 登录并返回 JWT Token。
-     */
-    public String login(String username, String rawPassword) {
-        Users user = service.getByUsername(username);
-        if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
-            return jwtTokenUtil.generateToken(username);
-        }
-        return null;
-    }
         return false;
     }
 }

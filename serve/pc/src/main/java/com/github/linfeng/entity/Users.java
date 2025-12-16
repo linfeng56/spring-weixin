@@ -66,6 +66,8 @@ public class Users implements Serializable {
      * 手机号
      */
     private String phone;
+    private String email;
+    private String avatar;
 
     /**
      * 出生日期(年月日)
@@ -228,6 +230,22 @@ public class Users implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public Integer getBirthday() {

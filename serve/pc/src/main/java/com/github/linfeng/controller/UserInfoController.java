@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,12 +32,12 @@ public class UserInfoController {
     public ResponseEntity<?> getUserInfo() {
         String username = getCurrentUsername();
         if (username == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+            return ResponseEntity.status(401).body(Collections.singletonMap("error", "Unauthorized"));
         }
 
         Users user = usersService.getByUsername(username);
         if (user == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "User not found"));
         }
 
         return ResponseEntity.ok(filterSensitiveFields(user));
@@ -46,12 +47,12 @@ public class UserInfoController {
     public ResponseEntity<?> updateUserInfo(@RequestBody Map<String, Object> updates) {
         String username = getCurrentUsername();
         if (username == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+            return ResponseEntity.status(401).body(Collections.singletonMap("error", "Unauthorized"));
         }
 
         Users user = usersService.getByUsername(username);
         if (user == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "User not found"));
         }
 
         if (updates.containsKey("nickName")) {
@@ -67,7 +68,7 @@ public class UserInfoController {
                 if (existingUser != null && email.equals(existingUser.getEmail())) {
                     user.setEmail(email);
                 } else {
-                    return ResponseEntity.badRequest().body(Map.of("error", "Email already in use"));
+                    return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Email already in use"));
                 }
             }
         }
@@ -83,29 +84,29 @@ public class UserInfoController {
     public ResponseEntity<?> changePassword(@RequestBody Map<String, String> passwordData) {
         String username = getCurrentUsername();
         if (username == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+            return ResponseEntity.status(401).body(Collections.singletonMap("error", "Unauthorized"));
         }
 
         String oldPassword = passwordData.get("oldPassword");
         String newPassword = passwordData.get("newPassword");
 
         if (oldPassword == null || newPassword == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Missing password"));
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Missing password"));
         }
 
         Users user = usersService.getByUsername(username);
         if (user == null) {
-            return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "User not found"));
         }
 
         if (!passwordEncoder.matches(oldPassword, user.getPwd())) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid old password"));
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Invalid old password"));
         }
 
         user.setPwd(passwordEncoder.encode(newPassword));
         usersService.update(user);
 
-        return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+        return ResponseEntity.ok(Collections.singletonMap("message", "Password changed successfully"));
     }
 
     private String getCurrentUsername() {

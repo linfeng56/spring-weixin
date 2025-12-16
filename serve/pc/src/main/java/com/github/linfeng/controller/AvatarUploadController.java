@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,20 +32,20 @@ public class AvatarUploadController {
     public ResponseEntity<?> uploadAvatar(@RequestParam("file") MultipartFile file) {
         String username = getCurrentUsername();
         if (username == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+            return ResponseEntity.status(401).body(Collections.singletonMap("error", "Unauthorized"));
         }
 
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "File is empty"));
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "File is empty"));
         }
 
         if (file.getSize() > MAX_SIZE) {
-            return ResponseEntity.badRequest().body(Map.of("error", "File size exceeds 1MB"));
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "File size exceeds 1MB"));
         }
 
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Only JPG, PNG, GIF files are allowed"));
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Only JPG, PNG, GIF files are allowed"));
         }
 
         try {
@@ -60,9 +61,9 @@ public class AvatarUploadController {
             file.transferTo(filePath.toFile());
 
             String avatarUrl = "/uploads/avatar/" + filename;
-            return ResponseEntity.ok(Map.of("url", avatarUrl));
+            return ResponseEntity.ok(Collections.singletonMap("url", avatarUrl));
         } catch (IOException e) {
-            return ResponseEntity.status(500).body(Map.of("error", "Failed to upload file"));
+            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Failed to upload file"));
         }
     }
 
