@@ -1,5 +1,6 @@
 package com.github.linfeng.app.entity;
 
+import com.github.linfeng.app.enums.PlanStatus;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -26,8 +27,12 @@ public class WeekPlan {
     @Column(name = "week_number", nullable = false)
     private Integer weekNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String status = "DRAFT";
+    private PlanStatus status = PlanStatus.DRAFT;
+
+    @Column(name = "status_history", columnDefinition = "JSON")
+    private String statusHistory;
 
     @Column(name = "current_progress", nullable = false)
     private Integer currentProgress = 0;
@@ -74,8 +79,11 @@ public class WeekPlan {
     public Integer getWeekNumber() { return weekNumber; }
     public void setWeekNumber(Integer weekNumber) { this.weekNumber = weekNumber; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public PlanStatus getStatus() { return status; }
+    public void setStatus(PlanStatus status) { this.status = status; }
+
+    public String getStatusHistory() { return statusHistory; }
+    public void setStatusHistory(String statusHistory) { this.statusHistory = statusHistory; }
 
     public Integer getCurrentProgress() { return currentProgress; }
     public void setCurrentProgress(Integer currentProgress) { this.currentProgress = currentProgress; }

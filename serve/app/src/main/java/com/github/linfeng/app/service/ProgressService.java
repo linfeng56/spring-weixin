@@ -2,6 +2,7 @@ package com.github.linfeng.app.service;
 
 import com.github.linfeng.app.entity.PlanProgress;
 import com.github.linfeng.app.entity.WeekPlan;
+import com.github.linfeng.app.enums.PlanStatus;
 import com.github.linfeng.app.repository.PlanProgressRepository;
 import com.github.linfeng.app.repository.WeekPlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,13 @@ public class ProgressService {
             throw new IllegalArgumentException("无权限操作此计划");
         }
 
-        if ("ARCHIVED".equals(plan.getStatus())) {
+        if (plan.getStatus() == PlanStatus.ARCHIVED) {
             throw new IllegalArgumentException("已归档的计划不允许更新进度");
         }
 
         plan.setCurrentProgress(progress);
-        if (progress == 100 && !"COMPLETED".equals(plan.getStatus())) {
-            plan.setStatus("COMPLETED");
+        if (progress == 100 && plan.getStatus() != PlanStatus.COMPLETED) {
+            plan.setStatus(PlanStatus.COMPLETED);
         }
         weekPlanRepository.save(plan);
 
