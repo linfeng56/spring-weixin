@@ -1,5 +1,6 @@
 package com.github.linfeng.plan.controller;
 
+import com.github.linfeng.plan.dto.WeekPlanMobileDTO;
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.entity.PlanSubtasks;
 import com.github.linfeng.plan.entity.PlanChangeHistory;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -48,6 +50,82 @@ public class WeekPlanController {
             list = weeksService.listByUserId(userId);
         }
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/mobile/list")
+    public ResponseEntity<?> getMobileList(
+            @RequestParam Integer year,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer size) {
+        Integer userId = getCurrentUserId();
+        List<PlanWeeks> allPlans;
+        if (status != null) {
+            allPlans = weeksService.listByUserIdAndStatus(userId, status);
+        } else {
+            allPlans = weeksService.listByUserId(userId);
+        }
+
+        final long[] weekRange = getWeekRange(year, 1);
+        final long yearStart = weekRange[0];
+        final long yearEnd = yearStart + 365L * 24L * 3600L * 1000L;
+
+        List<PlanWeeks> filtered = allPlans.stream()
+            .filter(p -> p.getBeginDate() != null)
+            .filter(p -> p.getBeginDate() >= yearStart && p.getBeginDate() < yearEnd)
+            .collect(Collectors.toList());
+
+        int total = filtered.size();
+        int start = page * size;
+        int end = Math.min(start + size, total);
+
+        List<WeekPlanMobileDTO> result;
+        if (start < total) {
+            List<PlanWeeks> pageData = filtered.subList(start, end);
+            result = pageData.stream().map(this::convertToMobileDTO).collect(Collectors.toList());
+        } else {
+            result = Collections.emptyList();
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", result);
+        response.put("total", total);
+        response.put("page", page);
+        response.put("size", size);
+
+        return ResponseEntity.ok(response);
+    }
+
+    private WeekPlanMobileDTO convertToMobileDTO(PlanWeeks plan) {
+        WeekPlanMobileDTO dto = new WeekPlanMobileDTO();
+        dto.setWeekId(plan.getWeekId());
+        dto.setTitle(plan.getTitle());
+        dto.setStatus(plan.getStatus());
+        dto.setProgress(calculateProgress(plan));
+        dto.setBeginDate(plan.getBeginDate());
+        dto.setEndDate(plan.getEndDate());
+        dto.setWeekNumber(calculateWeekNumber(plan.getBeginDate()));
+        dto.setPriority("normal");
+        dto.setCreateDate(plan.getCreateDate());
+        return dto;
+    }
+
+    private Integer calculateProgress(PlanWeeks plan) {
+        if (plan.getStatus() == null) return 0;
+        switch (plan.getStatus()) {
+            case 0: return 0;
+            case 1: return 50;
+            case 2: return 100;
+            case 3: return 100;
+            default: return 0;
+        }
+    }
+
+    private Integer calculateWeekNumber(Long timestamp) {
+        if (timestamp == null) return 1;
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTimeInMillis(timestamp);
+        return cal.get(java.util.Calendar.WEEK_OF_YEAR);
     }
 
     @GetMapping("/{id}")

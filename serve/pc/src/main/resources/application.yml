@@ -8,6 +8,10 @@ spring:
       enabled: true
       max-file-size: 1MB
       max-request-size: 1MB
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
+    min-response-size: 1024
 
 upload:
   path: ./src/main/resources/static/uploads/avatar
