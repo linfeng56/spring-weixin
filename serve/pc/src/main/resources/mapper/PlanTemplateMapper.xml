@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.linfeng.plan.mapper.PlanTemplateMapper">
+
+    <resultMap id="BaseResultMap" type="com.github.linfeng.plan.entity.PlanTemplate">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="category" property="category"/>
+        <result column="content" property="content"/>
+        <result column="is_system" property="isSystem"/>
+        <result column="is_public" property="isPublic"/>
+        <result column="user_id" property="userId"/>
+        <result column="use_count" property="useCount"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT * FROM plan_template ORDER BY use_count DESC, created_at DESC
+    </select>
+
+    <select id="listVisible" resultMap="BaseResultMap">
+        SELECT * FROM plan_template
+        WHERE is_public = TRUE OR is_system = TRUE OR user_id = #{userId}
+        ORDER BY is_system DESC, use_count DESC, created_at DESC
+    </select>
+
+    <select id="listByCategory" resultMap="BaseResultMap">
+        SELECT * FROM plan_template
+        WHERE category = #{category}
+        AND (is_public = TRUE OR is_system = TRUE OR user_id = #{userId})
+        ORDER BY is_system DESC, use_count DESC
+    </select>
+
+    <select id="listByUserId" resultMap="BaseResultMap">
+        SELECT * FROM plan_template
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="searchTemplates" resultMap="BaseResultMap">
+        SELECT * FROM plan_template
+        WHERE (is_public = TRUE OR is_system = TRUE OR user_id = #{userId})
+        AND (name LIKE CONCAT('%', #{keyword}, '%') OR description LIKE CONCAT('%', #{keyword}, '%'))
+        ORDER BY use_count DESC
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap">
+        SELECT * FROM plan_template WHERE id = #{id}
+    </select>
+
+    <insert id="add" parameterType="com.github.linfeng.plan.entity.PlanTemplate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO plan_template (name, description, category, content, is_system, is_public, user_id, use_count, created_at, updated_at)
+        VALUES (#{template.name}, #{template.description}, #{template.category}, #{template.content},
+                #{template.isSystem}, #{template.isPublic}, #{template.userId}, 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+    </insert>
+
+    <update id="update" parameterType="com.github.linfeng.plan.entity.PlanTemplate">
+        UPDATE plan_template
+        SET name = #{template.name},
+            description = #{template.description},
+            category = #{template.category},
+            content = #{template.content},
+            updated_at = UNIX_TIMESTAMP()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM plan_template WHERE id = #{id}
+    </delete>
+
+    <update id="incrementUseCount">
+        UPDATE plan_template SET use_count = use_count + 1 WHERE id = #{id}
+    </update>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM plan_template
+    </select>
+
+</mapper>
