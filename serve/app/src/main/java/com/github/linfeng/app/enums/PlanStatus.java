@@ -1,6 +1,8 @@
 package com.github.linfeng.app.enums;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,14 +21,14 @@ public enum PlanStatus {
     private static final Map<PlanStatus, Set<PlanStatus>> ALLOWED_TRANSITIONS = new HashMap<>();
 
     static {
-        ALLOWED_TRANSITIONS.put(DRAFT, Set.of(PENDING_APPROVAL, IN_PROGRESS, CANCELLED));
-        ALLOWED_TRANSITIONS.put(PENDING_APPROVAL, Set.of(IN_PROGRESS, REJECTED, CANCELLED));
-        ALLOWED_TRANSITIONS.put(IN_PROGRESS, Set.of(PAUSED, COMPLETED, CANCELLED));
-        ALLOWED_TRANSITIONS.put(PAUSED, Set.of(IN_PROGRESS, CANCELLED));
-        ALLOWED_TRANSITIONS.put(COMPLETED, Set.of(ARCHIVED));
-        ALLOWED_TRANSITIONS.put(REJECTED, Set.of(DRAFT));
-        ALLOWED_TRANSITIONS.put(CANCELLED, Set.of(DRAFT));
-        ALLOWED_TRANSITIONS.put(ARCHIVED, Set.of());
+        ALLOWED_TRANSITIONS.put(DRAFT, new HashSet<>(Arrays.asList(PENDING_APPROVAL, IN_PROGRESS, CANCELLED)));
+        ALLOWED_TRANSITIONS.put(PENDING_APPROVAL, new HashSet<>(Arrays.asList(IN_PROGRESS, REJECTED, CANCELLED)));
+        ALLOWED_TRANSITIONS.put(IN_PROGRESS, new HashSet<>(Arrays.asList(PAUSED, COMPLETED, CANCELLED)));
+        ALLOWED_TRANSITIONS.put(PAUSED, new HashSet<>(Arrays.asList(IN_PROGRESS, CANCELLED)));
+        ALLOWED_TRANSITIONS.put(COMPLETED, new HashSet<>(Arrays.asList(ARCHIVED)));
+        ALLOWED_TRANSITIONS.put(REJECTED, new HashSet<>(Arrays.asList(DRAFT)));
+        ALLOWED_TRANSITIONS.put(CANCELLED, new HashSet<>(Arrays.asList(DRAFT)));
+        ALLOWED_TRANSITIONS.put(ARCHIVED, new HashSet<>(Arrays.asList()));
     }
 
     PlanStatus(String label) {
@@ -38,6 +40,6 @@ public enum PlanStatus {
     }
 
     public boolean canTransitionTo(PlanStatus target) {
-        return ALLOWED_TRANSITIONS.getOrDefault(this, Set.of()).contains(target);
+        return ALLOWED_TRANSITIONS.getOrDefault(this, new HashSet<>(Arrays.asList())).contains(target);
     }
 }

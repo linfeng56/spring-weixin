@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.linfeng</groupId>
-    <artifactId>spring-cloud-gateway</artifactId>
+    <artifactId>gateway</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>Spring Cloud Gateway</name>
-    <description>Spring Cloud Gateway for JWT Authentication</description>
+    <name>Serve Gateway</name>
+    <description>Serve Gateway for JWT Authentication</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

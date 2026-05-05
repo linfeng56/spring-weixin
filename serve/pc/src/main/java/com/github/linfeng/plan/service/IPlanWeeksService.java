@@ -14,6 +14,8 @@ public interface IPlanWeeksService {
 
     PlanWeeks getById(Integer id);
 
+    PlanWeeks getByIdAndUserId(Integer id, Integer userId);
+
     Integer add(PlanWeeks weeks);
 
     /**
@@ -25,6 +27,16 @@ public interface IPlanWeeksService {
     List<PlanWeeks> list(String searchText);
 
     /**
+     * 按用户ID查询周计划
+     */
+    List<PlanWeeks> listByUserId(Integer userId);
+
+    /**
+     * 按用户ID和状态查询周计划
+     */
+    List<PlanWeeks> listByUserIdAndStatus(Integer userId, Integer status);
+
+    /**
      * 更新周计划
      *
      * @param id    周计划编号
@@ -32,6 +44,11 @@ public interface IPlanWeeksService {
      * @return 受影响记录数, 大于0成功, 等于0失败.
      */
     Integer update(Integer id, PlanWeeks weeks);
+
+    /**
+     * 删除周计划
+     */
+    Integer delete(Integer id, Integer userId);
 
     /**
      * 更新总结内容

@@ -15,6 +15,7 @@
     <modules>
         <module>app</module>
         <module>pc</module>
+        <module>gateway</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -57,6 +58,19 @@
                 <artifactId>aspectjweaver</artifactId>
                 <version>1.9.19</version>
             </dependency>
+            <!-- Bean Validation API (接口规范) -->
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>2.0.1.Final</version>
+            </dependency>
+
+            <!-- Hibernate Validator (参考实现，必须添加才能生效) -->
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>6.0.10.Final</version>
+            </dependency>
 
             <!--springframework-->
             <dependency>
@@ -89,6 +103,12 @@
                 <artifactId>spring-jdbc</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>2.7.18</version> <!-- 示例版本，请根据实际Spring Boot版本调整 -->
+            </dependency>
+
             <!-- shiro鉴权 -->
             <dependency>
                 <groupId>org.apache.shiro</groupId>
@@ -200,7 +220,6 @@
                 <artifactId>spring-boot-starter-security</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

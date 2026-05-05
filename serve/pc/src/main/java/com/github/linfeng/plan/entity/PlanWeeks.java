@@ -56,6 +56,11 @@ public class PlanWeeks implements Serializable {
      */
     private Long summaryDate;
 
+    /**
+     * 状态: 0-待提交 1-进行中 2-已完成 3-已归档
+     */
+    private Integer status;
+
     public Integer getWeekId() {
         return weekId;
     }
@@ -128,6 +133,14 @@ public class PlanWeeks implements Serializable {
         this.summaryDate = summaryDate;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "PlanWeeks{" +
@@ -140,6 +153,7 @@ public class PlanWeeks implements Serializable {
             ", createDate=" + createDate +
             ", summary='" + summary + '\'' +
             ", summaryDate=" + summaryDate +
+            ", status=" + status +
             '}';
     }
 }

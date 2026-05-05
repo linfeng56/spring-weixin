@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +106,7 @@ public class PlanTemplateController {
             result.put("message", "模板删除成功");
             return ResponseEntity.ok(result);
         } else {
-            return ResponseEntity.badRequest().body(Map.of("message", "删除失败"));
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "删除失败"));
         }
     }
 

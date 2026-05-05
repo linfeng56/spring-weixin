@@ -30,6 +30,11 @@ public class PlanWeeksServiceImpl implements IPlanWeeksService {
     }
 
     @Override
+    public PlanWeeks getByIdAndUserId(Integer id, Integer userId) {
+        return planWeeksMapper.getByIdAndUserId(id, userId);
+    }
+
+    @Override
     public Integer add(PlanWeeks weeks) {
         return planWeeksMapper.add(weeks);
     }
@@ -40,8 +45,23 @@ public class PlanWeeksServiceImpl implements IPlanWeeksService {
     }
 
     @Override
+    public List<PlanWeeks> listByUserId(Integer userId) {
+        return planWeeksMapper.listByUserId(userId);
+    }
+
+    @Override
+    public List<PlanWeeks> listByUserIdAndStatus(Integer userId, Integer status) {
+        return planWeeksMapper.listByUserIdAndStatus(userId, status);
+    }
+
+    @Override
     public Integer update(Integer id, PlanWeeks week) {
         return planWeeksMapper.update(id, week);
+    }
+
+    @Override
+    public Integer delete(Integer id, Integer userId) {
+        return planWeeksMapper.deleteByIdAndUserId(id, userId);
     }
 
     @Override

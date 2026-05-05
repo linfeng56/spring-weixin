@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -24,7 +25,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
     @Value("${jwt.expiration:86400000}")
     private long expiration;
 
-    private static final List<String> WHITELIST = List.of(
+    private static final List<String> WHITELIST = Arrays.asList(
             "/api/login",
             "/api/register",
             "/api/user/register",

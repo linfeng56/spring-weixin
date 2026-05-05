@@ -13,23 +13,25 @@
         <result column="create_date" property="createDate"/>
         <result column="summary" property="summary"/>
         <result column="summary_date" property="summaryDate"/>
+        <result column="status" property="status"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        week_id, user_id, title, remarks, begin_date, end_date, create_date, summary, summary_date
+        week_id, user_id, title, remarks, begin_date, end_date, create_date, summary, summary_date, status
     </sql>
     <insert id="add" parameterType="com.github.linfeng.plan.entity.PlanWeeks">
-        insert into spwx_plan_weeks (title, begin_date, end_date, create_date, remarks)
-        values (#{week.title}, #{week.beginDate}, #{week.endDate}, #{week.createDate}, #{week.remarks});
+        insert into spwx_plan_weeks (user_id, title, begin_date, end_date, create_date, remarks, status)
+        values (#{week.userId}, #{week.title}, #{week.beginDate}, #{week.endDate}, #{week.createDate}, #{week.remarks}, #{week.status});
     </insert>
     <update id="update" parameterType="map">
         UPDATE spwx_plan_weeks
         SET title=#{week.title},
             begin_date=#{week.beginDate},
             end_date=#{week.endDate},
-            remarks=#{week.remarks}
-        WHERE week_id = #{id}
+            remarks=#{week.remarks},
+            status=#{week.status}
+        WHERE week_id = #{id} AND user_id = #{week.userId}
     </update>
     <update id="updateSummary" parameterType="map">
         UPDATE spwx_plan_weeks
@@ -37,6 +39,29 @@
             summary_date=#{summaryDate}
         WHERE week_id = #{id}
     </update>
+    <select id="listByUserId" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
+        select *
+        from spwx_plan_weeks
+        where user_id = #{userId}
+        order by begin_date desc, week_id desc;
+    </select>
+    <select id="listByUserIdAndStatus" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
+        select *
+        from spwx_plan_weeks
+        where user_id = #{userId}
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        order by begin_date desc, week_id desc;
+    </select>
+    <select id="getByIdAndUserId" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
+        select *
+        from spwx_plan_weeks
+        where week_id = #{id} and user_id = #{userId};
+    </select>
+    <delete id="deleteByIdAndUserId">
+        delete from spwx_plan_weeks where week_id = #{id} and user_id = #{userId}
+    </delete>
     <select id="list" resultMap="BaseResultMap" resultType="com.github.linfeng.plan.entity.PlanWeeks">
         select *
         from spwx_plan_weeks
