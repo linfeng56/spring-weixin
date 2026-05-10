@@ -1,30 +1,103 @@
-# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java#apache-maven-with-a-settings-path
 
-name: Maven Package
+name: Build and Upload to Release
 
 on:
   release:
     types: [created]
+  # 也可以支持 push tag 触发
+  # push:
+  #   tags:
+  #     - 'v*'
 
 jobs:
-  build:
-
+  build-and-upload:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
+      # 1. 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      # 2. 设置 Java 环境 (根据项目需求修改版本)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
-    - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+      # 3. 编译 Java 项目
+      - name: Build Java Project with Maven
+        run: mvn clean package -Dmaven.test.skip=true --file ./serve/pom.xml
+
+      # 4. 设置 Node.js 环境 (根据项目需求修改版本)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+          run_install: false
+
+      # 5. 编译 Vue 项目
+      - name: Install Vue Dependencies
+        # run: pnpm install --lockfile-only
+        # run: pnpm install --frozen-lockfile
+        run: pnpm install
+        working-directory: client/web
+        # 关键点：使用 working-directory 在特定目录下执行命令
+        
+      - name: Build Vue 
+        run: pnpm run build
+        working-directory: client/web
+        # Vue 构建输出在 client/web/dist 目录
+
+      # 6. 准备发布目录结构
+      - name: Prepare Distribution Artifacts
+        run: |
+          mkdir -p dist/windows
+          mkdir -p dist/linux
+          
+          # 复制 Java 产物
+          cp ./serve/app/target/*.war dist/windows/
+          cp ./serve/gateway/target/*.jar dist/windows/
+          cp ./serve/pc/target/*.war dist/windows/
+          cp ./serve/app/target/*.war dist/linux/
+          cp ./serve/gateway/target/*.jar dist/linux/
+          cp ./serve/pc/target/*.war dist/linux/
+          
+          # 复制 Vue 产物
+          mkdir -p dist/windows/web/
+          mkdir -p dist/linuxweb/
+          cp -r client/web/dist/* dist/windows/web/
+          cp -r client/web/dist/* dist/linux/web/
+          
+          # 区分平台特定的脚本或配置
+          # echo "Windows Start Script" > dist/windows/start.bat
+          # echo "Linux Start Script" > dist/linux/start.sh && chmod +x dist/linux/start.sh
+
+      # 7. 打包 Windows 版本
+      - name: Zip Windows Artifact
+        run: |
+          cd dist/windows
+          zip -r ../../spring-weixin-windows.zip .
+
+      # 8. 打包 Linux 版本
+      - name: Tar Linux Artifact
+        run: |
+          cd dist/linux
+          tar -czf ../../spring-weixin-linux.tar.gz .
+
+      # 9. 上传到 GitHub Release
+      - name: Upload Assets to Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'release'
+        with:
+          files: |
+            spring-weixin-windows.zip
+            spring-weixin-linux.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

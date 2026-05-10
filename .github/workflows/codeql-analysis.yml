@@ -39,11 +39,11 @@ jobs:
         queries: security-and-quality
 
     # ================= Java 构建步骤 =================
-    - name: Setup Java JDK 1.8
+    - name: Setup Java JDK 17
       if: ${{ matrix.language == 'java' }}
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        java-version: '17'
         distribution: 'temurin'
         cache: maven
 
@@ -55,17 +55,22 @@ jobs:
 
     # ================= JavaScript 构建步骤 =================
     - name: Setup Node.js
-      if: ${{ matrix.language == 'javascript' }}
+      if: ${{ matrix.language == 'javascript-typescript' }}
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
-        cache: 'npm'
-        # 关键点：指定 package.json 所在的具体子目录
-        cache-dependency-path: client/web/package.json
+        node-version: '25'
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 11
+        run_install: false
 
     - name: Install JS Dependencies
-      if: ${{ matrix.language == 'javascript' }}
-      run: npm install
+      if: ${{ matrix.language == 'javascript-typescript' }}
+      # run: pnpm install --lockfile-only
+      # run: pnpm install --frozen-lockfile
+      run: pnpm install
       working-directory: client/web
       # 关键点：使用 working-directory 在特定目录下执行命令
 

@@ -1,6 +1,6 @@
 package com.github.linfeng.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import com.github.linfeng.config.WeiXinConfig;
 import com.github.linfeng.entity.Users;
 import com.github.linfeng.service.UserService;

@@ -2,10 +2,11 @@ package com.github.linfeng.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
@@ -27,10 +28,10 @@ public class JwtTokenUtil {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expirationSeconds * 1000);
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(now)
-                .setExpiration(expiry)
-                .signWith(SignatureAlgorithm.HS256, secret.getBytes())
+                .subject(username)
+                .issuedAt(now)
+                .expiration(expiry)
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
                 .compact();
     }
 
@@ -56,8 +57,9 @@ public class JwtTokenUtil {
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(secret.getBytes())
-                .parseClaimsJws(token)
-                .getBody();
+                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

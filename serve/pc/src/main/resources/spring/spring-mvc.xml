@@ -14,10 +14,6 @@
        https://www.springframework.org/schema/aop/spring-aop.xsd">
     <!--这个文件去买个整个MVC的配置-->
 
-    <aop:config proxy-target-class="true"/>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"/>
-    </bean>
     <!--启用spring的annotation-->
     <context:annotation-config/>
     <!--配置注解驱动 可以将request参数绑定到controller参数上-->

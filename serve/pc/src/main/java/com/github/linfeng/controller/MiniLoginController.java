@@ -2,7 +2,7 @@ package com.github.linfeng.controller;
 
 import java.util.Map;
 import java.util.TreeMap;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import com.alibaba.fastjson.JSONObject;
 import com.github.linfeng.config.WeiXinConfig;
 import com.github.linfeng.service.UserService;
