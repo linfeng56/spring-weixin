@@ -71,7 +71,7 @@ jobs:
           
           # 复制 Vue 产物
           mkdir -p dist/windows/web/
-          mkdir -p dist/linuxweb/
+          mkdir -p dist/linux/web/
           cp -r client/web/dist/* dist/windows/web/
           cp -r client/web/dist/* dist/linux/web/
           
