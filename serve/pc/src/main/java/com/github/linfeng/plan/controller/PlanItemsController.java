@@ -4,8 +4,8 @@ package com.github.linfeng.plan.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanItems;
 import com.github.linfeng.plan.entity.PlanUsers;
@@ -16,7 +16,6 @@ import com.github.linfeng.plan.view.JobType;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -86,7 +85,6 @@ public class PlanItemsController extends BasePlanController {
         return "plan/items/list";
     }
 
-    @RequiresRoles("normaladmin")
     @RequestMapping("/cnt")
     @ResponseBody
     public ResponseView<Integer> cnt() {

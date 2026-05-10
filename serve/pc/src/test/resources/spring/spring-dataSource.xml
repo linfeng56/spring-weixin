@@ -50,9 +50,6 @@
     </bean>
     <!-- 初始化数据库 -->
     <jdbc:initialize-database data-source="dataSource" ignore-failures="NONE">
-        <!-- 初始化表结构 -->
-        <jdbc:script location="classpath:sql/shiro-back.sql"/>
         <!--改用DbSetup在程序中初始化表数据-->
-        <!--<jdbc:script location="classpath:test-data.sql"/>-->
     </jdbc:initialize-database>
 </beans>

@@ -1,14 +1,11 @@
 package com.github.linfeng.plan.controller;
 
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanUsers;
 import com.github.linfeng.plan.entity.User;
@@ -17,11 +14,10 @@ import com.github.linfeng.plan.service.IUserService;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -45,6 +41,7 @@ public class PlanUsersController extends BasePlanController {
      */
     private final IPlanUsersService service;
     private final IUserService userService;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public PlanUsersController(IPlanUsersService service, IUserService userService) {
@@ -76,14 +73,12 @@ public class PlanUsersController extends BasePlanController {
         return JSON.toJSONString(ret);
     }
 
-    @RequiresRoles("normaladmin")
     @RequestMapping("/add")
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
 
         return "plan/users/add";
     }
 
-    @RequiresRoles("normaladmin")
     @RequestMapping("/doAdd")
     @ResponseBody
     public ResponseView<Long> doAdd(String username, String name, String password, String rePassword,
@@ -98,17 +93,14 @@ public class PlanUsersController extends BasePlanController {
         user.setName(name);
         user.setLocked(locked == 1);
         user.setCreateDate(DateTimeUtils.DateTimeToLong());
-        String rnd = ((Long) new Random().nextLong()).toString();
-        String salt = Base64.getUrlEncoder().encodeToString(rnd.getBytes(StandardCharsets.UTF_8));
-        user.setSalt(salt);
-        String encodePassword = new SimpleHash("MD5", password, user.getCredentialsSalt(), 2).toHex();
+        String encodePassword = passwordEncoder.encode(password);
         user.setPassword(encodePassword);
+        user.setSalt("");
         Long userId = userService.createUser(user);
         LOGGER.info("新增加用户:" + user.toString());
         return new ResponseView<>(200, "操作成功", userId);
     }
 
-    @RequiresRoles("normaladmin")
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
         HttpServletRequest request, HttpServletResponse response) {
@@ -123,7 +115,6 @@ public class PlanUsersController extends BasePlanController {
         return "plan/users/list";
     }
 
-    @RequiresRoles("normaladmin")
     @RequestMapping("/cnt")
     @ResponseBody
     public ResponseView<Integer> cnt() {
@@ -230,12 +221,6 @@ public class PlanUsersController extends BasePlanController {
     /**
      * 验证表单数据
      *
-     * @param weekTitle 标题
-     * @param weekBegin 开始日期
-     * @param weekEnd   结束日期
-     * @return 异常提示对象或null
-     */
-    /**
      * @param username   登录名
      * @param name       姓名
      * @param password   密码

@@ -179,7 +179,7 @@
     PlanChangeHistory,
   } from '/@/api/plan/weekPlan';
   import { getSubtasks, createSubtask, updateSubtask, deleteSubtask, PlanSubtask } from '/@/api/plan/subtask';
-  import { dayjs } from '/@/utils/dateUtil';
+  import { dateUtil as dayjs } from '/@/utils/dateUtil';
 
   const columns = [
     { title: '标题', dataIndex: 'title', key: 'title' },

@@ -4,8 +4,8 @@ package com.github.linfeng.plan.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.PlanWeeks;
 import com.github.linfeng.plan.service.IPlanItemsService;
@@ -14,7 +14,6 @@ import com.github.linfeng.plan.service.IPlanWeeksService;
 import com.github.linfeng.plan.view.ResponseView;
 import com.github.linfeng.utils.DateTimeUtils;
 
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,7 +49,6 @@ public class PlanWeeksController extends BasePlanController {
         this.planUsersService = planUsersService;
     }
 
-    @RequiresRoles("normaladmin")
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -71,7 +69,6 @@ public class PlanWeeksController extends BasePlanController {
     }
 
 
-    @RequiresRoles("normaladmin")
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "table_search", required = false) String searchText,
         HttpServletRequest request, HttpServletResponse response) {
@@ -88,13 +85,11 @@ public class PlanWeeksController extends BasePlanController {
     }
 
 
-    @RequiresRoles("normaladmin")
     @GetMapping(value = "/add")
     public String add(Model model, HttpServletRequest request, HttpServletResponse response) {
         return "plan/weeks/add";
     }
 
-    @RequiresRoles("normaladmin")
     @PostMapping(value = "/doAdd")
     @ResponseBody
     public ResponseView<Integer> doAdd(String weekTitle, String weekBegin, String weekEnd,
@@ -139,7 +134,6 @@ public class PlanWeeksController extends BasePlanController {
     }
 
 
-    @RequiresRoles("normaladmin")
     @GetMapping(value = "/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
         PlanWeeks item;
@@ -154,7 +148,6 @@ public class PlanWeeksController extends BasePlanController {
         return "plan/weeks/edit";
     }
 
-    @RequiresRoles("normaladmin")
     @PostMapping(value = "/doEdit/{id}")
     @ResponseBody
     public ResponseView<Integer> doEdit(@PathVariable("id") Integer id, Model model, String weekTitle, String weekBegin,
@@ -200,7 +193,6 @@ public class PlanWeeksController extends BasePlanController {
         return weeks;
     }
 
-    @RequiresRoles("normaladmin")
     @RequestMapping("/detail/{id}")
     @ResponseBody
     public String list(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
@@ -224,7 +216,6 @@ public class PlanWeeksController extends BasePlanController {
     }
 
 
-    @RequiresRoles("normaladmin")
     @GetMapping(value = "/summary/{id}")
     @ResponseBody
     public ResponseView summary(@PathVariable("id") Integer id, Model model, HttpServletRequest request,
@@ -240,7 +231,6 @@ public class PlanWeeksController extends BasePlanController {
         }
     }
 
-    @RequiresRoles("normaladmin")
     @PostMapping(value = "/summary/{id}")
     @ResponseBody
     public ResponseView<PlanWeeks> summaryEdit(@PathVariable("id") Integer id, Model model, HttpServletRequest request,

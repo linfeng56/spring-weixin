@@ -132,7 +132,7 @@
     TemplateCategory,
     TemplateCategoryText,
   } from '/@/api/plan/template';
-  import { dayjs } from '/@/utils/dateUtil';
+  import { dateUtil as dayjs } from '/@/utils/dateUtil';
 
   export default defineComponent({
     name: 'TemplateList',

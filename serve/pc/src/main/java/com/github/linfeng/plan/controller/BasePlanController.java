@@ -1,6 +1,6 @@
 package com.github.linfeng.plan.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 工作计划控制器基类

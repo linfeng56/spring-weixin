@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.github.linfeng.plan.entity.CalendarEventObject;
 import com.github.linfeng.plan.entity.PlanItems;
@@ -16,7 +16,6 @@ import com.github.linfeng.plan.service.IPlanUsersService;
 import com.github.linfeng.plan.service.IPlanWeeksService;
 import com.github.linfeng.plan.view.JobType;
 
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +41,6 @@ public class PlanCalendarController extends BasePlanController {
         this.planUsersService = planUsersService;
     }
 
-    @RequiresRoles("normaladmin")
     @RequestMapping("/index")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> jobTypes = JobType.toMap();
@@ -74,7 +72,6 @@ public class PlanCalendarController extends BasePlanController {
         return "plan/calendar/index";
     }
 
-    // @RequiresRoles("normaladmin")
     @RequestMapping(value = "/feed", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public Object feed(@RequestParam("start") String start, @RequestParam("end") String end, HttpServletRequest request,

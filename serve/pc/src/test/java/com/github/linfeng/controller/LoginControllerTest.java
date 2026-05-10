@@ -23,12 +23,10 @@ class LoginControllerTest {
 
     @Test
     void testLoginSuccess() throws Exception {
-        String requestBody = """
-            {
-                "loginName": "testuser",
-                "password": "123456"
-            }
-            """;
+        String requestBody = "{" +
+                "\"username\": \"testuser\"," +
+                "\"password\": \"123456\"" +
+            "}";
 
         mockMvc.perform(post("/api/login")
                         .contentType("application/json")
@@ -39,12 +37,10 @@ class LoginControllerTest {
 
     @Test
     void testLoginFailure() throws Exception {
-        String requestBody = """
-            {
-                "loginName": "testuser",
-                "password": "wrongpassword"
-            }
-            """;
+        String requestBody = "{" +
+                "\"username\": \"testuser\"," +
+                "\"password\": \"wrongpassword\"" +
+            "}";
 
         mockMvc.perform(post("/api/login")
                         .contentType("application/json")
@@ -54,16 +50,48 @@ class LoginControllerTest {
 
     @Test
     void testLoginWithInvalidUser() throws Exception {
-        String requestBody = """
-            {
-                "loginName": "nonexistent",
-                "password": "123456"
-            }
-            """;
+        String requestBody = "{" +
+                "\"username\": \"nonexistent\"," +
+                "\"password\": \"123456\"" +
+            "}";
 
         mockMvc.perform(post("/api/login")
                         .contentType("application/json")
                         .content(requestBody))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void testLoginWithMissingUsername() throws Exception {
+        String requestBody = "{" +
+                "\"password\": \"123456\"" +
+            "}";
+
+        mockMvc.perform(post("/api/login")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testLoginWithMissingPassword() throws Exception {
+        String requestBody = "{" +
+                "\"username\": \"testuser\"" +
+            "}";
+
+        mockMvc.perform(post("/api/login")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testLoginWithEmptyBody() throws Exception {
+        String requestBody = "{}";
+
+        mockMvc.perform(post("/api/login")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
     }
 }

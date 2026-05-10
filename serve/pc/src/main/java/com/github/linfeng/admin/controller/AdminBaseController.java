@@ -1,6 +1,6 @@
 package com.github.linfeng.admin.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import com.github.linfeng.admin.view.AdminUser;
 
 import org.springframework.util.ObjectUtils;
